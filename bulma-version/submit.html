@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="EN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Submission</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link href="../shared/css/tokens.css" rel="stylesheet">
+  <link href="../shared/css/bridge-bulma.css" rel="stylesheet">
+  <link href="../shared/css/app.css" rel="stylesheet">
+  <script defer src="../shared/js/theme.js"></script>
+  <script type="module" src="../shared/js/app.js"></script>
+</head>
+<body>
+<div class="brand">Bulma + Tokens</div>
+<div class="top-right"><a class="button is-light" href="../admin/log.html" target="_blank" rel="noopener">Background log</a></div>
+
+<div class="center-stage">
+  <div class="card login-card">
+    <div class="card-content">
+      <p class="title is-5">Assignment submission</p>
+      <form id="submitForm" novalidate>
+  <div class="columns is-multiline">
+    <div class="column is-half">
+      <label class="label">Assignment title</label>
+      <input class="input" id="assignmentTitle" value=HW1: Basic Programming Exercise disabled>
+    </div>
+
+    <div class="column is-half">
+      <label class="label">Due</label>
+      <input class="input" id="assignmentDue" disabled>
+    </div>
+
+    <div class="column is-half">
+      <label class="label">Your name</label>
+      <input class="input" name="studentName" placeholder="e.g., Jane Doe" required>
+    </div>
+
+    <div class="column is-half">
+      <label class="label">Upload</label>
+      <div class="file has-name is-fullwidth">
+        <label class="file-label">
+          <input class="file-input" type="file" name="file" accept=".pdf,.zip" aria-describedby="fileHelp" required>
+          <span class="file-cta"><span class="file-label">Choose a file…</span></span>
+          <span class="file-name">No file uploaded</span>
+        </label>
+      </div>
+      <p id="fileHelp" class="help">Supports PDF/ZIP only; recommended &lt; 10MB</p>
+    </div>
+
+    <div class="column is-full">
+      <label class="label">Notes</label>
+      <textarea class="textarea" rows="4" name="note" placeholder="Any notes for the marker…"></textarea>
+    </div>
+  </div>
+
+  <p id="err" class="help is-danger" aria-live="polite"></p>
+
+  <div class="buttons">
+    <button type="submit" class="button is-primary">Submit</button>
+    <a class="button is-light" href="./feedback.html">Go to feedback</a>
+  </div>
+</form>
+
+    </div>
+  </div>
+</div>
+
+<button class="theme-switch" onclick="__toggleTheme()">switch theme</button>
+
+</body>
+</html>

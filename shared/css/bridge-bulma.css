@@ -1,0 +1,136 @@
+
+/* Map tokens -> Bulma */
+body { background: var(--color-bg); color: var(--color-text); }
+.card {
+  background: var(--color-panel);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(148,163,184,.12);
+  color: var(--color-text);
+}
+.title, .subtitle, .label { color: var(--color-text) !important; }
+.help, .has-text-grey, .has-text-grey-light { color: var(--color-muted) !important; }
+.input, .textarea, .select select {
+  background: rgba(255,255,255,.04);
+  color: var(--color-text);
+  border-color: rgba(148,163,184,.28);
+}
+.input::placeholder, .textarea::placeholder { color: var(--color-muted); }
+.input:focus, .textarea:focus, .select select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 .15rem color-mix(in srgb, var(--color-primary), transparent 75%);
+}
+.button.is-primary {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #0b1220;
+}
+.button.is-secondary {
+  background: var(--color-secondary);
+  border-color: var(--color-secondary);
+  color: #0b1220;
+}
+.button { border-radius: 999px; }
+.table th, .table td { border-color: rgba(148,163,184,.12) !important; }
+.tag.is-round { border-radius: 999px; border: 1px solid rgba(148,163,184,.18); background: transparent; color: var(--color-text); }
+
+/* shared/css/bridge-bulma-extended.css
+   Maps tokens to Bulma components by overriding class rules.
+   Load AFTER Bulma CSS and AFTER tokens-extended.css.
+*/
+
+/* Base */
+html, body {
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+a { color: var(--color-primary); }
+a:hover { color: var(--primary-hover); }
+
+/* Buttons */
+.button {
+  border-radius: var(--radius-md);
+  height: var(--control-height-md);
+}
+.button.is-primary {
+  background-color: var(--color-primary);
+  border-color: color-mix(in srgb, var(--color-primary), #000 20%);
+  color: var(--color-on-primary);
+}
+.button.is-primary:hover { background-color: var(--primary-hover); }
+.button.is-success { background-color: var(--color-success); color: #fff; }
+.button.is-warning { background-color: var(--color-warning); color: #111827; }
+.button.is-danger  { background-color: var(--color-danger);  color: #fff; }
+.button:focus-visible { outline: var(--focus-ring); }
+
+/* Inputs */
+.input, .textarea, .select select {
+  border-radius: var(--radius-md);
+  min-height: var(--control-height-md);
+}
+.input:focus, .textarea:focus, .select select:focus {
+  border-color: var(--color-primary);
+  box-shadow: none;
+  outline: var(--focus-ring);
+}
+.input.is-success, .textarea.is-success { border-color: var(--color-success); }
+.input.is-warning, .textarea.is-warning { border-color: var(--color-warning); }
+.input.is-danger,  .textarea.is-danger  { border-color: var(--color-danger); }
+
+/* Notifications */
+.notification {
+  background: var(--color-surface-2);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+.notification.is-primary {
+  background: color-mix(in srgb, var(--color-primary), #fff 90%);
+  color: color-mix(in srgb, var(--color-primary), #000 70%);
+  border-color: color-mix(in srgb, var(--color-primary), #fff 60%);
+}
+.notification.is-success {
+  background: color-mix(in srgb, var(--color-success), #fff 90%);
+  color: color-mix(in srgb, var(--color-success), #000 70%);
+  border-color: color-mix(in srgb, var(--color-success), #fff 60%);
+}
+.notification.is-warning {
+  background: color-mix(in srgb, var(--color-warning), #fff 90%);
+  color: color-mix(in srgb, var(--color-warning), #000 70%);
+  border-color: color-mix(in srgb, var(--color-warning), #fff 60%);
+}
+.notification.is-danger {
+  background: color-mix(in srgb, var(--color-danger), #fff 90%);
+  color: color-mix(in srgb, var(--color-danger), #000 70%);
+  border-color: color-mix(in srgb, var(--color-danger), #fff 60%);
+}
+
+/* Tags & badges */
+.tag.is-primary { background-color: var(--color-primary); color: var(--color-on-primary); }
+.tag.is-success { background-color: var(--color-success); color: #fff; }
+.tag.is-warning { background-color: var(--color-warning); color: #111827; }
+.tag.is-danger  { background-color: var(--color-danger);  color: #fff; }
+
+/* Navbar / Tabs / Breadcrumbs */
+.navbar, .tabs, .breadcrumb {
+  --bulma-border-color: var(--color-border);
+}
+.navbar {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--bulma-border-color);
+}
+.tabs li.is-active a { border-bottom-color: var(--color-primary); color: var(--color-primary); }
+.breadcrumb a { color: var(--color-muted); }
+.breadcrumb a:hover { color: var(--color-primary); }
+
+/* Tables */
+.table {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+.table thead th { background: color-mix(in srgb, var(--color-surface-2), #000 0%); }
+
+/* Accessibility helpers */
+[role="status"], [aria-live] { outline-offset: 2px; }
