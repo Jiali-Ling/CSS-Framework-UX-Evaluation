@@ -1,31 +1,51 @@
-const LOG_KEY = "eventlog";
+const LOG_KEY = "study_logs_v1";
 
-export function log(event, payload = {}) {
-  const rec = { event, ts: new Date().toISOString(), ...payload };
-  const all = JSON.parse(localStorage.getItem(LOG_KEY) || "[]");
-  all.push(rec);
-  localStorage.setItem(LOG_KEY, JSON.stringify(all));
+export function logEvent(event, details = "") {
+  const logs = getLogs();
+  logs.push({
+    ts: new Date().toISOString(),
+    event: event,
+    details: details
+  });
+  localStorage.setItem(LOG_KEY, JSON.stringify(logs));
 }
 
 export function getLogs() {
-  return JSON.parse(localStorage.getItem(LOG_KEY) || "[]");
+  try {
+    const raw = localStorage.getItem(LOG_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
 }
 
-export function clearLogs(){
+export function clearLogs() {
   localStorage.removeItem(LOG_KEY);
 }
 
 export function exportLogsCSV() {
-  const rows = getLogs();
-  if (!rows.length) { alert("暂无日志"); return; }
-  const headers = Object.keys(rows[0]);
+  const logs = getLogs();
+  if (logs.length === 0) {
+    alert("No logs to export");
+    return;
+  }
+
   const csv = [
-    headers.join(","),
-    ...rows.map(r => headers.map(h => JSON.stringify(r[h] ?? "")).join(","))
-  ].join("\n");
-  const blob = new Blob([csv], {type:"text/csv;charset=utf-8;"});
+    ["Time", "Event", "Details"],
+    ...logs.map(log => [
+      new Date(log.ts).toLocaleString(),
+      log.event,
+      log.details
+    ])
+  ].map(row => row.map(cell => `"${cell}"`).join(",")).join("\n");
+
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "eventlog.csv";
+  a.href = url;
+  a.download = `study_logs_${Date.now()}.csv`;
+  document.body.appendChild(a);
   a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }

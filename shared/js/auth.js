@@ -44,10 +44,6 @@ export function injectGreeting(){
   wrap.style.gap = "8px";
   wrap.style.marginRight = "8px";
 
-  const hi = document.createElement("span");
-  hi.className = "has-text-grey";
-  hi.textContent = `Hi, ${u.name}`;
-
   const btn = document.createElement("button");
   btn.className = "button is-light";
   btn.textContent = "Logout";
@@ -55,8 +51,6 @@ export function injectGreeting(){
     logout();
     location.href = "./index.html";
   });
-
-  wrap.appendChild(hi);
   wrap.appendChild(btn);
   bar.prepend(wrap);
 }

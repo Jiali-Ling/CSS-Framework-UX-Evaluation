@@ -16,6 +16,8 @@
     constructor() {
       this.logs = [];
       this.session = this._uuid();
+      this.activeTasks = new Map();
+      this.activeTaskOrder = [];
       this.context = {
         variant: this._detectVariant(), // 'bootstrap' | 'bulma' | 'unknown'
         theme: this._getTheme(),
@@ -69,19 +71,62 @@
 
     startTask(name, extra={}) {
       const id = this._uuid();
+      const startedAt = this._now();
       const entry = this._push('task_start', { id, name, extra });
+      this.activeTasks.set(id, { name, startedAt });
+      this.activeTaskOrder.push(id);
       return id;
     }
 
-    endTask(nameOrId, extra={}) {
-      // Accept either id or name; try to find the latest matching start
-      let id = nameOrId;
-      if (nameOrId && nameOrId.indexOf('-') === -1) {
-        // likely a plain name; search last start with that name
-        const idx = [...this.logs].reverse().find(l => l.type==='task_start' && l.name===nameOrId);
-        id = idx ? idx.id : this._uuid();
+    endTask(nameOrId, extraOrSuccess={}, maybeExtra={}) {
+      let extra;
+      if (typeof extraOrSuccess === 'boolean') {
+        extra = Object.assign({}, maybeExtra, { success: extraOrSuccess });
+      } else {
+        extra = extraOrSuccess || {};
       }
-      return this._push('task_end', { id, name: nameOrId, extra });
+
+      let id = this._resolveTaskId(nameOrId);
+      let name = nameOrId;
+      let duration;
+      if (id && this.activeTasks.has(id)) {
+        const meta = this.activeTasks.get(id);
+        name = meta.name;
+        duration = this._now() - meta.startedAt;
+        this._clearActiveTask(id);
+      }
+      if (!id) {
+        id = this._uuid();
+      }
+      const success = typeof extra.success === 'boolean' ? extra.success : undefined;
+      return this._push('task_end', {
+        id,
+        name,
+        duration_ms: typeof duration === 'number' ? duration : undefined,
+        success,
+        extra
+      });
+    }
+
+    start(name, extra={}) { return this.startTask(name, extra); }
+    end(nameOrId, successOrExtra, extra) { return this.endTask(nameOrId, successOrExtra, extra); }
+    mark(name, extra={}) { return this._push('mark', { name, extra }); }
+
+    _resolveTaskId(nameOrId) {
+      if (!nameOrId) return null;
+      if (this.activeTasks.has(nameOrId)) return nameOrId;
+      for (let i = this.activeTaskOrder.length - 1; i >= 0; i--) {
+        const id = this.activeTaskOrder[i];
+        const meta = this.activeTasks.get(id);
+        if (meta && meta.name === nameOrId) return id;
+      }
+      return null;
+    }
+
+    _clearActiveTask(id) {
+      this.activeTasks.delete(id);
+      const idx = this.activeTaskOrder.indexOf(id);
+      if (idx !== -1) this.activeTaskOrder.splice(idx, 1);
     }
 
     attachAutoBindings() {
@@ -106,6 +151,7 @@
         form.addEventListener('submit', (e) => {
           const valid = form.checkValidity();
           this.endTask(taskName, { success: valid, submit: true });
+          started = false;
         });
         form.addEventListener('invalid', (e) => {
           this.error('html5_invalid', {name: taskName, field: e.target && e.target.name}, true);

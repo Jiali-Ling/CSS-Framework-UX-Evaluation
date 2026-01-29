@@ -1,53 +1,63 @@
 <!doctype html>
-<html lang="EN">
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Login</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+
+  <link href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css" rel="stylesheet">
   <link href="../shared/css/tokens.css" rel="stylesheet">
   <link href="../shared/css/bridge-bulma.css" rel="stylesheet">
   <link href="../shared/css/app.css" rel="stylesheet">
-  <script defer src="../shared/js/theme.js"></script>
-  <script type="module" src="../shared/js/app.js"></script>
 </head>
-<body>
-<div class="brand">Bulma + Tokens</div>
-<div class="top-right"><a class="button is-light" href="../admin/log.html" target="_blank" rel="noopener">Background log</a></div>
 
-<div class="center-stage">
-  <div class="card login-card">
-    <div class="card-content">
-      <p class="title is-5">Log in</p>
-      <div class="content">
-        <form id="loginForm" class="mt-3">
-          <div class="field">
-            <label class="label">Your name</label>
-            <div class="control">
-              <input class="input" name="name" placeholder="e.g., Jane Doe" required>
-            </div>
-          </div>
-          <div class="field">
-            <label class="label">Student ID (optional)</label>
-            <div class="control">
-              <input class="input" name="studentId" placeholder="e.g., B01812XXX">
-            </div>
-          </div>
-          <div class="field is-grouped">
-            <div class="control">
-              <button type="submit" class="button is-primary">Login</button>
-            </div>
-            <div class="control">
-              <a class="button is-light" href="./submit.html">Skip → Submit</a>
-            </div>
-          </div>
-        </form>
+<body data-framework="bulma">
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <div id="statusLive" class="is-sr-only" aria-live="polite"></div>
+
+  <div class="brand">Bulma + Tokens</div>
+
+  <main id="main" class="center-stage" tabindex="-1">
+    <div class="box" style="max-width: 720px; margin: 0 auto;">
+      <div class="is-flex is-justify-content-space-between is-align-items-center mb-3">
+        <h1 class="title is-5 mb-0">Login</h1>
+        <span id="pidBadge" class="tag is-light">Not logged in</span>
       </div>
-    </div>
-  </div>
-</div>
 
-<button class="theme-switch" onclick="__toggleTheme()">switch theme</button>
+      <p class="text-muted mb-2">
+        Your Study ID (auto-generated): <strong><span id="studyIdText">P----</span></strong>
+      </p>
+
+
+      <form id="loginForm" data-next="./submit.html" novalidate>
+        <div class="field">
+          <label class="label" for="loginAlias">Nickname (optional)</label>
+          <div class="control">
+            <input id="loginAlias" 
+                   class="input" 
+                   name="nickname" 
+                   placeholder="e.g., BlueCat (do not use real name)">
+          </div>
+          <p class="help">Optional. Do not enter your real name.</p>
+        </div>
+
+        <div class="field is-grouped">
+          <div class="control">
+            <button type="submit" class="button is-link">Continue</button>
+          </div>
+          <div class="control">
+            <a class="button is-light" href="./feedback.html">Go to feedback</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script type="module" src="../shared/js/app.js"></script>
+  <button id="themeToggle" class="theme-switch" type="button" aria-label="Toggle theme" aria-pressed="false">
+  Toggle theme
+</button>
+<script defer src="../shared/js/theme.js"></script>
 
 </body>
 </html>

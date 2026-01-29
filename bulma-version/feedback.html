@@ -1,49 +1,60 @@
 <!doctype html>
-<html lang="EN">
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Feedback</title>
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css" rel="stylesheet">
   <link href="../shared/css/tokens.css" rel="stylesheet">
   <link href="../shared/css/bridge-bulma.css" rel="stylesheet">
   <link href="../shared/css/app.css" rel="stylesheet">
-
-  <script defer src="../shared/js/theme.js"></script>
-  <script type="module" src="../shared/js/app.js"></script>
 </head>
-<body data-page="feedback">
+
+<body data-framework="bulma" data-page="feedback">
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <div id="statusLive" class="is-sr-only" aria-live="polite"></div>
+
   <div class="brand">Bulma + Tokens</div>
+
   <div class="top-right">
     <a class="button is-light" href="../admin/log.html" target="_blank" rel="noopener">Background log</a>
-  </div>
 
-  <div id="history" class="mt-3"></div>
-
-  <div class="center-stage">
-    <div class="card login-card">
-      <div class="card-content">
-        <p class="title is-5">Feedback</p>
-
-        <div class="nav-tabs">
-          <a href="./index.html">Login</a>
-          <a href="./submit.html">Submit</a>
-          <a href="./feedback.html" aria-current="page">Feedback</a>
-        </div>
-
-        <div id="fb" aria-live="polite">Loading…</div>
-        <div id="history" class="mt-2"></div>
-
-
-        <div class="content mt-3">
-          <p class="has-text-grey">Tip: open “Background log” to export CSV.</p>
-        </div>
-      </div>
+    <div class="pill" style="margin-left: .5rem;">
+      <span id="pidBadge">Not logged in</span>
+      <button id="logoutBtn" type="button" class="button is-small is-light" style="margin-left:.5rem;">
+        Reset ID
+      </button>
+      <button id="copyIdBtn" class="button is-light is-small" type="button">
+        Copy ID
+      </button>
     </div>
   </div>
 
-  <button class="theme-switch" onclick="__toggleTheme()">switch theme</button>
+  <main id="main" class="center-stage" tabindex="-1">
+    <div class="box login-card">
+      <h2 class="title is-4 mb-3">Feedback</h2>
+
+      <div class="tabs is-toggle is-fullwidth mb-4">
+        <ul>
+          <li><a href="./index.html">Login</a></li>
+          <li><a href="./submit.html">Submit</a></li>
+          <li class="is-active"><a aria-current="page">Feedback</a></li>
+        </ul>
+      </div>
+
+      <div id="fb" aria-live="polite">Loading…</div>
+
+      <p class="tip-text mt-3">Tip: export this table for analysis.</p>
+
+      <div id="history" class="mt-4"></div>
+    </div>
+  </main>
+
+  <button id="themeToggle" class="theme-switch" type="button" aria-label="Toggle theme" aria-pressed="false">Toggle theme</button>
+
+  <script type="module" src="../shared/js/app.js"></script>
+  <script src="../shared/js/metrics.js"></script>
+  <script defer src="../shared/js/theme.js"></script>
 </body>
 </html>
-

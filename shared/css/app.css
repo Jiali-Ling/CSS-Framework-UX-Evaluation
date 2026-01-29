@@ -1,1 +1,66 @@
 /* layout helpers live here; tokens.css already contains most of them */
+
+.auth-panel {
+	margin-top: 12px;
+	padding: 16px;
+	min-width: 260px;
+	background: var(--color-panel, #fff);
+	border: 1px solid rgba(148, 163, 184, 0.2);
+	border-radius: var(--radius, 10px);
+	box-shadow: var(--shadow-sm, 0 1px 2px rgba(0,0,0,0.06));
+}
+
+.auth-panel form {
+	margin: 0;
+}
+
+.section-title {
+	font-size: 1.25rem;
+	font-weight: 600;
+	margin-bottom: 1rem;
+}
+
+.table-wrapper {
+	overflow-x: auto;
+	margin-bottom: 1rem;
+}
+
+.tip-text {
+	color: var(--color-muted, #64748b);
+	margin-bottom: 0;
+}
+
+/* ---- Theme (light/dark) ---- */
+:root[data-theme="light"] {
+  --bb-bg: #f6f7f9;
+  --bb-text: #0f172a;
+  --bb-card: #ffffff;
+  --bb-border: rgba(15, 23, 42, 0.12);
+  --bb-muted: rgba(15, 23, 42, 0.65);
+}
+
+:root[data-theme="dark"] {
+  --bb-bg: #0b0d10;
+  --bb-text: #e7eaf0;
+  --bb-card: #11151b;
+  --bb-border: rgba(231, 234, 240, 0.14);
+  --bb-muted: rgba(231, 234, 240, 0.70);
+}
+
+body { background: var(--bb-bg); color: var(--bb-text); }
+
+.card, .box, .login-card { background: var(--bb-card); border-color: var(--bb-border) !important; }
+.text-muted, .has-text-grey, .help { color: var(--bb-muted) !important; }
+
+.theme-switch {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  z-index: 20;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--bb-border);
+  background: var(--bb-card);
+  color: var(--bb-text);
+}
+

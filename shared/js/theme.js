@@ -1,17 +1,27 @@
+// shared/js/theme.js
+const THEME_KEY = "bb_theme"; // "light" | "dark"
 
-(function () {
-  const KEY = "pref-theme";
-  function setTheme(mode) {
-    document.documentElement.setAttribute("data-theme", mode);
-    try { localStorage.setItem(KEY, mode); } catch (_) {}
-  }
-  function initial() {
-    try { const t = localStorage.getItem(KEY); if (t) return t; } catch (_){}
-    return (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-  }
-  setTheme(initial());
-  window.__toggleTheme = function () {
-    const cur = document.documentElement.getAttribute('data-theme') || 'light';
-    setTheme(cur === 'dark' ? 'light' : 'dark');
-  };
-})();
+function applyTheme(theme) {
+  const t = theme === "dark" ? "dark" : "light";
+  document.documentElement.dataset.theme = t;
+
+  const btn = document.getElementById("themeToggle");
+  if (btn) btn.setAttribute("aria-pressed", String(t === "dark"));
+}
+
+function getSavedTheme() {
+  return localStorage.getItem(THEME_KEY) || "light";
+}
+
+function toggleTheme() {
+  const current = document.documentElement.dataset.theme || "light";
+  const next = current === "dark" ? "light" : "dark";
+  localStorage.setItem(THEME_KEY, next);
+  applyTheme(next);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  applyTheme(getSavedTheme());
+  const btn = document.getElementById("themeToggle");
+  if (btn) btn.addEventListener("click", toggleTheme);
+});
