@@ -28,12 +28,69 @@
   --color-primary: #2563eb;
 }
 
-/* Dark theme: bright text for both versions */
+/* Dark theme: bright text for all elements */
 :root[data-theme="dark"] {
   --bs-body-color: #ffffff;
   --bs-heading-color: #ffffff;
   --bs-table-color: #ffffff;
   --bs-input-color: #ffffff;
+  --bs-input-placeholder-color: #cbd5e1;
+  --bs-btn-color: #ffffff;
+  --bs-link-color: #60a5fa;
+}
+
+[data-theme="dark"] body,
+[data-theme="dark"] .card,
+[data-theme="dark"] .card-body,
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6,
+[data-theme="dark"] p,
+[data-theme="dark"] .form-label,
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .table,
+[data-theme="dark"] .badge,
+[data-theme="dark"] span,
+[data-theme="dark"] label,
+[data-theme="dark"] .btn {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .form-control::placeholder {
+  color: #cbd5e1 !important;
+  opacity: 1;
+}
+
+[data-theme="dark"] .text-muted,
+[data-theme="dark"] .help,
+[data-theme="dark"] small {
+  color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .btn-primary {
+  color: #000000 !important;
+}
+
+[data-theme="dark"] .btn-outline-secondary,
+[data-theme="dark"] .btn-light,
+[data-theme="dark"] .btn-secondary {
+  color: #000000 !important;
+  background-color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+
+[data-theme="dark"] .badge,
+[data-theme="dark"] .text-bg-light,
+[data-theme="dark"] .badge.text-bg-light {
+  color: #000000 !important;
+  background-color: #ffffff !important;
+}
+
+[data-theme="dark"] a {
+  color: #60a5fa !important;
 }
 .card { border-radius: var(--radius-xl); box-shadow: var(--shadow-md); }
 .btn { border-radius: 999px; }

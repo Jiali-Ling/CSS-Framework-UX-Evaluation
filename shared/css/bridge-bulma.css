@@ -8,14 +8,63 @@
   --color-primary: #7c3aed;
 }
 
-/* Dark theme: bright text for both versions */
+/* Dark theme: bright text for all elements */
 :root[data-theme="dark"] body,
+:root[data-theme="dark"] .card,
+:root[data-theme="dark"] .box,
 :root[data-theme="dark"] .title,
 :root[data-theme="dark"] .subtitle,
 :root[data-theme="dark"] .label,
 :root[data-theme="dark"] .input,
-:root[data-theme="dark"] .textarea {
+:root[data-theme="dark"] .textarea,
+:root[data-theme="dark"] .select select,
+:root[data-theme="dark"] .table,
+:root[data-theme="dark"] .button,
+:root[data-theme="dark"] .tag,
+:root[data-theme="dark"] p,
+:root[data-theme="dark"] span,
+:root[data-theme="dark"] h1,
+:root[data-theme="dark"] h2,
+:root[data-theme="dark"] h3,
+:root[data-theme="dark"] h4,
+:root[data-theme="dark"] h5,
+:root[data-theme="dark"] h6 {
   color: #ffffff !important;
+}
+
+:root[data-theme="dark"] .input::placeholder,
+:root[data-theme="dark"] .textarea::placeholder {
+  color: #cbd5e1 !important;
+  opacity: 1;
+}
+
+:root[data-theme="dark"] .help,
+:root[data-theme="dark"] .has-text-grey,
+:root[data-theme="dark"] .has-text-grey-light {
+  color: #e2e8f0 !important;
+}
+
+:root[data-theme="dark"] .button.is-primary,
+:root[data-theme="dark"] .button.is-info {
+  color: #000000 !important;
+}
+
+:root[data-theme="dark"] .button.is-light,
+:root[data-theme="dark"] .button.is-white {
+  color: #000000 !important;
+  background-color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+
+:root[data-theme="dark"] .tag,
+:root[data-theme="dark"] .tag.is-light {
+  color: #000000 !important;
+  background-color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+
+:root[data-theme="dark"] a {
+  color: #a78bfa !important;
 }
 
 body { background: var(--color-bg); color: var(--color-text); }
