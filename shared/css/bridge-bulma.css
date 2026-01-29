@@ -1,5 +1,23 @@
 
 /* Map tokens -> Bulma */
+
+/* Bulma version: Purple-toned light theme */
+:root:not([data-theme="dark"]) {
+  --color-text: #581c87;
+  --color-muted: #7c3aed;
+  --color-primary: #7c3aed;
+}
+
+/* Dark theme: bright text for both versions */
+:root[data-theme="dark"] body,
+:root[data-theme="dark"] .title,
+:root[data-theme="dark"] .subtitle,
+:root[data-theme="dark"] .label,
+:root[data-theme="dark"] .input,
+:root[data-theme="dark"] .textarea {
+  color: #ffffff !important;
+}
+
 body { background: var(--color-bg); color: var(--color-text); }
 .card {
   background: var(--color-panel);

@@ -20,6 +20,21 @@
   --bs-table-bg: transparent;
   --bs-table-color: var(--color-text);
 }
+
+/* Bootstrap version: Blue-toned light theme */
+:root:not([data-theme="dark"]) {
+  --color-text: #1e3a8a;
+  --color-muted: #3b82f6;
+  --color-primary: #2563eb;
+}
+
+/* Dark theme: bright text for both versions */
+:root[data-theme="dark"] {
+  --bs-body-color: #ffffff;
+  --bs-heading-color: #ffffff;
+  --bs-table-color: #ffffff;
+  --bs-input-color: #ffffff;
+}
 .card { border-radius: var(--radius-xl); box-shadow: var(--shadow-md); }
 .btn { border-radius: 999px; }
 .form-control {
