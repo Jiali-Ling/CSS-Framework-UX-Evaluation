@@ -19,9 +19,9 @@
 :root[data-theme="dark"] {
   /* Dark to match Bulma screenshot */
   --color-bg: #0f1216;
-  --color-panel: #1a1f28;
-  --color-text: #f1f5f9;
-  --color-muted: #cbd5e1;
+  --color-panel: #1e2530;
+  --color-text: #ffffff;
+  --color-muted: #e2e8f0;
   --color-primary: #60a5fa; 
   --color-secondary: #a78bfa;
   --shadow-md: 0 12px 30px rgba(0,0,0,.35);
@@ -70,7 +70,7 @@ a { color: var(--color-primary); }
 
 [data-theme="dark"] .table-like th,
 [data-theme="dark"] .table-like td { 
-  border-bottom-color: rgba(203,213,225,.25);
+  border-bottom-color: rgba(255,255,255,.15);
 }
 
 /* shared/css/tokens-extended.css
@@ -148,10 +148,10 @@ a { color: var(--color-primary); }
 
 [data-theme="dark"] {
   --color-surface: #0f1216;    /* near slate-950 */
-  --color-surface-2: #1a1f28;  /* slate-900 */
-  --color-text: #f1f5f9;       /* slate-100 - brighter */
-  --color-muted: #cbd5e1;      /* slate-300 - lighter */
-  --color-border: #334155;     /* slate-700 - more visible */
+  --color-surface-2: #1e2530;  /* slate-900 */
+  --color-text: #ffffff;       /* pure white for max contrast */
+  --color-muted: #e2e8f0;      /* slate-200 - very light */
+  --color-border: #475569;     /* slate-600 - visible borders */
   --color-primary: #60a5fa;    /* lighter for contrast in dark */
   --color-on-primary: #0f1216;
   --focus-ring-color: color-mix(in srgb, var(--color-primary), #000 40%);
