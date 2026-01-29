@@ -19,11 +19,11 @@
 :root[data-theme="dark"] {
   /* Dark to match Bulma screenshot */
   --color-bg: #0f1216;
-  --color-panel: #171b22;
-  --color-text: #e5e7eb;
-  --color-muted: #94a3b8;
+  --color-panel: #1a1f28;
+  --color-text: #f1f5f9;
+  --color-muted: #cbd5e1;
   --color-primary: #60a5fa; 
-  --color-secondary: #8b5cf6;
+  --color-secondary: #a78bfa;
   --shadow-md: 0 12px 30px rgba(0,0,0,.35);
   --shadow-lg: 0 40px 80px rgba(0,0,0,.45);
 }
@@ -65,8 +65,13 @@ a { color: var(--color-primary); }
 }
 /* Tables */
 .table-like { width:100%; border-collapse: collapse; }
-.table-like th, .table-like td { padding: 10px 12px; border-bottom: 1px solid rgba(148,163,184,.12); }
+.table-like th, .table-like td { padding: 10px 12px; border-bottom: 1px solid var(--color-border, rgba(148,163,184,.12)); }
 .table-like th { text-align: left; color: var(--color-muted); font-weight: 600; }
+
+[data-theme="dark"] .table-like th,
+[data-theme="dark"] .table-like td { 
+  border-bottom-color: rgba(203,213,225,.25);
+}
 
 /* shared/css/tokens-extended.css
    Design Tokens (Extended) — light/dark, spacing, radius, shadows, typography, states
@@ -142,13 +147,13 @@ a { color: var(--color-primary); }
 }
 
 [data-theme="dark"] {
-  --color-surface: #0b1220;    /* near slate-950 */
-  --color-surface-2: #0f172a;  /* slate-900 */
-  --color-text: #e5e7eb;       /* slate-200 */
-  --color-muted: #94a3b8;      /* slate-400 */
-  --color-border: #1f2937;     /* slate-800 */
-  --color-primary: #6aa3ff;    /* lighter for contrast in dark */
-  --color-on-primary: #0b1220;
+  --color-surface: #0f1216;    /* near slate-950 */
+  --color-surface-2: #1a1f28;  /* slate-900 */
+  --color-text: #f1f5f9;       /* slate-100 - brighter */
+  --color-muted: #cbd5e1;      /* slate-300 - lighter */
+  --color-border: #334155;     /* slate-700 - more visible */
+  --color-primary: #60a5fa;    /* lighter for contrast in dark */
+  --color-on-primary: #0f1216;
   --focus-ring-color: color-mix(in srgb, var(--color-primary), #000 40%);
   --focus-ring: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #2b8a3e);
   --selection-bg: color-mix(in srgb, var(--color-primary), #000 80%);
@@ -211,3 +216,7 @@ a { color: var(--color-primary); }
 .badge.is-success { background: color-mix(in srgb, var(--color-success), #fff 85%); color: #064e3b; }
 .badge.is-warning { background: color-mix(in srgb, var(--color-warning), #fff 85%); color: #7c2d12; }
 .badge.is-danger  { background: color-mix(in srgb, var(--color-danger),  #fff 85%); color: #7f1d1d; }
+
+[data-theme="dark"] .badge.is-success { background: color-mix(in srgb, var(--color-success), #000 60%); color: #86efac; }
+[data-theme="dark"] .badge.is-warning { background: color-mix(in srgb, var(--color-warning), #000 60%); color: #fde68a; }
+[data-theme="dark"] .badge.is-danger  { background: color-mix(in srgb, var(--color-danger),  #000 60%); color: #fca5a5; }

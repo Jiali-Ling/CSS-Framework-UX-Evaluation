@@ -41,10 +41,10 @@
 
 :root[data-theme="dark"] {
   --bb-bg: #0b0d10;
-  --bb-text: #e7eaf0;
-  --bb-card: #11151b;
-  --bb-border: rgba(231, 234, 240, 0.14);
-  --bb-muted: rgba(231, 234, 240, 0.70);
+  --bb-text: #f1f5f9;
+  --bb-card: #1a1f28;
+  --bb-border: rgba(241, 245, 249, 0.2);
+  --bb-muted: rgba(241, 245, 249, 0.85);
 }
 
 body { background: var(--bb-bg); color: var(--bb-text); }
