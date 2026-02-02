@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Study Entry</title>
+</head>
+<body>
+<script>
+    const BOOTSTRAP_URL = "https://jiali-ling.github.io/CSS-Framework-UX-Evaluation/bootstrap-version/index.html";
+    const BULMA_URL = "https://jiali-ling.github.io/CSS-Framework-UX-Evaluation/bulma-version/index.html";
+
+    const KEY = "assigned_version";
+    let assigned = null;
+    try { assigned = localStorage.getItem(KEY); } catch(e) {}
+
+    if (!assigned) {
+        assigned = (Math.random() < 0.5) ? "A" : "B"; // A=Bootstrap, B=Bulma
+        try { localStorage.setItem(KEY, assigned); } catch(e) {}
+    }
+
+    const target = (assigned === "A") ? BOOTSTRAP_URL : BULMA_URL;
+    window.location.replace(target);
+</script>
+</body>
+</html>

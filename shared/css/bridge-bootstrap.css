@@ -21,11 +21,11 @@
   --bs-table-color: var(--color-text);
 }
 
-/* Bootstrap version: Blue-toned light theme */
+/* Unified color scheme for fair comparison */
 :root:not([data-theme="dark"]) {
-  --color-text: #1e3a8a;
-  --color-muted: #3b82f6;
-  --color-primary: #2563eb;
+  --color-text: #0f172a;
+  --color-muted: #64748b;
+  --color-primary: #3b82f6;
 }
 
 /* Dark theme: bright text for all elements */

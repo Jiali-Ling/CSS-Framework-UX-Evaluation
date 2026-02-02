@@ -1,11 +1,11 @@
 
 /* Map tokens -> Bulma */
 
-/* Bulma version: Purple-toned light theme */
+/* Unified color scheme for fair comparison */
 :root:not([data-theme="dark"]) {
-  --color-text: #581c87;
-  --color-muted: #7c3aed;
-  --color-primary: #7c3aed;
+  --color-text: #0f172a;
+  --color-muted: #64748b;
+  --color-primary: #3b82f6;
 }
 
 /* Dark theme: bright text for all elements */
