@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Assignment Test</title>
+    <style>
+        body { font-family: system-ui; padding: 2rem; max-width: 600px; margin: 0 auto; }
+        .card { border: 2px solid #ddd; padding: 1.5rem; margin: 1rem 0; border-radius: 8px; }
+        .btn { padding: 0.5rem 1rem; margin: 0.5rem; cursor: pointer; }
+        .bootstrap { background: #0d6efd; color: white; }
+        .bulma { background: #7c3aed; color: white; }
+        .reset { background: #dc2626; color: white; }
+        .result { font-size: 1.2em; font-weight: bold; padding: 1rem; margin: 1rem 0; border-radius: 4px; }
+        .result.A { background: #dbeafe; color: #1e40af; }
+        .result.B { background: #ede9fe; color: #5b21b6; }
+        code { background: #f3f4f6; padding: 0.2rem 0.4rem; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Assignment Logic Test</h1>
+    
+    <div class="card">
+        <h2>Current Assignment</h2>
+        <div id="current" class="result">Loading...</div>
+        <p><strong>localStorage key:</strong> <code>assigned_version</code></p>
+    </div>
+
+    <div class="card">
+        <h2>Test Controls</h2>
+        <button class="btn reset" onclick="clearAssignment()">🔄 Clear Assignment (Simulate New User)</button>
+        <button class="btn bootstrap" onclick="simulateMultiple()">🎲 Simulate 1000 Assignments</button>
+    </div>
+
+    <div class="card">
+        <h2>Statistics</h2>
+        <div id="stats"></div>
+    </div>
+
+    <script>
+        const KEY = "assigned_version";
+
+        function getCurrentAssignment() {
+            try {
+                return localStorage.getItem(KEY);
+            } catch(e) {
+                return null;
+            }
+        }
+
+        function displayCurrent() {
+            const assigned = getCurrentAssignment();
+            const el = document.getElementById("current");
+            if (!assigned) {
+                el.textContent = "No assignment yet (will be assigned on first visit)";
+                el.className = "result";
+            } else {
+                const version = assigned === "A" ? "Bootstrap (A)" : "Bulma (B)";
+                el.textContent = `Assigned to: ${version}`;
+                el.className = `result ${assigned}`;
+            }
+        }
+
+        function clearAssignment() {
+            localStorage.removeItem(KEY);
+            displayCurrent();
+            document.getElementById("stats").innerHTML = "<em>Assignment cleared. Refresh assign.html to get a new random assignment.</em>";
+        }
+
+        function simulateMultiple() {
+            const counts = { A: 0, B: 0 };
+            const iterations = 1000;
+            
+            for (let i = 0; i < iterations; i++) {
+                const assignment = (Math.random() < 0.5) ? "A" : "B";
+                counts[assignment]++;
+            }
+
+            const percentA = ((counts.A / iterations) * 100).toFixed(1);
+            const percentB = ((counts.B / iterations) * 100).toFixed(1);
+
+            document.getElementById("stats").innerHTML = `
+                <p><strong>Simulated ${iterations} random assignments:</strong></p>
+                <ul>
+                    <li>Bootstrap (A): ${counts.A} times (${percentA}%)</li>
+                    <li>Bulma (B): ${counts.B} times (${percentB}%)</li>
+                </ul>
+                <p>✅ Expected: ~50% each<br>
+                Deviation: A: ${Math.abs(percentA - 50).toFixed(1)}%, B: ${Math.abs(percentB - 50).toFixed(1)}%</p>
+            `;
+        }
+
+        // Initial display
+        displayCurrent();
+
+        // Auto-refresh display every second
+        setInterval(displayCurrent, 1000);
+    </script>
+</body>
+</html>

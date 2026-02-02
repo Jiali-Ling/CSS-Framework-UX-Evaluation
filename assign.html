@@ -7,18 +7,33 @@
 </head>
 <body>
 <script>
-    const BOOTSTRAP_URL = "https://jiali-ling.github.io/CSS-Framework-UX-Evaluation/bootstrap-version/index.html";
-    const BULMA_URL = "https://jiali-ling.github.io/CSS-Framework-UX-Evaluation/bulma-version/index.html";
+    // Platform URLs (relative paths for flexibility)
+    const BOOTSTRAP_URL = "bootstrap-version/index.html";
+    const BULMA_URL = "bulma-version/index.html";
 
+    // Keep assignment stable to avoid switching groups on refresh
     const KEY = "assigned_version";
     let assigned = null;
-    try { assigned = localStorage.getItem(KEY); } catch(e) {}
-
-    if (!assigned) {
-        assigned = (Math.random() < 0.5) ? "A" : "B"; // A=Bootstrap, B=Bulma
-        try { localStorage.setItem(KEY, assigned); } catch(e) {}
+    try { 
+        assigned = localStorage.getItem(KEY); 
+    } catch(e) {
+        console.warn("localStorage not available:", e);
     }
 
+    // First visit: 50/50 random assignment
+    if (!assigned) {
+        assigned = (Math.random() < 0.5) ? "A" : "B"; // A=Bootstrap, B=Bulma
+        try { 
+            localStorage.setItem(KEY, assigned); 
+            console.log("New assignment:", assigned === "A" ? "Bootstrap" : "Bulma");
+        } catch(e) {
+            console.warn("Cannot save assignment:", e);
+        }
+    } else {
+        console.log("Existing assignment:", assigned === "A" ? "Bootstrap" : "Bulma");
+    }
+
+    // Redirect to assigned version
     const target = (assigned === "A") ? BOOTSTRAP_URL : BULMA_URL;
     window.location.replace(target);
 </script>
