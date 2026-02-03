@@ -7,11 +7,9 @@
 </head>
 <body>
 <script>
-    // Platform URLs (relative paths for flexibility)
     const BOOTSTRAP_URL = "bootstrap-version/index.html";
     const BULMA_URL = "bulma-version/index.html";
 
-    // Keep assignment stable to avoid switching groups on refresh
     const KEY = "assigned_version";
     let assigned = null;
     try { 
@@ -20,12 +18,21 @@
         console.warn("localStorage not available:", e);
     }
 
-    // First visit: 50/50 random assignment
     if (!assigned) {
         assigned = (Math.random() < 0.5) ? "A" : "B"; // A=Bootstrap, B=Bulma
         try { 
             localStorage.setItem(KEY, assigned); 
             console.log("New assignment:", assigned === "A" ? "Bootstrap" : "Bulma");
+            
+            // Log the assignment
+            const framework = assigned === "A" ? "bootstrap" : "bulma";
+            const logs = JSON.parse(localStorage.getItem("study_logs_v1") || "[]");
+            logs.push({
+                ts: new Date().toISOString(),
+                event: "version_assigned",
+                details: framework
+            });
+            localStorage.setItem("study_logs_v1", JSON.stringify(logs));
         } catch(e) {
             console.warn("Cannot save assignment:", e);
         }
@@ -33,7 +40,6 @@
         console.log("Existing assignment:", assigned === "A" ? "Bootstrap" : "Bulma");
     }
 
-    // Redirect to assigned version
     const target = (assigned === "A") ? BOOTSTRAP_URL : BULMA_URL;
     window.location.replace(target);
 </script>

@@ -11,7 +11,10 @@ export function login({ name, id }){
   if(!name) throw new Error("missing_name");
   const user = { name, id: id || "" };
   localStorage.setItem(AUTH_KEY, JSON.stringify(user));
-  log("login_succeeded", { name });
+  
+  // Log the login with framework version
+  const framework = document.body.getAttribute("data-framework") || "unknown";
+  log("login_succeeded", { name, framework });
   return user;
 }
 
