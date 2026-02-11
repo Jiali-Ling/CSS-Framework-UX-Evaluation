@@ -4,6 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Feedback</title>
+  
+  <!-- Performance optimizations -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 
   <link href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css" rel="stylesheet">
   <link href="../shared/css/tokens.css" rel="stylesheet">
@@ -48,6 +52,28 @@
       <p class="tip-text mt-3">Tip: export this table for analysis.</p>
 
       <div id="history" class="mt-4"></div>
+
+      <div class="notification is-light mt-4">
+        <h3 class="subtitle is-6">📋 Please complete the study questionnaire</h3>
+        <p class="has-text-grey mb-2">After reviewing your feedback, please fill out the usability questionnaire (SUS + UEQ). Your Study ID will be auto-filled.</p>
+        <a href="https://forms.gle/YOUR_FORM_LINK" target="_blank" rel="noopener" class="button is-link" id="questionnaireLink">
+          Open Questionnaire
+        </a>
+        <script>
+          // Auto-fill study ID in the form URL
+          document.getElementById('questionnaireLink')?.addEventListener('click', function(e) {
+            const identity = JSON.parse(localStorage.getItem('study_identity_v1') || '{}');
+            const version = localStorage.getItem('assigned_version') || 'unknown';
+            const framework = document.body.getAttribute('data-framework') || 'unknown';
+            if (identity.studyId) {
+              const url = new URL(this.href);
+              url.searchParams.set('entry.STUDY_ID_FIELD', identity.studyId);
+              url.searchParams.set('entry.VERSION_FIELD', framework);
+              this.href = url.toString();
+            }
+          });
+        </script>
+      </div>
     </div>
   </main>
 

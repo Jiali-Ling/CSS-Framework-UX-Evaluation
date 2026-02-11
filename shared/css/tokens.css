@@ -17,7 +17,6 @@
   --shadow-lg: 0 24px 60px rgba(2, 6, 23, 0.16);
 }
 :root[data-theme="dark"] {
-  /* Dark to match Bulma screenshot */
   --color-bg: #0f1216;
   --color-panel: #1e2530;
   --color-text: #ffffff;
