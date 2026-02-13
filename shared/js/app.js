@@ -20,8 +20,6 @@ function nowISO() {
 }
 
 function generateStudyId() {
-  // Generate 4-digit random ID: P0000 - P9999
-  // Math.random() ensures each user gets a unique random number
   const n = Math.floor(Math.random() * 10000);
   return `P${String(n).padStart(4, "0")}`;
 }
@@ -87,12 +85,10 @@ function announce(msg) {
   if (live) live.textContent = msg;
 }
 
-/** -------- UI wiring -------- */
 
 function updateHeaderUI() {
   const identity = ensureIdentity();
 
-  // Common badges/text blocks used across your pages
   const pidBadge = document.getElementById("pidBadge");
   if (pidBadge) pidBadge.textContent = `ID: ${identity.studyId}`;
 
@@ -118,7 +114,6 @@ function wireCopyIdButtons() {
         await navigator.clipboard.writeText(identity.studyId);
         announce(`Copied ID: ${identity.studyId}`);
       } catch {
-        // Fallback: prompt
         window.prompt("Copy your Study ID:", identity.studyId);
       }
     });
@@ -146,8 +141,6 @@ function wireResetButtons() {
       updateHeaderUI();
       announce(`New Study ID generated: ${fresh.studyId}`);
 
-      // Optional: send them back to Login page for clarity
-      // Use relative navigation so it works for both versions.
       const to = "index.html";
       window.location.href = new URL(to, window.location.href).toString();
     });
@@ -357,8 +350,6 @@ function renderFeedbackPage() {
 }
 
 function wireNavGates() {
-  // Optional: If you want to block submit/feedback pages when scripts failed, you can add checks here.
-  // For now we keep it permissive (study is low friction).
 }
 
 /** -------- helpers for feedback rendering -------- */
@@ -381,7 +372,6 @@ function formatLocal(iso) {
 }
 
 function simulateScore(task) {
-  // deterministic-ish, non-sensitive
   const base = task && task.toLowerCase().includes("lab") ? 66 : 78;
   return base;
 }
@@ -389,7 +379,6 @@ function simulateScore(task) {
 /** -------- init -------- */
 
 function init() {
-  // If shared JS fails to load, everything breaks. So keep init small & robust.
   ensureIdentity();
   updateHeaderUI();
   wireCopyIdButtons();
