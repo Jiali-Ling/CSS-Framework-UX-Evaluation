@@ -72,19 +72,14 @@ a { color: var(--color-primary); }
   border-bottom-color: rgba(255,255,255,.15);
 }
 
-/* shared/css/tokens-extended.css
-   Design Tokens (Extended) — light/dark, spacing, radius, shadows, typography, states
-   Drop this file AFTER your existing tokens.css or replace it if preferred.
-*/
 
 :root {
   /* Surfaces & text */
   --color-surface: #ffffff;
-  --color-surface-2: #f8fafc; /* subtle cards */
-  --color-text: #0f172a;      /* slate-900 */
-  --color-muted: #475569;     /* slate-600 */
-  --color-border: #e2e8f0;    /* slate-200 */
-
+  --color-surface-2: #f8fafc;
+  --color-text: #0f172a; 
+  --color-muted: #475569; 
+  --color-border: #e2e8f0;
   /* Brand / accent */
   --color-primary: #2a6df4;
   --color-on-primary: #ffffff;

@@ -1,49 +1,33 @@
-
-/* Map tokens -> Bulma */
-
-/* ========================================
-   Override Bulma 1.0 HSL Color System
-   ======================================== */
+/* Bridge: Map tokens to Bulma classes */
 
 :root {
-  /* ---- Convert Hex Tokens to Bulma HSL Variables ---- */
-  /* Bulma uses HSL (Hue-Saturation-Lightness) color space */
-  
-  /* Primary Color: #3b82f6 → HSL(217, 91%, 60%) */
+  /* Bulma 1.0 uses HSL color system - convert hex tokens */
   --bulma-primary-h: 217deg;
   --bulma-primary-s: 91%;
   --bulma-primary-l: 60%;
   
-  /* Success Color: #10b981 → HSL(160, 84%, 39%) */
   --bulma-success-h: 160deg;
   --bulma-success-s: 84%;
   --bulma-success-l: 39%;
   
-  /* Danger Color: #ef4444 → HSL(0, 84%, 60%) */
   --bulma-danger-h: 0deg;
   --bulma-danger-s: 84%;
   --bulma-danger-l: 60%;
   
-  /* Warning Color: #f59e0b → HSL(38, 92%, 50%) */
   --bulma-warning-h: 38deg;
   --bulma-warning-s: 92%;
   --bulma-warning-l: 50%;
   
-  /* Info Color: #3b82f6 (same as primary) */
   --bulma-info-h: 217deg;
   --bulma-info-s: 91%;
   --bulma-info-l: 60%;
   
-  /* ---- Override Bulma Button Variables ---- */
+  /* Override Bulma button variables */
   --bulma-button-h: var(--bulma-primary-h);
   --bulma-button-s: var(--bulma-primary-s);
   --bulma-button-background-l: var(--bulma-primary-l);
   --bulma-button-background-l-delta: 0%;
-  --bulma-button-border-l-delta: 0%;
-  --bulma-button-hover-border-l-delta: -10%;
-  --bulma-button-active-border-l-delta: -20%;
   
-  /* ---- Override Link Colors ---- */
   --bulma-link-h: var(--bulma-primary-h);
   --bulma-link-s: var(--bulma-primary-s);
   --bulma-link-l: var(--bulma-primary-l);

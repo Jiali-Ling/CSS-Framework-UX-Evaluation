@@ -1,19 +1,3 @@
-/**
- * shared/js/app.js
- *
- * Honours HCI study helper:
- * - Auto-generate an anonymous Study ID per browser (e.g., P8619)
- * - Optional nickname (must NOT be real name)
- * - Simulated Login / Submit / Feedback flow
- * - Participants only see THEIR own submission/feedback (per Study ID)
- *
- * Storage
- * - Identity: localStorage[IDENTITY_KEY] = { studyId, nickname, createdAt }
- * - Submissions: localStorage[SUBMISSIONS_KEY] = Array<{
- *      studyId, nickname, task, fileName, comments, createdAtISO
- *   }>
- */
-
 import { logEvent } from "./log.js";
 
 const IDENTITY_KEY = "study_identity_v1";

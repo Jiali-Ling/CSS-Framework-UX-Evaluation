@@ -1,5 +1,5 @@
+/* Bridge: Map tokens to Bootstrap 5 variables */
 
-/* Map tokens -> Bootstrap 5 variables */
 :root {
   --bs-body-bg: var(--color-bg);
   --bs-body-color: var(--color-text);
@@ -105,10 +105,6 @@
 .table > :not(caption) > * > * { background-color: transparent; }
 .badge-round { border-radius: 999px; padding: .25rem .6rem; border: 1px solid rgba(148,163,184,.18); }
 
-/* shared/css/bridge-bootstrap-extended.css
-   Maps tokens to Bootstrap 5.3 CSS variables and common components.
-   Load AFTER Bootstrap CSS and AFTER tokens-extended.css.
-*/
 
 /* Global palette & geometry */
 :root {
