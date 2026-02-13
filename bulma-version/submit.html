@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Submit</title>
   
-  <!-- Performance optimizations -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 
@@ -44,6 +43,7 @@
           <div class="control">
             <div class="select is-fullwidth">
               <select id="assignmentSelect" required>
+                <option value="">-- Select an assignment --</option>
                 <option>Web Dev Lab</option>
                 <option>HCI Coursework 1</option>
                 <option>Programming Lab</option>
@@ -102,6 +102,70 @@
     const fileName = document.getElementById('fileName');
     fileName.textContent = e.target.files[0]?.name || 'No file chosen';
   });
+
+  function clearErrors() {
+    const alerts = document.querySelectorAll('.notification.is-danger');
+    alerts.forEach(alert => alert.remove());
+  }
+
+  function showError(message) {
+    clearErrors();
+    
+    const form = document.getElementById('submitForm');
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'notification is-danger mt-4';
+    alertDiv.innerHTML = `<strong>Error:</strong> ${message}`;
+    
+    form.parentNode.insertBefore(alertDiv, form);
+    alertDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  document.getElementById('submitForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const assignment = document.getElementById('assignmentSelect').value;
+    const file = document.getElementById('fileInput').files[0];
+    const comments = document.getElementById('commentsInput').value;
+    
+    if (!assignment) {
+      showError('Please select an assignment.');
+      return;
+    }
+    
+    const btn = e.target.querySelector('button[type="submit"]');
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Submitting...';
+    
+    const identity = JSON.parse(localStorage.getItem('study_identity_v1') || '{}');
+    
+    const data = {
+      studyId: identity.studyId || 'unknown',
+      nickname: identity.nickname || 'anonymous',
+      assignment: assignment,
+      fileName: file ? file.name : 'No file uploaded',
+      comments: comments || 'No comments',
+      timestamp: new Date().toISOString()
+    };
+    
+    localStorage.setItem('submission', JSON.stringify(data));
+    
+    if (typeof logEvent === 'function') {
+      logEvent('submit_clicked', { 
+        assignment: assignment,
+        hasFile: !!file,
+        hasComments: !!comments
+      });
+    }
+    
+    setTimeout(() => {
+      window.location.href = './feedback.html';
+    }, 800);
+  });
+
+  if (typeof logEvent === 'function') {
+    logEvent('page_loaded', { page: 'submit' });
+  }
   </script>
 
 </body>
