@@ -20,9 +20,9 @@ function nowISO() {
 }
 
 function generateStudyId() {
-  // P0000 - P9999
-  const n = Math.floor(Math.random() * 10000);
-  return `P${String(n).padStart(4, "0")}`;
+  const timestamp = Date.now().toString().slice(-4);
+  const random = Math.floor(Math.random() * 1000);
+  return `P${timestamp}${String(random).padStart(3, "0")}`;
 }
 
 function getIdentity() {
@@ -212,7 +212,7 @@ function wireSubmitForm() {
     const identity = ensureIdentity();
     const nickname = (identity.nickname || "").trim();
 
-    const taskSel = form.querySelector('select[name="assignment"], select#assignmentSelect');
+    const taskSel = form.querySelector('select[name="assignment"], select#assignment');
     const task = taskSel ? taskSel.value : "";
 
     if (!task || task === "") {

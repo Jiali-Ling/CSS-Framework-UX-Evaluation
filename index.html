@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSS Framework UX Study - Entry</title>
+    <meta name="description" content="Honours Project: Comparative evaluation of Bootstrap vs Bulma CSS frameworks">
+</head>
+<body>
+<script>
+    // ===== Random Assignment System =====
+    // Ensures 50/50 distribution between Bootstrap (A) and Bulma (B)
+    
+    const BOOTSTRAP_URL = "bootstrap-version/index.html";
+    const BULMA_URL = "bulma-version/index.html";
+    const VERSION_KEY = "assigned_version";
+    
+    let assigned = null;
+    
+    try { 
+        assigned = localStorage.getItem(VERSION_KEY); 
+    } catch(e) {
+        console.warn("localStorage not available:", e);
+    }
+
+    // First-time visitor: random assignment
+    if (!assigned) {
+        // True random 50/50 split
+        assigned = (Math.random() < 0.5) ? "A" : "B";
+        
+        try { 
+            localStorage.setItem(VERSION_KEY, assigned); 
+            
+            const framework = assigned === "A" ? "bootstrap" : "bulma";
+            console.log("🎲 New random assignment:", framework);
+            
+            // Log assignment event
+            const logs = JSON.parse(localStorage.getItem("study_logs_v1") || "[]");
+            logs.push({
+                ts: new Date().toISOString(),
+                event: "version_assigned",
+                details: { framework, assignmentMethod: "random" }
+            });
+            localStorage.setItem("study_logs_v1", JSON.stringify(logs));
+        } catch(e) {
+            console.warn("Cannot persist assignment:", e);
+        }
+    } else {
+        // Returning visitor: maintain consistency
+        const framework = assigned === "A" ? "bootstrap" : "bulma";
+        console.log("✓ Returning user, assigned:", framework);
+    }
+
+    // Redirect to assigned version
+    const target = (assigned === "A") ? BOOTSTRAP_URL : BULMA_URL;
+    window.location.replace(target);
+</script>
+
+<noscript>
+    <h1>JavaScript Required</h1>
+    <p>This study requires JavaScript to be enabled. Please enable JavaScript and refresh the page.</p>
+    <p>Alternatively, you can manually access:</p>
+    <ul>
+        <li><a href="bootstrap-version/index.html">Bootstrap Version</a></li>
+        <li><a href="bulma-version/index.html">Bulma Version</a></li>
+    </ul>
+</noscript>
+</body>
+</html>
