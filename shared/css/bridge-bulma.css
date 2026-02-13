@@ -1,6 +1,54 @@
 
 /* Map tokens -> Bulma */
 
+/* ========================================
+   Override Bulma 1.0 HSL Color System
+   ======================================== */
+
+:root {
+  /* ---- Convert Hex Tokens to Bulma HSL Variables ---- */
+  /* Bulma uses HSL (Hue-Saturation-Lightness) color space */
+  
+  /* Primary Color: #3b82f6 → HSL(217, 91%, 60%) */
+  --bulma-primary-h: 217deg;
+  --bulma-primary-s: 91%;
+  --bulma-primary-l: 60%;
+  
+  /* Success Color: #10b981 → HSL(160, 84%, 39%) */
+  --bulma-success-h: 160deg;
+  --bulma-success-s: 84%;
+  --bulma-success-l: 39%;
+  
+  /* Danger Color: #ef4444 → HSL(0, 84%, 60%) */
+  --bulma-danger-h: 0deg;
+  --bulma-danger-s: 84%;
+  --bulma-danger-l: 60%;
+  
+  /* Warning Color: #f59e0b → HSL(38, 92%, 50%) */
+  --bulma-warning-h: 38deg;
+  --bulma-warning-s: 92%;
+  --bulma-warning-l: 50%;
+  
+  /* Info Color: #3b82f6 (same as primary) */
+  --bulma-info-h: 217deg;
+  --bulma-info-s: 91%;
+  --bulma-info-l: 60%;
+  
+  /* ---- Override Bulma Button Variables ---- */
+  --bulma-button-h: var(--bulma-primary-h);
+  --bulma-button-s: var(--bulma-primary-s);
+  --bulma-button-background-l: var(--bulma-primary-l);
+  --bulma-button-background-l-delta: 0%;
+  --bulma-button-border-l-delta: 0%;
+  --bulma-button-hover-border-l-delta: -10%;
+  --bulma-button-active-border-l-delta: -20%;
+  
+  /* ---- Override Link Colors ---- */
+  --bulma-link-h: var(--bulma-primary-h);
+  --bulma-link-s: var(--bulma-primary-s);
+  --bulma-link-l: var(--bulma-primary-l);
+}
+
 /* Unified color scheme for fair comparison */
 :root:not([data-theme="dark"]) {
   --color-text: #0f172a;
@@ -88,9 +136,20 @@ body { background: var(--color-bg); color: var(--color-text); }
   box-shadow: 0 0 0 .15rem color-mix(in srgb, var(--color-primary), transparent 75%);
 }
 .button.is-primary {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-  color: #0b1220;
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  color: white !important;
+}
+
+.button.is-primary:hover,
+.button.is-primary:focus {
+  background-color: color-mix(in srgb, var(--color-primary) 85%, black) !important;
+  border-color: color-mix(in srgb, var(--color-primary) 85%, black) !important;
+}
+
+.button.is-primary:active {
+  background-color: color-mix(in srgb, var(--color-primary) 80%, black) !important;
+  border-color: color-mix(in srgb, var(--color-primary) 80%, black) !important;
 }
 .button.is-secondary {
   background: var(--color-secondary);
@@ -101,10 +160,6 @@ body { background: var(--color-bg); color: var(--color-text); }
 .table th, .table td { border-color: rgba(148,163,184,.12) !important; }
 .tag.is-round { border-radius: 999px; border: 1px solid rgba(148,163,184,.18); background: transparent; color: var(--color-text); }
 
-/* shared/css/bridge-bulma-extended.css
-   Maps tokens to Bulma components by overriding class rules.
-   Load AFTER Bulma CSS and AFTER tokens-extended.css.
-*/
 
 /* Base */
 html, body {
@@ -119,12 +174,9 @@ a:hover { color: var(--primary-hover); }
   border-radius: var(--radius-md);
   height: var(--control-height-md);
 }
-.button.is-primary {
-  background-color: var(--color-primary);
-  border-color: color-mix(in srgb, var(--color-primary), #000 20%);
-  color: var(--color-on-primary);
-}
-.button.is-primary:hover { background-color: var(--primary-hover); }
+
+/* .button.is-primary styles defined above with !important */
+
 .button.is-success { background-color: var(--color-success); color: #fff; }
 .button.is-warning { background-color: var(--color-warning); color: #111827; }
 .button.is-danger  { background-color: var(--color-danger);  color: #fff; }
