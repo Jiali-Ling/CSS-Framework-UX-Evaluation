@@ -1,4 +1,3 @@
-// shared/js/theme.js
 const THEME_KEY = "bb_theme"; // "light" | "dark"
 
 function applyTheme(theme) {

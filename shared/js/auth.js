@@ -12,7 +12,6 @@ export function login({ name, id }){
   const user = { name, id: id || "" };
   localStorage.setItem(AUTH_KEY, JSON.stringify(user));
   
-  // Log the login with framework version
   const framework = document.body.getAttribute("data-framework") || "unknown";
   log("login_succeeded", { name, framework });
   return user;
