@@ -183,6 +183,29 @@ function wireSubmitForm() {
   const form = document.getElementById("submitForm");
   if (!form) return;
 
+  function clearErrors() {
+    const alerts = form.parentNode.querySelectorAll('.alert-danger, .notification.is-danger');
+    alerts.forEach(alert => alert.remove());
+  }
+
+  function showError(message) {
+    clearErrors();
+    
+    const framework = document.body.dataset.framework || 'bootstrap';
+    const alertDiv = document.createElement('div');
+    
+    if (framework === 'bulma') {
+      alertDiv.className = 'notification is-danger mt-4';
+    } else {
+      alertDiv.className = 'alert alert-danger mt-3';
+      alertDiv.role = 'alert';
+    }
+    
+    alertDiv.innerHTML = `<strong>Error:</strong> ${message}`;
+    form.parentNode.insertBefore(alertDiv, form);
+    alertDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
@@ -190,7 +213,12 @@ function wireSubmitForm() {
     const nickname = (identity.nickname || "").trim();
 
     const taskSel = form.querySelector('select[name="assignment"], select#assignmentSelect');
-    const task = taskSel ? taskSel.value : "Assignment";
+    const task = taskSel ? taskSel.value : "";
+
+    if (!task || task === "") {
+      showError('Please select an assignment.');
+      return;
+    }
 
     const fileInput = form.querySelector('input[type="file"]');
     const fileName =
@@ -201,6 +229,12 @@ function wireSubmitForm() {
     const commentsInput =
       form.querySelector('textarea[name="comments"], textarea#comments, textarea#commentsInput') || null;
     const comments = commentsInput ? commentsInput.value.trim() : "";
+
+    const btn = form.querySelector('button[type="submit"]');
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'Submitting...';
+    }
 
     const submission = {
       studyId: identity.studyId,
@@ -223,7 +257,9 @@ function wireSubmitForm() {
     announce("Submitted (simulated). Redirecting…");
 
     const success = form.dataset.success || "success.html";
-    window.location.href = new URL(success, window.location.href).toString();
+    setTimeout(() => {
+      window.location.href = new URL(success, window.location.href).toString();
+    }, 800);
   });
 }
 
