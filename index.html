@@ -8,9 +8,6 @@
 </head>
 <body>
 <script>
-    // ===== Random Assignment System =====
-    // Ensures 50/50 distribution between Bootstrap (A) and Bulma (B)
-    
     const BOOTSTRAP_URL = "bootstrap-version/index.html";
     const BULMA_URL = "bulma-version/index.html";
     const VERSION_KEY = "assigned_version";
@@ -23,18 +20,13 @@
         console.warn("localStorage not available:", e);
     }
 
-    // First-time visitor: random assignment
     if (!assigned) {
-        // True random 50/50 split
         assigned = (Math.random() < 0.5) ? "A" : "B";
         
         try { 
             localStorage.setItem(VERSION_KEY, assigned); 
-            
             const framework = assigned === "A" ? "bootstrap" : "bulma";
-            console.log("🎲 New random assignment:", framework);
             
-            // Log assignment event
             const logs = JSON.parse(localStorage.getItem("study_logs_v1") || "[]");
             logs.push({
                 ts: new Date().toISOString(),
@@ -45,13 +37,8 @@
         } catch(e) {
             console.warn("Cannot persist assignment:", e);
         }
-    } else {
-        // Returning visitor: maintain consistency
-        const framework = assigned === "A" ? "bootstrap" : "bulma";
-        console.log("✓ Returning user, assigned:", framework);
     }
 
-    // Redirect to assigned version
     const target = (assigned === "A") ? BOOTSTRAP_URL : BULMA_URL;
     window.location.replace(target);
 </script>
