@@ -20,9 +20,10 @@ function nowISO() {
 }
 
 function generateStudyId() {
-  const timestamp = Date.now().toString().slice(-4);
-  const random = Math.floor(Math.random() * 1000);
-  return `P${timestamp}${String(random).padStart(3, "0")}`;
+  // Generate 4-digit random ID: P0000 - P9999
+  // Math.random() ensures each user gets a unique random number
+  const n = Math.floor(Math.random() * 10000);
+  return `P${String(n).padStart(4, "0")}`;
 }
 
 function getIdentity() {
