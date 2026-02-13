@@ -40,9 +40,9 @@
             <label class="form-label" for="assignmentSelect">Assignment</label>
             <select class="form-select" id="assignmentSelect" required>
               <option value="">-- Select an assignment --</option>
-              <option>Web Dev Lab</option>
-              <option>HCI Coursework 1</option>
-              <option>Programming Lab</option>
+              <option value="Web Dev Lab">Web Dev Lab</option>
+              <option value="HCI Coursework 1">HCI Coursework 1</option>
+              <option value="Programming Lab">Programming Lab</option>
             </select>
           </div>
 
@@ -81,12 +81,13 @@
   
   <script defer src="../shared/js/theme.js"></script>
   <script>
-  document.getElementById('fileInput').addEventListener('change', function(e) {
-    document.getElementById('fileName').textContent = 
-      e.target.files[0]?.name || 'No file chosen';
-  });
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+      document.getElementById('fileName').textContent = 
+        e.target.files[0]?.name || 'No file chosen';
+    });
 
-  function clearErrors() {
+    function clearErrors() {
     const alerts = document.querySelectorAll('.alert-danger');
     alerts.forEach(alert => alert.remove());
   }
@@ -111,13 +112,8 @@
     const file = document.getElementById('fileInput').files[0];
     const comments = document.getElementById('commentsInput').value;
     
-    if (!assignment) {
-      showError('Please select an assignment.');
-      return;
-    }
-    
-    const btn = e.target.querySelector('button[type="submit"]');
-    const originalText = btn.textContent;
+      console.log('Form submitted. Assignment value:', assignment);
+      
     btn.disabled = true;
     btn.textContent = 'Submitting...';
     
@@ -147,9 +143,10 @@
     }, 800);
   });
 
-  if (typeof logEvent === 'function') {
-    logEvent('page_loaded', { page: 'submit' });
-  }
+    if (typeof logEvent === 'function') {
+      logEvent('page_loaded', { page: 'submit' });
+    }
+  });
   </script>
 
 </body>
