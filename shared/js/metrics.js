@@ -4,20 +4,41 @@
   class Metrics {
     constructor() {
       this.storageKey = STORAGE_KEY;
-      this.logs = this._loadLogs();
+      this.logs = [];
+      this.logsLoaded = false;
       this.session = this._uuid();
       this.activeTasks = new Map();
       this.activeTaskOrder = [];
       this.context = {
-        variant: this._detectVariant(), // 'bootstrap' | 'bulma' | 'unknown'
-        theme: this._getTheme(),
-        userAgent: navigator.userAgent,
-        viewport: `${window.innerWidth}x${window.innerHeight}`
+        variant: null, // lazy load
+        theme: null,
+        userAgent: null,
+        viewport: null
       };
-      window.addEventListener('storage', () => { this.context.theme = this._getTheme(); });
-      document.addEventListener('DOMContentLoaded', () => {
+      
+      // Defer initialization until idle
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => this._init(), { timeout: 2000 });
+      } else {
+        setTimeout(() => this._init(), 100);
+      }
+    }
+
+    _init() {
+      this.logs = this._loadLogs();
+      this.logsLoaded = true;
+      this.context.variant = this._detectVariant();
+      this.context.theme = this._getTheme();
+      this.context.userAgent = navigator.userAgent;
+      this.context.viewport = `${window.innerWidth}x${window.innerHeight}`;
+      
+      window.addEventListener('storage', () => { this.context.theme = this._getTheme(); }, { passive: true });
+      
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => this.attachAutoBindings(), { once: true });
+      } else {
         this.attachAutoBindings();
-      });
+      }
     }
 
     _uuid() {
@@ -58,13 +79,23 @@
     }
 
     _push(type, payload) {
+      // Ensure logs are loaded
+      if (!this.logsLoaded) {
+        this.logs = this._loadLogs();
+        this.logsLoaded = true;
+      }
+      
       const entry = Object.assign({
         ts: this._now(),
         type,
         session: this.session
       }, this.context, payload || {});
       this.logs.push(entry);
-      this._saveLogs();
+      
+      // Debounce save operation
+      if (this._saveTimeout) clearTimeout(this._saveTimeout);
+      this._saveTimeout = setTimeout(() => this._saveLogs(), 300);
+      
       return entry;
     }
 
@@ -139,33 +170,37 @@
     }
 
     attachAutoBindings() {
-      // auto click tracking
-      document.querySelectorAll('[data-metric-click]').forEach(el => {
-        el.addEventListener('click', () => {
+      // auto click tracking with passive listeners
+      const clickEls = document.querySelectorAll('[data-metric-click]');
+      if (clickEls.length > 0) {
+        clickEls.forEach(el => {
           const name = el.getAttribute('data-metric-click');
-          this.click(name);
-        }, { passive: true });
-      });
+          el.addEventListener('click', () => this.click(name), { passive: true });
+        });
+      }
 
-      // form tracking
-      document.querySelectorAll('form[data-metric-form]').forEach(form => {
-        const taskName = form.getAttribute('data-metric-form') || 'form';
-        let started = false;
-        form.addEventListener('focusin', () => {
-          if (!started) {
-            this.startTask(taskName);
-            started = true;
-          }
+      // form tracking with passive listeners where possible
+      const forms = document.querySelectorAll('form[data-metric-form]');
+      if (forms.length > 0) {
+        forms.forEach(form => {
+          const taskName = form.getAttribute('data-metric-form') || 'form';
+          let started = false;
+          form.addEventListener('focusin', () => {
+            if (!started) {
+              this.startTask(taskName);
+              started = true;
+            }
+          }, { passive: true });
+          form.addEventListener('submit', () => {
+            const valid = form.checkValidity();
+            this.endTask(taskName, { success: valid, submit: true });
+            started = false;
+          });
+          form.addEventListener('invalid', (e) => {
+            this.error('html5_invalid', {name: taskName, field: e.target?.name});
+          }, true);
         });
-        form.addEventListener('submit', (e) => {
-          const valid = form.checkValidity();
-          this.endTask(taskName, { success: valid, submit: true });
-          started = false;
-        });
-        form.addEventListener('invalid', (e) => {
-          this.error('html5_invalid', {name: taskName, field: e.target && e.target.name}, true);
-        }, true);
-      });
+      }
     }
 
     exportCSV(filename=`metrics_${this.context.variant}_${new Date().toISOString().slice(0,10)}.csv`) {

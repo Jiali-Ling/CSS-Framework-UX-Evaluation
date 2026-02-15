@@ -352,8 +352,6 @@ function renderFeedbackPage() {
 function wireNavGates() {
 }
 
-/** -------- helpers for feedback rendering -------- */
-
 function escapeHtml(s) {
   return String(s || "")
     .replaceAll("&", "&amp;")
@@ -376,7 +374,7 @@ function simulateScore(task) {
   return base;
 }
 
-/** -------- init -------- */
+
 
 function init() {
   ensureIdentity();

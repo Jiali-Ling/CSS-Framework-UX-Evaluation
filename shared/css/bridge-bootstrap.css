@@ -123,7 +123,7 @@
 /* Buttons */
 .btn {
   --bs-btn-border-radius: var(--radius-md);
-  --bs-btn-focus-shadow-rgb: 0,0,0; /* we'll override using outline */
+  --bs-btn-focus-shadow-rgb: 0,0,0; 
 }
 .btn:focus-visible { outline: var(--focus-ring); }
 

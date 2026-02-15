@@ -9,11 +9,18 @@
   <!-- Performance optimizations -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css" as="style">
 
-  <link href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css" rel="stylesheet" media="all">
   <link href="../shared/css/tokens.css" rel="stylesheet">
   <link href="../shared/css/bridge-bulma.css" rel="stylesheet">
   <link href="../shared/css/app.css" rel="stylesheet">
+  
+  <style>
+    .brand { display: block; }
+    .center-stage { min-height: 50vh; }
+    .box { background: var(--bg-primary, #fff); }
+  </style>
 </head>
 
 <body data-framework="bulma" data-page="feedback">
@@ -61,17 +68,22 @@
           Open Questionnaire
         </a>
         <script>
-          // Auto-fill study ID in the form URL
-          document.getElementById('questionnaireLink')?.addEventListener('click', function(e) {
-            const identity = JSON.parse(localStorage.getItem('study_identity_v1') || '{}');
-            const version = localStorage.getItem('assigned_version') || 'unknown';
-            const framework = document.body.getAttribute('data-framework') || 'unknown';
-            if (identity.studyId) {
-              const url = new URL(this.href);
-              url.searchParams.set('entry.STUDY_ID_FIELD', identity.studyId);
-              url.searchParams.set('entry.VERSION_FIELD', framework);
-              this.href = url.toString();
-            }
+          // Auto-fill study ID in the form URL (deferred execution)
+          window.addEventListener('DOMContentLoaded', function() {
+            const link = document.getElementById('questionnaireLink');
+            if (!link) return;
+            link.addEventListener('click', function(e) {
+              try {
+                const identity = JSON.parse(localStorage.getItem('study_identity_v1') || '{}');
+                const framework = document.body.getAttribute('data-framework') || 'unknown';
+                if (identity.studyId) {
+                  const url = new URL(this.href);
+                  url.searchParams.set('entry.STUDY_ID_FIELD', identity.studyId);
+                  url.searchParams.set('entry.VERSION_FIELD', framework);
+                  this.href = url.toString();
+                }
+              } catch(e) { console.error(e); }
+            });
           });
         </script>
       </div>
@@ -80,8 +92,9 @@
 
   <button id="themeToggle" class="theme-switch" type="button" aria-label="Toggle theme" aria-pressed="false">Toggle theme</button>
 
+  <!-- Optimized script loading -->
   <script type="module" src="../shared/js/app.js"></script>
-  <script src="../shared/js/metrics.js"></script>
+  <script defer src="../shared/js/metrics.js"></script>
   <script defer src="../shared/js/theme.js"></script>
 </body>
 </html>
