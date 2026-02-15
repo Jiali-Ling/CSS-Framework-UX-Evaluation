@@ -122,8 +122,8 @@ function wireCopyIdButtons() {
 
 function wireResetButtons() {
   const buttons = [
-    document.getElementById("logoutBtn"),    // your existing top-right button
-    document.getElementById("resetIdBtn"),   // your existing bottom button
+    document.getElementById("logoutBtn"), 
+    document.getElementById("resetIdBtn"), 
     ...document.querySelectorAll('[data-action="reset-id"]'),
     ...document.querySelectorAll('[data-action="reset"]'),
   ].filter(Boolean);
