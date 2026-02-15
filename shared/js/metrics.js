@@ -1,20 +1,10 @@
-/* shared/js/metrics.js
-   Minimal task metrics logger for A/B comparisons.
-   Usage:
-     const m = window.Metrics; 
-     m.startTask('login'); ... m.endTask('login', {success:true});
-     m.click('submit_button');
-     m.error('required_missing', {field:'email'});
-     m.exportCSV(); // triggers download
-   Auto-binding:
-     - Add data-metric-click="name" to buttons/links to auto-log clicks.
-     - Add data-metric-form="taskName" on <form> to auto start/end and log validity.
-*/
-
 (function(){
+  const STORAGE_KEY = 'metrics_logs_v1';
+  
   class Metrics {
     constructor() {
-      this.logs = [];
+      this.storageKey = STORAGE_KEY;
+      this.logs = this._loadLogs();
       this.session = this._uuid();
       this.activeTasks = new Map();
       this.activeTaskOrder = [];
@@ -49,6 +39,24 @@
       return el.getAttribute('data-theme') || 'light';
     }
 
+    _loadLogs() {
+      try {
+        const raw = localStorage.getItem(this.storageKey || STORAGE_KEY);
+        const arr = raw ? JSON.parse(raw) : [];
+        return Array.isArray(arr) ? arr : [];
+      } catch(e) {
+        return [];
+      }
+    }
+
+    _saveLogs() {
+      try {
+        localStorage.setItem(this.storageKey || STORAGE_KEY, JSON.stringify(this.logs));
+      } catch(e) {
+        console.warn('Failed to save metrics:', e);
+      }
+    }
+
     _push(type, payload) {
       const entry = Object.assign({
         ts: this._now(),
@@ -56,6 +64,7 @@
         session: this.session
       }, this.context, payload || {});
       this.logs.push(entry);
+      this._saveLogs();
       return entry;
     }
 
