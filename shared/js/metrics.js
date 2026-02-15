@@ -10,13 +10,12 @@
       this.activeTasks = new Map();
       this.activeTaskOrder = [];
       this.context = {
-        variant: null, // lazy load
+        variant: null,
         theme: null,
         userAgent: null,
         viewport: null
       };
       
-      // Defer initialization until idle
       if ('requestIdleCallback' in window) {
         requestIdleCallback(() => this._init(), { timeout: 2000 });
       } else {
@@ -170,32 +169,37 @@
     }
 
     attachAutoBindings() {
-      // auto click tracking with passive listeners
-      const clickEls = document.querySelectorAll('[data-metric-click]');
-      if (clickEls.length > 0) {
-        clickEls.forEach(el => {
+      document.addEventListener('click', (e) => {
+        const el = e.target.closest('[data-metric-click]');
+        if (el) {
           const name = el.getAttribute('data-metric-click');
-          el.addEventListener('click', () => this.click(name), { passive: true });
-        });
-      }
+          this.click(name);
+        }
+      }, { passive: true, capture: true });
 
-      // form tracking with passive listeners where possible
       const forms = document.querySelectorAll('form[data-metric-form]');
       if (forms.length > 0) {
+        const formStates = new WeakMap();
+        
         forms.forEach(form => {
           const taskName = form.getAttribute('data-metric-form') || 'form';
-          let started = false;
+          formStates.set(form, { started: false });
+          
           form.addEventListener('focusin', () => {
-            if (!started) {
+            const state = formStates.get(form);
+            if (!state.started) {
               this.startTask(taskName);
-              started = true;
+              state.started = true;
             }
-          }, { passive: true });
+          }, { passive: true, once: false });
+          
           form.addEventListener('submit', () => {
             const valid = form.checkValidity();
             this.endTask(taskName, { success: valid, submit: true });
-            started = false;
+            const state = formStates.get(form);
+            if (state) state.started = false;
           });
+          
           form.addEventListener('invalid', (e) => {
             this.error('html5_invalid', {name: taskName, field: e.target?.name});
           }, true);
@@ -225,15 +229,25 @@
       }
       const blob = new Blob([rows.join('\n')], {type: 'text/csv'});
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(() => {
-        URL.revokeObjectURL(url);
-        a.remove();
-      }, 0);
+      
+      // Use requestAnimationFrame to prevent forced reflow
+      const scheduleDownload = 'requestAnimationFrame' in window 
+        ? requestAnimationFrame 
+        : (cb) => setTimeout(cb, 0);
+      
+      scheduleDownload(() => {
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        
+        scheduleDownload(() => {
+          URL.revokeObjectURL(url);
+          a.remove();
+        });
+      });
     }
   }
 

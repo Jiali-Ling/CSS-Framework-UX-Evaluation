@@ -1,5 +1,4 @@
 :root {
-  /* Light */
   --color-bg: #f7f8fa;
   --color-panel: #ffffff;
   --color-text: #0f172a;
@@ -22,34 +21,65 @@
   --shadow-md: 0 12px 30px rgba(0,0,0,.35);
   --shadow-lg: 0 40px 80px rgba(0,0,0,.45);
 }
-/* Primitive atoms */
+
 html, body { height: 100%; }
 body {
   background: var(--color-bg);
   color: var(--color-text);
-  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased; 
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  contain: layout style;
 }
-a { color: var(--color-primary); }
+a { 
+  color: var(--color-primary); 
+  text-decoration-skip-ink: auto;
+}
 .text-muted { color: var(--color-muted)!important; }
 .brand {
   position: fixed; top: 14px; left: 24px;
   font-weight: 700; letter-spacing: .3px; opacity: .95;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  contain: layout style paint;
 }
-.top-right { position: fixed; top: 16px; right: 16px; }
-.center-stage { min-height: 100vh; display: grid; place-items: center; padding: 48px 16px; }
+.top-right { 
+  position: fixed; top: 16px; right: 16px; 
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  contain: layout style;
+}
+.center-stage { 
+  min-height: 100vh; 
+  display: grid; 
+  place-items: center; 
+  padding: 48px 16px; 
+  contain: layout style;
+}
 .panel-card, .login-card {
   background: var(--color-panel);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-md);
   border: 1px solid rgba(148,163,184,.12);
+  contain: layout style paint;
+  content-visibility: auto;
 }
-.login-card { width: min(980px, 92vw); }
+.login-card { 
+  width: min(980px, 92vw); 
+  padding: var(--space-8, 2rem);
+}
 .theme-switch {
   position: fixed; left: 16px; bottom: 16px;
   background: transparent; border: none; padding: 6px 8px;
   color: var(--color-muted); cursor: pointer; text-decoration: underline; opacity: .9;
+  will-change: opacity;
+  transition: opacity 0.2s ease;
 }
-.theme-switch:hover { opacity: 1; }
+.theme-switch:hover { 
+  opacity: 1; 
+}
 .nav-tabs {
   display:flex; gap:10px; margin-bottom: 16px;
 }
@@ -58,10 +88,27 @@ a { color: var(--color-primary); }
   background: rgba(255,255,255,.04);
   border: 1px solid rgba(148,163,184,.12);
 }
-/* Tables */
-.table-like { width:100%; border-collapse: collapse; }
-.table-like th, .table-like td { padding: 10px 12px; border-bottom: 1px solid var(--color-border, rgba(148,163,184,.12)); }
-.table-like th { text-align: left; color: var(--color-muted); font-weight: 600; }
+
+.table-like { 
+  width:100%; 
+  border-collapse: collapse; 
+  contain: layout style;
+}
+.table-like th, .table-like td { 
+  padding: 10px 12px; 
+  border-bottom: 1px solid var(--color-border, rgba(148,163,184,.12)); 
+}
+.table-like th { 
+  text-align: left; 
+  color: var(--color-muted); 
+  font-weight: 600; 
+}
+
+.table-responsive {
+  contain: layout style;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
 
 [data-theme="dark"] .table-like th,
 [data-theme="dark"] .table-like td { 
@@ -93,15 +140,15 @@ a { color: var(--color-primary); }
   --selection-bg: color-mix(in srgb, var(--color-primary), #ffffff 85%);
 
   /* Spacing scale */
-  --space-1: 0.25rem; /* 4px */
-  --space-2: 0.5rem;  /* 8px */
-  --space-3: 0.75rem; /* 12px */
-  --space-4: 1rem;    /* 16px */
-  --space-5: 1.25rem; /* 20px */
-  --space-6: 1.5rem;  /* 24px */
-  --space-8: 2rem;    /* 32px */
-  --space-10: 2.5rem; /* 40px */
-  --space-12: 3rem;   /* 48px */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
 
   /* Radius */
   --radius-sm: 0.25rem;
@@ -124,9 +171,9 @@ a { color: var(--color-primary); }
   --line-height-normal: 1.5;
 
   /* Controls */
-  --control-height-sm: 2rem;   /* 32px */
-  --control-height-md: 2.5rem; /* 40px */
-  --control-height-lg: 3rem;   /* 48px */
+  --control-height-sm: 2rem;
+  --control-height-md: 2.5rem;
+  --control-height-lg: 3rem;
 
   /* Derived token helpers */
   --primary-hover: color-mix(in srgb, var(--color-primary), #000 10%);
@@ -194,6 +241,9 @@ a { color: var(--color-primary); }
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   padding: var(--space-4);
+  /* Performance optimizations */
+  contain: layout style paint;
+  content-visibility: auto;
 }
 .badge,
 .tag-token {

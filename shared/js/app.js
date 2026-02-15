@@ -3,8 +3,33 @@ import { logEvent } from "./log.js";
 const IDENTITY_KEY = "study_identity_v1";
 const SUBMISSIONS_KEY = "study_submissions_v1";
 
+const domCache = new Map();
+
 function $(sel) {
-  return document.querySelector(sel);
+  if (!domCache.has(sel)) {
+    domCache.set(sel, document.querySelector(sel));
+  }
+  return domCache.get(sel);
+}
+
+function clearDomCache() {
+  domCache.clear();
+}
+
+function debounce(fn, delay) {
+  let timer;
+  return function(...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), delay);
+  };
+}
+
+function batchDomUpdate(callback) {
+  if ('requestAnimationFrame' in window) {
+    requestAnimationFrame(callback);
+  } else {
+    callback();
+  }
 }
 
 function safeJsonParse(text, fallback) {
@@ -89,14 +114,17 @@ function announce(msg) {
 function updateHeaderUI() {
   const identity = ensureIdentity();
 
-  const pidBadge = document.getElementById("pidBadge");
-  if (pidBadge) pidBadge.textContent = `ID: ${identity.studyId}`;
+  // Batch DOM updates to prevent layout thrashing
+  batchDomUpdate(() => {
+    const pidBadge = document.getElementById("pidBadge");
+    if (pidBadge) pidBadge.textContent = `ID: ${identity.studyId}`;
 
-  const studyIdText = document.getElementById("studyIdText");
-  if (studyIdText) studyIdText.textContent = identity.studyId;
+    const studyIdText = document.getElementById("studyIdText");
+    if (studyIdText) studyIdText.textContent = identity.studyId;
 
-  const nicknamePreview = document.getElementById("nicknamePreview");
-  if (nicknamePreview) nicknamePreview.textContent = identity.nickname || "";
+    const nicknamePreview = document.getElementById("nicknamePreview");
+    if (nicknamePreview) nicknamePreview.textContent = identity.nickname || "";
+  });
 }
 
 function wireCopyIdButtons() {
@@ -265,88 +293,115 @@ function renderFeedbackPage() {
   const identity = ensureIdentity();
   const mine = getMySubmissions(identity.studyId);
 
-  if (fb) {
-    if (mine.length === 0) {
-      fb.innerHTML = `
-        <div class="alert alert-info">
-          <p>No submissions found for <strong>${identity.studyId}</strong>. 
-          Please <a href="./submit.html">submit an assignment</a> first.</p>
-        </div>
-      `;
-    } else {
-      const framework = document.body.dataset.framework || "bootstrap";
-      const tableClass = framework === "bulma" ? "table is-fullwidth" : "table table-like align-middle";
-      const badgeClass = framework === "bulma" ? "tag is-success" : "badge rounded-pill text-bg-success";
+  batchDomUpdate(() => {
+    if (fb) {
+      if (mine.length === 0) {
+        fb.innerHTML = `
+          <div class="alert alert-info">
+            <p>No submissions found for <strong>${identity.studyId}</strong>. 
+            Please <a href="./submit.html">submit an assignment</a> first.</p>
+          </div>
+        `;
+      } else {
+        const framework = document.body.dataset.framework || "bootstrap";
+        const tableClass = framework === "bulma" ? "table is-fullwidth" : "table table-like align-middle";
+        const badgeClass = framework === "bulma" ? "tag is-success" : "badge rounded-pill text-bg-success";
 
-      fb.innerHTML = `
-        <div class="table-responsive table-wrapper mb-3">
-          <table class="${tableClass}">
-            <thead>
-              <tr>
-                <th>Assignment</th>
-                <th>Score</th>
-                <th>Status</th>
-                <th>Marker notes</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${mine.map(sub => `
-                <tr>
-                  <td>${escapeHtml(sub.task)}</td>
-                  <td>${simulateScore(sub.task)}</td>
-                  <td><span class="${badgeClass}">Passed</span></td>
-                  <td>Simulated feedback for the study (no real grading).</td>
-                </tr>
-              `).join("")}
-            </tbody>
-          </table>
-        </div>
-
-        <div style="margin-top: 1.5rem; padding: 1rem; background: var(--bb-card); border: 1px solid var(--bb-border); border-radius: 8px;">
+        const fragment = document.createDocumentFragment();
+        const wrapper = document.createElement('div');
+        wrapper.className = 'table-responsive table-wrapper mb-3';
+        wrapper.style.contain = 'layout style';
+        
+        const table = document.createElement('table');
+        table.className = tableClass;
+        
+        const thead = document.createElement('thead');
+        thead.innerHTML = `
+          <tr>
+            <th>Assignment</th>
+            <th>Score</th>
+            <th>Status</th>
+            <th>Marker notes</th>
+          </tr>
+        `;
+        table.appendChild(thead);
+        
+        const tbody = document.createElement('tbody');
+        mine.forEach(sub => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${escapeHtml(sub.task)}</td>
+            <td>${simulateScore(sub.task)}</td>
+            <td><span class="${badgeClass}">Passed</span></td>
+            <td>Simulated feedback for the study (no real grading).</td>
+          `;
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        
+        wrapper.appendChild(table);
+        fragment.appendChild(wrapper);
+        
+        const infoDiv = document.createElement('div');
+        infoDiv.style.cssText = 'margin-top: 1.5rem; padding: 1rem; background: var(--bb-card); border: 1px solid var(--bb-border); border-radius: 8px; contain: layout style;';
+        infoDiv.innerHTML = `
           <p><strong>Study ID:</strong> ${identity.studyId}${identity.nickname ? ` (${escapeHtml(identity.nickname)})` : ""}</p>
           <p><strong>Latest submission:</strong> ${escapeHtml(mine[0].task)}</p>
           <p><strong>Time:</strong> ${formatLocal(mine[0].createdAtISO)}</p>
-        </div>
-      `;
+        `;
+        fragment.appendChild(infoDiv);
+        
+        fb.textContent = '';
+        fb.appendChild(fragment);
+      }
     }
-  }
 
-  if (history) {
-    if (mine.length === 0) {
-      history.innerHTML = "";
-    } else {
-      history.innerHTML = `
-        <h3>History</h3>
-        <table class="table table-like align-middle">
-          <thead>
-            <tr>
-              <th>Version</th>
-              <th>Time</th>
-              <th>File</th>
-              <th>Assignment</th>
-              <th>Score</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${mine
-              .slice(0, 10)
-              .map((r, idx) => {
-                return `
-                  <tr>
-                    <td>v${mine.length - idx}</td>
-                    <td>${formatLocal(r.createdAtISO)}</td>
-                    <td>${escapeHtml(r.fileName)}</td>
-                    <td>${escapeHtml(r.task)}</td>
-                    <td>${simulateScore(r.task)}</td>
-                  </tr>
-                `;
-              })
-              .join("")}
-          </tbody>
-        </table>
-      `;
+    if (history) {
+      if (mine.length === 0) {
+        history.textContent = "";
+      } else {
+        const fragment = document.createDocumentFragment();
+        const h3 = document.createElement('h3');
+        h3.textContent = 'History';
+        fragment.appendChild(h3);
+        
+        const table = document.createElement('table');
+        table.className = 'table table-like align-middle';
+        table.style.contain = 'layout style';
+        
+        const thead = document.createElement('thead');
+        thead.innerHTML = `
+          <tr>
+            <th>Version</th>
+            <th>Time</th>
+            <th>File</th>
+            <th>Assignment</th>
+            <th>Score</th>
+          </tr>
+        `;
+        table.appendChild(thead);
+        
+        const tbody = document.createElement('tbody');
+        mine.slice(0, 10).forEach((r, idx) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>v${mine.length - idx}</td>
+            <td>${formatLocal(r.createdAtISO)}</td>
+            <td>${escapeHtml(r.fileName)}</td>
+            <td>${escapeHtml(r.task)}</td>
+            <td>${simulateScore(r.task)}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        
+        fragment.appendChild(table);
+        
+        history.textContent = '';
+        history.appendChild(fragment);
+      }
     }
-  }
+  });
 }
 
 function wireNavGates() {
