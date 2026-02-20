@@ -132,9 +132,11 @@
         </div>
 
         <div class="buttons">
-          <button type="submit" class="button is-primary">Submit</button>
-          <a class="button is-light" href="./feedback.html">View feedback</a>
+          <button type="submit" class="button is-primary" aria-describedby="submit-hint">Submit</button>
+          <a class="button is-light" href="./feedback.html" aria-describedby="view-fb-hint">View feedback</a>
         </div>
+        <p class="help mt-1" id="submit-hint">Submit: records a submission log entry and redirects to the success page.</p>
+        <p class="help mt-1" id="view-fb-hint">View feedback: opens your latest submission feedback and file (if stored).</p>
       </form>
     </div>
   </main>

@@ -228,7 +228,7 @@ function wireSubmitForm() {
     alertDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const identity = ensureIdentity();
@@ -242,41 +242,69 @@ function wireSubmitForm() {
       return;
     }
 
-    const fileInput = form.querySelector('input[type="file"]');
-    const fileName =
-      fileInput && fileInput.files && fileInput.files[0]
-        ? fileInput.files[0].name
-        : "SampleFile.pdf";
-
-    const commentsInput =
-      form.querySelector('textarea[name="comments"], textarea#comments, textarea#commentsInput') || null;
-    const comments = commentsInput ? commentsInput.value.trim() : "";
-
     const btn = form.querySelector('button[type="submit"]');
     if (btn) {
       btn.disabled = true;
       btn.textContent = 'Submitting...';
     }
 
+    const fileInput = form.querySelector('input[type="file"]');
+    const file = fileInput && fileInput.files && fileInput.files[0] ? fileInput.files[0] : null;
+    const fileName = file ? file.name : "SampleFile.pdf";
+
+    let fileDataUrl = null;
+    let fileMime = null;
+    let fileSize = null;
+
+    if (file) {
+      try {
+        fileDataUrl = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = ev => resolve(ev.target.result);
+          reader.onerror = () => reject(new Error('File read failed'));
+          reader.readAsDataURL(file);
+        });
+        fileMime = file.type || null;
+        fileSize = file.size;
+      } catch (err) {
+        console.warn('Could not read file as dataURL:', err);
+      }
+    }
+
+    const commentsInput =
+      form.querySelector('textarea[name="comments"], textarea#comments, textarea#commentsInput') || null;
+    const comments = commentsInput ? commentsInput.value.trim() : "";
+
     const submission = {
+      id: `${identity.studyId}_${Date.now()}`,
       studyId: identity.studyId,
       nickname,
       task,
       fileName,
+      fileDataUrl,
+      fileMime,
+      fileSize,
       comments,
       createdAtISO: nowISO(),
     };
 
-    addSubmission(submission);
+    try {
+      addSubmission(submission);
+    } catch (err) {
+      submission.fileDataUrl = null;
+      try { addSubmission(submission); } catch (_) {}
+      console.warn('Stored submission without file content (storage quota exceeded):', err);
+    }
 
     logEvent("Submission", JSON.stringify({
       studyId: identity.studyId,
       task,
       fileName,
+      hasFile: !!fileDataUrl,
       hasComments: comments.length > 0
     }));
 
-    announce("Submitted (simulated). Redirecting…");
+    announce("Submitted. Redirecting…");
 
     const success = form.dataset.success || "success.html";
     setTimeout(() => {
@@ -305,12 +333,18 @@ function renderFeedbackPage() {
       } else {
         const framework = document.body.dataset.framework || "bootstrap";
         const tableClass = framework === "bulma" ? "table is-fullwidth" : "table table-like align-middle";
-        const badgeClass = framework === "bulma" ? "tag is-success" : "badge rounded-pill text-bg-success";
+        const badgeGreen = framework === "bulma" ? "tag is-success" : "badge rounded-pill text-bg-success";
+        const badgeBlue  = framework === "bulma" ? "tag is-info"    : "badge rounded-pill text-bg-primary";
+        const btnOpen = framework === "bulma"
+          ? "button is-small is-link is-light"
+          : "btn btn-sm btn-outline-primary me-1";
+        const btnView = framework === "bulma"
+          ? "button is-small is-info is-light ml-1"
+          : "btn btn-sm btn-outline-secondary";
 
         const fragment = document.createDocumentFragment();
         const wrapper = document.createElement('div');
         wrapper.className = 'table-responsive table-wrapper mb-3';
-        wrapper.style.contain = 'layout style';
         
         const table = document.createElement('table');
         table.className = tableClass;
@@ -322,20 +356,74 @@ function renderFeedbackPage() {
             <th>Score</th>
             <th>Status</th>
             <th>Marker notes</th>
+            <th>Actions</th>
           </tr>
         `;
         table.appendChild(thead);
-        
+
         const tbody = document.createElement('tbody');
         mine.forEach(sub => {
+          const mf = getFeedbackForSubmission(sub);
+          const score = mf ? mf.score : simulateScore(sub.task);
+          const status = mf ? 'Graded' : 'Passed';
+          const badgeClass = mf ? badgeBlue : badgeGreen;
+          const notes = mf ? mf.markerNotes : 'Awaiting marker feedback.';
+
           const tr = document.createElement('tr');
           tr.innerHTML = `
             <td>${escapeHtml(sub.task)}</td>
-            <td>${simulateScore(sub.task)}</td>
-            <td><span class="${badgeClass}">Passed</span></td>
-            <td>Simulated feedback for the study (no real grading).</td>
+            <td>${score}</td>
+            <td><span class="${badgeClass}">${status}</span></td>
+            <td style="max-width:200px;white-space:normal;">${escapeHtml(notes)}</td>
+            <td class="actions-cell" style="white-space:nowrap;"></td>
           `;
+
+          const actionsCell = tr.querySelector('.actions-cell');
+
+          const openBtn = document.createElement('button');
+          openBtn.type = 'button';
+          openBtn.className = btnOpen;
+          openBtn.textContent = '\u{1F4C4} Open file';
+          if (!sub.fileDataUrl) {
+            openBtn.disabled = true;
+            openBtn.title = 'No file content stored — no file was chosen, or storage quota was exceeded';
+          }
+          openBtn.addEventListener('click', () => openSubmissionFile(sub));
+          actionsCell.appendChild(openBtn);
+
+          const viewBtn = document.createElement('button');
+          viewBtn.type = 'button';
+          viewBtn.className = btnView;
+          viewBtn.textContent = 'View feedback ▼';
+          viewBtn.setAttribute('aria-expanded', 'false');
+
+          const detailTr = document.createElement('tr');
+          detailTr.hidden = true;
+          detailTr.style.backgroundColor = 'var(--color-surface-2, #f8fafc)';
+          const detailTd = document.createElement('td');
+          detailTd.colSpan = 5;
+          detailTd.style.cssText = 'padding:1rem 1.25rem;border-top:none;';
+          detailTd.innerHTML = `
+            <dl style="margin:0;display:grid;gap:.4rem;">
+              <div><dt style="font-weight:600;display:inline;">Score: </dt><dd style="display:inline;">${score}</dd></div>
+              <div><dt style="font-weight:600;display:inline;">Marker notes: </dt><dd style="display:inline;white-space:pre-wrap;">${escapeHtml(notes)}</dd></div>
+              <div><dt style="font-weight:600;display:inline;">Submitted: </dt><dd style="display:inline;">${formatLocal(sub.createdAtISO)}</dd></div>
+              ${sub.fileName ? `<div><dt style="font-weight:600;display:inline;">File: </dt><dd style="display:inline;">${escapeHtml(sub.fileName)}${sub.fileSize ? ` (${Math.round(sub.fileSize / 1024)} KB, stored: ${sub.fileDataUrl ? 'yes' : 'no'})` : ''}</dd></div>` : ''}
+              ${sub.comments ? `<div><dt style="font-weight:600;display:inline;">Your comments: </dt><dd style="display:inline;white-space:pre-wrap;">${escapeHtml(sub.comments)}</dd></div>` : ''}
+            </dl>
+          `;
+          detailTr.appendChild(detailTd);
+
+          viewBtn.addEventListener('click', () => {
+            const nowHidden = detailTr.hidden;
+            detailTr.hidden = !nowHidden;
+            viewBtn.textContent = nowHidden ? 'Hide feedback ▲' : 'View feedback ▼';
+            viewBtn.setAttribute('aria-expanded', String(nowHidden));
+          });
+          actionsCell.appendChild(viewBtn);
+
           tbody.appendChild(tr);
+          tbody.appendChild(detailTr);
         });
         table.appendChild(tbody);
         
@@ -343,11 +431,10 @@ function renderFeedbackPage() {
         fragment.appendChild(wrapper);
         
         const infoDiv = document.createElement('div');
-        infoDiv.style.cssText = 'margin-top: 1.5rem; padding: 1rem; background: var(--bb-card); border: 1px solid var(--bb-border); border-radius: 8px; contain: layout style;';
+        infoDiv.style.cssText = 'margin-top:1rem;padding:.875rem 1rem;background:var(--color-surface-2,#f8fafc);border:1px solid var(--color-border,rgba(148,163,184,.18));border-radius:8px;font-size:.9em;';
         infoDiv.innerHTML = `
-          <p><strong>Study ID:</strong> ${identity.studyId}${identity.nickname ? ` (${escapeHtml(identity.nickname)})` : ""}</p>
-          <p><strong>Latest submission:</strong> ${escapeHtml(mine[0].task)}</p>
-          <p><strong>Time:</strong> ${formatLocal(mine[0].createdAtISO)}</p>
+          <p style="margin:.25rem 0;"><strong>Study ID:</strong> ${escapeHtml(identity.studyId)}${identity.nickname ? ` (${escapeHtml(identity.nickname)})` : ''}</p>
+          <p style="margin:.25rem 0;"><strong>Latest submission:</strong> ${escapeHtml(mine[0].task)} — ${formatLocal(mine[0].createdAtISO)}</p>
         `;
         fragment.appendChild(infoDiv);
         
@@ -358,50 +445,102 @@ function renderFeedbackPage() {
 
     if (history) {
       if (mine.length === 0) {
-        history.textContent = "";
+        history.textContent = '';
       } else {
+        const framework = document.body.dataset.framework || "bootstrap";
+        const tableClass = framework === "bulma" ? "table is-fullwidth is-striped" : "table table-like align-middle";
+
         const fragment = document.createDocumentFragment();
         const h3 = document.createElement('h3');
-        h3.textContent = 'History';
+        h3.style.cssText = 'font-size:1rem;font-weight:600;margin-bottom:.5rem;';
+        h3.textContent = 'Submission history';
         fragment.appendChild(h3);
-        
+
+        const responsiveWrapper = document.createElement('div');
+        responsiveWrapper.className = 'table-responsive table-wrapper';
+
         const table = document.createElement('table');
-        table.className = 'table table-like align-middle';
-        table.style.contain = 'layout style';
-        
+        table.className = tableClass;
+
         const thead = document.createElement('thead');
         thead.innerHTML = `
           <tr>
-            <th>Version</th>
+            <th>#</th>
             <th>Time</th>
-            <th>File</th>
             <th>Assignment</th>
             <th>Score</th>
+            <th>File</th>
           </tr>
         `;
         table.appendChild(thead);
-        
+
         const tbody = document.createElement('tbody');
         mine.slice(0, 10).forEach((r, idx) => {
+          const mf = getFeedbackForSubmission(r);
+          const score = mf ? mf.score : simulateScore(r.task);
+
           const tr = document.createElement('tr');
           tr.innerHTML = `
             <td>v${mine.length - idx}</td>
-            <td>${formatLocal(r.createdAtISO)}</td>
-            <td>${escapeHtml(r.fileName)}</td>
+            <td style="white-space:nowrap;">${formatLocal(r.createdAtISO)}</td>
             <td>${escapeHtml(r.task)}</td>
-            <td>${simulateScore(r.task)}</td>
+            <td>${score}</td>
           `;
+
+          const fileCell = document.createElement('td');
+          if (r.fileDataUrl) {
+            const fileBtn = document.createElement('button');
+            fileBtn.type = 'button';
+            fileBtn.className = framework === "bulma"
+              ? "button is-small is-link is-light"
+              : "btn btn-sm btn-outline-primary";
+            fileBtn.textContent = `\u{1F4C4} ${r.fileName}`;
+            fileBtn.addEventListener('click', () => openSubmissionFile(r));
+            fileCell.appendChild(fileBtn);
+          } else {
+            fileCell.innerHTML = `<span style="opacity:.55;" title="File content not stored">${escapeHtml(r.fileName)}</span>`;
+          }
+          tr.appendChild(fileCell);
           tbody.appendChild(tr);
         });
         table.appendChild(tbody);
-        
-        fragment.appendChild(table);
-        
+        responsiveWrapper.appendChild(table);
+        fragment.appendChild(responsiveWrapper);
+
         history.textContent = '';
         history.appendChild(fragment);
       }
     }
   });
+}
+
+function getMarkerFeedback() {
+  const raw = localStorage.getItem('marker_feedback_v1');
+  const arr = safeJsonParse(raw, []);
+  return Array.isArray(arr) ? arr : [];
+}
+
+function getFeedbackForSubmission(sub) {
+  if (!sub) return null;
+  const all = getMarkerFeedback();
+  return all.find(f =>
+    (sub.id && f.submissionId === sub.id) ||
+    (f.studyId === sub.studyId && f.createdAtISO === sub.createdAtISO)
+  ) || null;
+}
+
+function openSubmissionFile(sub) {
+  if (!sub.fileDataUrl) {
+    alert('No file was stored for this submission.\n\n(Files are saved in your browser only. If no file was chosen, or the file exceeded localStorage capacity, the content is not available.)');
+    return;
+  }
+  const a = document.createElement('a');
+  a.href = sub.fileDataUrl;
+  a.download = sub.fileName || 'submission';
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => a.remove(), 200);
 }
 
 function wireNavGates() {

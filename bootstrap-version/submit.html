@@ -76,9 +76,11 @@
           </div>
 
           <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary">Submit</button>
-            <a class="btn btn-outline-secondary" href="./feedback.html">View feedback</a>
+            <button type="submit" class="btn btn-primary" aria-describedby="submit-hint">Submit</button>
+            <a class="btn btn-outline-secondary" href="./feedback.html" aria-describedby="view-fb-hint">View feedback</a>
           </div>
+          <p class="form-text mt-2" id="submit-hint">Submit: records a submission log entry and redirects to the success page.</p>
+          <p class="form-text mt-1" id="view-fb-hint">View feedback: opens your latest submission feedback and file (if stored).</p>
         </form>
 
       </div>
