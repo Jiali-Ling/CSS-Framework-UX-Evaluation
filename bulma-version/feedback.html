@@ -217,28 +217,28 @@
   function scoreFor(t){return SCORES[t]??Math.floor(58+Math.random()*30);}
   function passFor(t){return PASSES[t]??60;}
   function toggleFb(btn){const b=btn.nextElementSibling;const o=b.classList.toggle('visible');btn.classList.toggle('open',o);btn.setAttribute('aria-expanded',o);}
+  function getSubs(){try{return JSON.parse(localStorage.getItem('study_submissions_v1')||'[]');}catch(e){return[];}}
+  function getStudyId(){try{return JSON.parse(localStorage.getItem('study_identity_v1')||'{}').studyId||'';}catch(e){return '';}}
   function viewDoc(idx){
     const panel=document.getElementById('docPanel'),content=document.getElementById('docPanelContent');
-    let subs=[];try{subs=JSON.parse(localStorage.getItem('submissions_v1')||'[]');}catch(e){}
-    const sid=localStorage.getItem('study_pid')||'';
-    const mine=subs.filter(s=>s.studyId===sid||s.pid===sid);
+    const sid=getStudyId();
+    const subs=getSubs();
+    const mine=subs.filter(s=>s.studyId===sid);
     const sub=mine[idx];if(!sub)return;
-    const task=sub.task||'(unknown)';const sc=scoreFor(task);const pm=passFor(task);const delta=sc-pm;const passed=delta>=0;const fb=FEEDBACK[task]||'No feedback available.';
+    const task=sub.task||sub.assignment||'(unknown)';const sc=scoreFor(task);const pm=passFor(task);const delta=sc-pm;const passed=delta>=0;const fb=FEEDBACK[task]||'No feedback available.';
     content.innerHTML=`<div class="doc-panel__row"><span class="doc-panel__label"><i class="fa-solid fa-book-open me-1"></i>Module</span><span class="doc-panel__value">${task}</span></div><div class="doc-panel__row"><span class="doc-panel__label"><i class="fa-regular fa-clock me-1"></i>Submitted</span><span class="doc-panel__value">${sub.createdAtISO?new Date(sub.createdAtISO).toLocaleString('en-GB'):'—'}</span></div><div class="doc-panel__row"><span class="doc-panel__label"><i class="fa-regular fa-file me-1"></i>File</span><span class="doc-panel__value">${sub.fileName||'No file attached'}</span></div><div class="doc-panel__row"><span class="doc-panel__label"><i class="fa-solid fa-pen-nib me-1"></i>Notes</span><span class="doc-panel__value">${sub.comments||'No notes provided'}</span></div><div class="doc-panel__row"><span class="doc-panel__label"><i class="fa-solid fa-star-half-stroke me-1"></i>Score</span><span class="doc-panel__value"><strong>${sc}%</strong> vs pass mark ${pm}% — <span style="color:${passed?'#16a34a':'#dc2626'};font-weight:600;">${passed?'+':''}${delta}% ${passed?'above':'below'} pass mark</span></span></div><div class="doc-panel__row"><span class="doc-panel__label"><i class="fa-solid fa-chalkboard me-1"></i>Feedback</span><span class="doc-panel__value">${fb}</span></div>`;
     panel.classList.add('visible');panel.scrollIntoView({behavior:'smooth',block:'start'});
   }
   function buildRow(sub,idx){
-    const task=sub.task||'(unknown)';const sc=scoreFor(task);const pm=passFor(task);const delta=sc-pm;const passed=delta>=0;const barCol=passed?'#16a34a':'#dc2626';const fb=FEEDBACK[task]||'Your work has been reviewed.';const ts=sub.createdAtISO?new Date(sub.createdAtISO).toLocaleString('en-GB'):'—';
+    const task=sub.task||sub.assignment||'(unknown)';const sc=scoreFor(task);const pm=passFor(task);const delta=sc-pm;const passed=delta>=0;const barCol=passed?'#16a34a':'#dc2626';const fb=FEEDBACK[task]||'Your work has been reviewed.';const ts=sub.createdAtISO?new Date(sub.createdAtISO).toLocaleString('en-GB'):'—';
     return `<tr><td><strong style="font-size:.85rem;color:#1a2f5a;">${task}</strong><br><span style="font-size:.74rem;color:#94a3b8;"><i class="fa-regular fa-clock"></i> ${ts}</span>${sub.fileName?`<br><span style="font-size:.74rem;color:#64748b;"><i class="fa-regular fa-file"></i> ${sub.fileName}</span>`:''}<br><button class="btn-sm-edu btn-sm-view mt-1" onclick="viewDoc(${idx})" aria-label="View details"><i class="fa-solid fa-folder-open"></i> View Details</button></td><td><span style="font-size:.88rem;font-weight:700;color:${barCol};">${sc}%</span><div class="score-bar-wrap"><div class="score-bar-track"><div class="score-bar-fill" style="width:${sc}%;background:${barCol};"></div></div><div class="score-meta">Pass: ${pm}% &nbsp;·&nbsp;<span class="score-delta ${passed?'pass':'fail'}">${passed?'+':''}${delta}% ${passed?'above':'below'} pass</span></div></div></td><td><span class="status-badge ${passed?'pass':'fail'}"><i class="fa-solid ${passed?'fa-circle-check':'fa-triangle-exclamation'}"></i>${passed?'Passed':'At Risk'}</span></td><td><button class="accordion-toggle" onclick="toggleFb(this)" aria-expanded="false"><i class="fa-solid fa-chevron-down"></i>Read Tutor Feedback</button><div class="accordion-body" role="region"><i class="fa-solid fa-chalkboard fa-sm me-1" style="color:#6090c8;"></i>${fb}</div></td></tr>`;
   }
   function renderEnhancedFeedback(){
     const histEl=document.getElementById('history');if(!histEl)return;
-    let subs=[];try{subs=JSON.parse(localStorage.getItem('submissions_v1')||'[]');}catch(e){}
-    const sid=localStorage.getItem('study_pid')||'';
-    const mine=subs.filter(s=>s.studyId===sid||s.pid===sid);
+    const sid=getStudyId();
+    const mine=getSubs().filter(s=>s.studyId===sid);
     document.getElementById('statCount').textContent=mine.length;
-    if(mine.length>0){const scores=mine.map(s=>scoreFor(s.task||''));const avg=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);const passedN=mine.filter(s=>scoreFor(s.task||'')>=passFor(s.task||'')).length;document.getElementById('statAvg').textContent=avg+'%';document.getElementById('statPassed').textContent=passedN+' / '+mine.length;}
-    const pid=localStorage.getItem('study_pid')||'';const ql=document.getElementById('questLink');if(ql)ql.href='https://forms.gle/YOUR_FORM_ID?usp=pp_url&entry.YOUR_FIELD='+encodeURIComponent(pid);
+    if(mine.length>0){const scores=mine.map(s=>scoreFor(s.task||s.assignment||''));const avg=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);const passedN=mine.filter(s=>scoreFor(s.task||s.assignment||'')>=passFor(s.task||s.assignment||'')).length;document.getElementById('statAvg').textContent=avg+'%';document.getElementById('statPassed').textContent=passedN+' / '+mine.length;}
     if(mine.length===0){histEl.innerHTML='<div class="empty-state"><i class="fa-regular fa-folder-open"></i><h3>No submissions yet</h3><p>You have not submitted any assignments in this session.<br><a href="./submit.html" style="color:#2558a8;font-weight:600;">Go to Submit</a> to complete your task.</p></div>';return;}
     const rows=mine.map((s,i)=>buildRow(s,i)).join('');
     histEl.innerHTML=`<div class="table-wrap"><table class="fb-table" aria-label="Submission records"><thead><tr><th><i class="fa-solid fa-file-lines me-1"></i>Assignment</th><th><i class="fa-solid fa-star-half-stroke me-1"></i>Score vs Pass Mark</th><th><i class="fa-solid fa-circle-half-stroke me-1"></i>Status</th><th><i class="fa-solid fa-chalkboard me-1"></i>Tutor Feedback</th></tr></thead><tbody>${rows}</tbody></table></div>`;
