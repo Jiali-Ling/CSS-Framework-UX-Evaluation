@@ -324,10 +324,15 @@ function renderFeedbackPage() {
   batchDomUpdate(() => {
     if (fb) {
       if (mine.length === 0) {
+        const submitUrl = './submit.html';
         fb.innerHTML = `
-          <div class="alert alert-info">
-            <p>No submissions found for <strong>${identity.studyId}</strong>. 
-            Please <a href="./submit.html">submit an assignment</a> first.</p>
+          <div style="text-align:center;padding:2.5rem 1rem;">
+            <i class="fa-regular fa-folder-open" style="font-size:3rem;color:#94a3b8;display:block;margin-bottom:1rem;"></i>
+            <p style="font-weight:600;font-size:1.05rem;margin:0 0 .35rem;">No submissions yet</p>
+            <p style="color:#64748b;font-size:.9rem;margin:0 0 1.25rem;">No submissions found for Study ID <strong>${escapeHtml(identity.studyId)}</strong>.<br>Submit an assignment first to see your feedback here.</p>
+            <a href="${submitUrl}" style="display:inline-flex;align-items:center;gap:.5rem;background:#2563eb;color:#fff;padding:.6rem 1.4rem;border-radius:8px;text-decoration:none;font-weight:600;font-size:.9rem;">
+              <i class="fa-solid fa-file-arrow-up"></i> Go to Submit
+            </a>
           </div>
         `;
       } else {
@@ -343,6 +348,16 @@ function renderFeedbackPage() {
           : "btn btn-sm btn-outline-secondary";
 
         const fragment = document.createDocumentFragment();
+        const recHeader = document.createElement('div');
+        recHeader.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:.5rem;';
+        recHeader.innerHTML = `
+          <h3 style="margin:0;font-size:1rem;font-weight:700;display:flex;align-items:center;gap:.5rem;">
+            <i class="fa-solid fa-table-list" style="color:#2563eb;"></i> Submission Records
+          </h3>
+          <span style="font-size:.8rem;color:#64748b;">Click <strong>View Details</strong> to review your document</span>
+        `;
+        fragment.appendChild(recHeader);
+
         const wrapper = document.createElement('div');
         wrapper.className = 'table-responsive table-wrapper mb-3';
         
@@ -383,7 +398,7 @@ function renderFeedbackPage() {
           const openBtn = document.createElement('button');
           openBtn.type = 'button';
           openBtn.className = btnOpen;
-          openBtn.textContent = '\u{1F4C4} Open file';
+          openBtn.innerHTML = '<i class="fa-regular fa-file me-1"></i> Open file';
           if (!sub.fileDataUrl) {
             openBtn.disabled = true;
             openBtn.title = 'No file content stored — no file was chosen, or storage quota was exceeded';
@@ -394,7 +409,7 @@ function renderFeedbackPage() {
           const viewBtn = document.createElement('button');
           viewBtn.type = 'button';
           viewBtn.className = btnView;
-          viewBtn.textContent = 'View feedback ▼';
+          viewBtn.innerHTML = '<i class="fa-solid fa-chevron-down fa-xs"></i> View Details';
           viewBtn.setAttribute('aria-expanded', 'false');
 
           const detailTr = document.createElement('tr');
@@ -417,7 +432,9 @@ function renderFeedbackPage() {
           viewBtn.addEventListener('click', () => {
             const nowHidden = detailTr.hidden;
             detailTr.hidden = !nowHidden;
-            viewBtn.textContent = nowHidden ? 'Hide feedback ▲' : 'View feedback ▼';
+            viewBtn.innerHTML = nowHidden
+              ? '<i class="fa-solid fa-chevron-up fa-xs"></i> Hide Details'
+              : '<i class="fa-solid fa-chevron-down fa-xs"></i> View Details';
             viewBtn.setAttribute('aria-expanded', String(nowHidden));
           });
           actionsCell.appendChild(viewBtn);
@@ -494,7 +511,7 @@ function renderFeedbackPage() {
             fileBtn.className = framework === "bulma"
               ? "button is-small is-link is-light"
               : "btn btn-sm btn-outline-primary";
-            fileBtn.textContent = `\u{1F4C4} ${r.fileName}`;
+            fileBtn.innerHTML = `<i class="fa-regular fa-file me-1"></i>${escapeHtml(r.fileName)}`;
             fileBtn.addEventListener('click', () => openSubmissionFile(r));
             fileCell.appendChild(fileBtn);
           } else {
@@ -534,13 +551,26 @@ function openSubmissionFile(sub) {
     alert('No file was stored for this submission.\n\n(Files are saved in your browser only. If no file was chosen, or the file exceeded localStorage capacity, the content is not available.)');
     return;
   }
-  const a = document.createElement('a');
-  a.href = sub.fileDataUrl;
-  a.download = sub.fileName || 'submission';
-  a.style.display = 'none';
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(() => a.remove(), 200);
+  try {
+    const parts = sub.fileDataUrl.split(',');
+    const mime = (parts[0].match(/:(.*?);/) || [])[1] || 'application/octet-stream';
+    const bstr = atob(parts[parts.length - 1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) u8arr[n] = bstr.charCodeAt(n);
+    const blob = new Blob([u8arr], { type: mime });
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank', 'noopener');
+    setTimeout(() => URL.revokeObjectURL(url), 30000);
+  } catch (e) {
+    const a = document.createElement('a');
+    a.href = sub.fileDataUrl;
+    a.download = sub.fileName || 'submission';
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => a.remove(), 200);
+  }
 }
 
 function wireNavGates() {

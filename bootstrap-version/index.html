@@ -3,23 +3,120 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login</title>
+  <title>Sign In — Bootstrap</title>
   <link rel="icon" href="data:,">
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-  <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" as="style">
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" media="all">
-  <link href="../shared/css/tokens.css" rel="stylesheet">
-  <link href="../shared/css/bridge-bootstrap.css" rel="stylesheet">
-  <link href="../shared/css/app.css" rel="stylesheet">
-  
   <style>
-    .brand { display: block; }
-    .center-stage { min-height: 50vh; }
-    .card { background: var(--bg-primary, #fff); }
+    :root {
+      --color-bg: #f1f5f9;
+      --color-panel: #ffffff;
+      --color-text: #0f172a;
+      --radius-xl: 16px;
+      --shadow-md: 0 10px 28px rgba(2,6,23,.12);
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { min-height: 100%; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--color-bg); color: var(--color-text);
+      -webkit-font-smoothing: antialiased;
+    }
+    .brand { position: fixed; top: 14px; left: 20px; font-weight: 700; font-size: .95rem; z-index: 200; }
+    .top-right {
+      position: fixed; top: 12px; right: 16px; z-index: 200;
+      display: flex; align-items: center; gap: .5rem;
+    }
+
+    /* ── Page stack ── */
+    .page-stack {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 1.5rem; min-height: 100vh; padding: 80px 16px 56px;
+    }
+
+    /* ── Step flow ── */
+    .step-flow { display: flex; align-items: flex-start; width: 100%; max-width: 420px; }
+    .step { display: flex; flex-direction: column; align-items: center; gap: .4rem; flex-shrink: 0; width: 80px; }
+    .step__circle {
+      width: 44px; height: 44px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; border: 2px solid #cbd5e1; background: #fff; color: #94a3b8;
+    }
+    .step--done   .step__circle { background: #16a34a; border-color: #16a34a; color: #fff; }
+    .step--active .step__circle { background: #2563eb; border-color: #2563eb; color: #fff; }
+    .step__label { font-size: .7rem; font-weight: 600; color: #94a3b8; text-align: center; line-height: 1.2; }
+    .step--done   .step__label { color: #16a34a; }
+    .step--active .step__label { color: #2563eb; }
+    .step__connector { flex: 1; height: 2px; background: #cbd5e1; margin-top: 21px; }
+    .step__connector.done { background: #16a34a; }
+
+    /* ── Panel card ── */
+    .panel-card {
+      width: min(540px, 100%);
+      background: var(--color-panel); border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-md); padding: 2rem 2.5rem;
+    }
+    @media (max-width: 560px) { .panel-card { padding: 1.5rem; } }
+
+    .panel-card__header { margin-bottom: 1.5rem; }
+    .panel-card__icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      background: #eff6ff; color: #2563eb;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; margin-bottom: .85rem;
+    }
+    .panel-card__title { font-size: 1.3rem; font-weight: 700; margin: 0 0 .4rem; }
+    .panel-card__subtitle { font-size: .88rem; color: #64748b; margin: 0; line-height: 1.5; }
+
+    /* Session flow box */
+    .session-flow {
+      background: #f8fafc; border: 1px solid #e2e8f0;
+      border-radius: 10px; padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+    }
+    .session-flow__label {
+      font-size: .68rem; font-weight: 700; letter-spacing: .06em;
+      color: #94a3b8; text-transform: uppercase; margin: 0 0 .7rem;
+    }
+    .session-flow__item {
+      display: flex; align-items: center; gap: .7rem;
+      font-size: .88rem; padding: .3rem 0;
+    }
+    .session-flow__dot {
+      width: 20px; height: 20px; border-radius: 50%;
+      border: 2px solid #cbd5e1; background: #fff; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .session-flow__dot.active { background: #2563eb; border-color: #2563eb; }
+    .session-flow__dot.active::after {
+      content: ''; width: 8px; height: 8px;
+      background: #fff; border-radius: 50%;
+    }
+
+    /* Study ID box */
+    .study-id-box {
+      display: flex; align-items: center; gap: .65rem;
+      background: #f0f9ff; border: 1px solid #bae6fd;
+      border-radius: 8px; padding: .65rem 1rem;
+      font-size: .88rem; margin-bottom: 1.25rem;
+    }
+    .study-id-box strong { color: #0369a1; font-size: .95rem; }
   </style>
+
+  <!-- Font Awesome 6 -->
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css"></noscript>
+
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"></noscript>
+
+  <link href="../shared/css/tokens.css" rel="stylesheet" media="print" onload="this.media='all';this.onload=null">
+  <link href="../shared/css/bridge-bootstrap.css" rel="stylesheet" media="print" onload="this.media='all';this.onload=null">
+  <link href="../shared/css/app.css" rel="stylesheet" media="print" onload="this.media='all';this.onload=null">
+
+  <link rel="modulepreload" href="../shared/js/app.js">
 </head>
 
 <body data-framework="bootstrap">
@@ -28,41 +125,95 @@
 
   <div class="brand">Bootstrap + Tokens</div>
 
-  <main id="main" class="center-stage" tabindex="-1">
-    <div class="card login-card">
-      <div class="card-body p-4 p-md-5">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h1 class="h4 mb-0">Login</h1>
-          <span id="pidBadge" class="badge text-bg-light">Not logged in</span>
+  <div class="top-right">
+    <span id="pidBadge" style="font-size:.85rem;font-weight:600;">ID: …</span>
+    <button id="logoutBtn" type="button" class="btn btn-sm btn-outline-secondary" title="Reset Study ID">
+      <i class="fa-solid fa-rotate-left"></i>
+    </button>
+    <button id="copyIdBtn" class="btn btn-sm btn-outline-secondary" type="button" title="Copy Study ID">
+      <i class="fa-regular fa-copy"></i>
+    </button>
+  </div>
+
+  <main id="main" class="page-stack" tabindex="-1">
+
+    <!-- Step flow -->
+    <nav class="step-flow" aria-label="Progress steps">
+      <div class="step step--active">
+        <div class="step__circle"><i class="fa-solid fa-right-to-bracket"></i></div>
+        <span class="step__label">Sign In</span>
+      </div>
+      <div class="step__connector"></div>
+      <div class="step">
+        <div class="step__circle"><i class="fa-solid fa-file-arrow-up"></i></div>
+        <span class="step__label">Submit</span>
+      </div>
+      <div class="step__connector"></div>
+      <div class="step">
+        <div class="step__circle"><i class="fa-solid fa-chart-bar"></i></div>
+        <span class="step__label">Feedback</span>
+      </div>
+    </nav>
+
+    <!-- Panel card -->
+    <div class="panel-card">
+      <div class="panel-card__header">
+        <div class="panel-card__icon">
+          <i class="fa-solid fa-right-to-bracket"></i>
+        </div>
+        <h1 class="panel-card__title">Sign In to the Portal</h1>
+        <p class="panel-card__subtitle">This portal is part of a UX research study comparing two CSS frameworks. Your session is anonymous — no personal data is stored.</p>
+      </div>
+
+      <!-- Session flow overview -->
+      <div class="session-flow">
+        <p class="session-flow__label">Session Flow</p>
+        <div class="session-flow__item">
+          <div class="session-flow__dot active"></div>
+          <span>Step 1 — <strong>Sign in</strong> with a nickname</span>
+        </div>
+        <div class="session-flow__item">
+          <div class="session-flow__dot"></div>
+          <span>Step 2 — <a href="./submit.html" style="color:#2563eb;text-decoration:none;font-weight:500;">Submit</a> a sample assignment</span>
+        </div>
+        <div class="session-flow__item">
+          <div class="session-flow__dot"></div>
+          <span>Step 3 — Review your score and <a href="./feedback.html" style="color:#2563eb;text-decoration:none;font-weight:500;">teacher feedback</a></span>
+        </div>
+      </div>
+
+      <!-- Auto Study ID display -->
+      <div class="study-id-box">
+        <i class="fa-solid fa-id-badge" style="color:#0369a1;font-size:1.05rem;flex-shrink:0;"></i>
+        <span>Your Study ID: <strong><span id="studyIdText">P----</span></strong>&ensp;<span style="color:#64748b;font-size:.82rem;">(auto-generated, anonymous)</span></span>
+      </div>
+
+      <form id="loginForm" data-next="./submit.html" novalidate>
+        <div class="mb-3">
+          <label for="loginAlias" class="form-label">
+            <i class="fa-regular fa-user me-1" style="color:#64748b;"></i>
+            Nickname <span style="color:#94a3b8;font-size:.85em;">(optional)</span>
+          </label>
+          <input id="loginAlias" class="form-control" name="nickname"
+                 placeholder="e.g. BlueCat — do not use your real name">
+          <div class="form-text">Use any alias. Your real identity will not be recorded.</div>
         </div>
 
-        <p class="text-muted mb-2">
-          Your Study ID (auto-generated): <strong><span id="studyIdText">P----</span></strong>
-        </p>
-
-
-        <form id="loginForm" data-next="./submit.html" novalidate>
-          <div class="mb-3">
-            <label for="loginAlias" class="form-label">Nickname (optional)</label>
-            <input id="loginAlias" class="form-control" name="nickname" placeholder="e.g., BlueCat (do not use real name)">
-            <div class="form-text">Optional. Do not enter your real name.</div>
-          </div>
-
-          <div class="d-flex gap-2">
-              <button type="submit" class="btn btn-primary" aria-describedby="login-hint">Continue</button>
-              <a class="btn btn-outline-secondary" href="./feedback.html">Go to feedback</a>
-          </div>
-          <p class="form-text mt-2" id="login-hint">Continue: links your Study ID to this session and proceeds to the submission page. No personal data is collected.</p>
-        </form>
-
-
-      </div>
+        <div class="d-flex flex-column gap-2">
+          <button type="submit" class="btn btn-primary" aria-describedby="login-hint">
+            <i class="fa-solid fa-arrow-right me-2"></i>Continue to Submit
+          </button>
+          <a class="btn btn-outline-secondary" href="./feedback.html">
+            <i class="fa-solid fa-chart-bar me-2"></i>Skip to Feedback
+          </a>
+        </div>
+        <p class="form-text mt-2" id="login-hint">Continues to the submission page. No personal data is collected.</p>
+      </form>
     </div>
+
   </main>
 
-  <button id="themeToggle" class="theme-switch" type="button" aria-label="Toggle theme" aria-pressed="false">
-  Toggle theme
-</button>
+  <button id="themeToggle" class="theme-switch" type="button" aria-label="Toggle theme" aria-pressed="false">Toggle theme</button>
 
   <script type="module" src="../shared/js/app.js"></script>
   <script defer src="../shared/js/metrics.js"></script>

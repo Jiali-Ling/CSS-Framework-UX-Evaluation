@@ -3,24 +3,115 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Submit</title>
+  <title>Submit — Bootstrap</title>
   <link rel="icon" href="data:,">
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-  <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" as="style">
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" media="all">
-  <link href="../shared/css/tokens.css" rel="stylesheet">
-  <link href="../shared/css/bridge-bootstrap.css" rel="stylesheet">
-  <link href="../shared/css/app.css" rel="stylesheet">
-  
   <style>
-    .brand { display: block; }
-    .center-stage { min-height: 50vh; }
-    .card { background: var(--bg-primary, #fff); }
-    .form-label, .form-control { margin-bottom: 0.5rem; }
+    :root {
+      --color-bg: #f1f5f9;
+      --color-panel: #ffffff;
+      --color-text: #0f172a;
+      --radius-xl: 16px;
+      --shadow-md: 0 10px 28px rgba(2,6,23,.12);
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { min-height: 100%; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--color-bg); color: var(--color-text);
+      -webkit-font-smoothing: antialiased;
+    }
+    .brand { position: fixed; top: 14px; left: 20px; font-weight: 700; font-size: .95rem; z-index: 200; }
+    .top-right {
+      position: fixed; top: 12px; right: 16px; z-index: 200;
+      display: flex; align-items: center; gap: .5rem;
+    }
+
+    /* ── Page stack ── */
+    .page-stack {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 1.5rem; min-height: 100vh; padding: 80px 16px 56px;
+    }
+
+    /* ── Step flow ── */
+    .step-flow { display: flex; align-items: flex-start; width: 100%; max-width: 420px; }
+    .step { display: flex; flex-direction: column; align-items: center; gap: .4rem; flex-shrink: 0; width: 80px; }
+    .step__circle {
+      width: 44px; height: 44px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; border: 2px solid #cbd5e1; background: #fff; color: #94a3b8;
+    }
+    .step--done   .step__circle { background: #16a34a; border-color: #16a34a; color: #fff; }
+    .step--active .step__circle { background: #2563eb; border-color: #2563eb; color: #fff; }
+    .step__label { font-size: .7rem; font-weight: 600; color: #94a3b8; text-align: center; line-height: 1.2; }
+    .step--done   .step__label { color: #16a34a; }
+    .step--active .step__label { color: #2563eb; }
+    .step__connector { flex: 1; height: 2px; background: #cbd5e1; margin-top: 21px; }
+    .step__connector.done { background: #16a34a; }
+
+    /* ── Panel card ── */
+    .panel-card {
+      width: min(620px, 100%);
+      background: var(--color-panel); border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-md); padding: 2rem 2.5rem;
+    }
+    @media (max-width: 600px) { .panel-card { padding: 1.5rem; } }
+
+    .panel-card__icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      background: #eff6ff; color: #2563eb;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; margin-bottom: .85rem;
+    }
+
+    /* Field label row */
+    .field-label-row {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: .45rem;
+    }
+    .field-label-row .label { font-weight: 600; margin: 0; }
+    .badge-req { font-size: .72rem; background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; border-radius: 4px; padding: .15rem .45rem; }
+    .badge-opt { font-size: .72rem; background: #f8fafc; color: #94a3b8; border: 1px solid #e2e8f0; border-radius: 4px; padding: .15rem .45rem; }
+
+    /* Drop zone */
+    .drop-zone {
+      border: 2px dashed #cbd5e1; border-radius: 10px;
+      background: #f8fafc; padding: 1.75rem 1rem;
+      text-align: center; cursor: pointer; transition: border-color .2s, background .2s;
+    }
+    .drop-zone:hover, .drop-zone.drag-over { border-color: #2563eb; background: #eff6ff; }
+    .drop-zone__icon { font-size: 2rem; color: #94a3b8; margin-bottom: .5rem; }
+    .drop-zone__cta { font-size: .9rem; color: #64748b; margin: 0; }
+    .drop-zone__cta a { color: #2563eb; font-weight: 600; text-decoration: none; cursor: pointer; }
+    .drop-zone__sub { font-size: .78rem; color: #94a3b8; margin: .3rem 0 0; }
+    .drop-zone__chosen { font-size: .85rem; color: #16a34a; font-weight: 600; margin-top: .5rem; display: none; }
+    .drop-zone__chosen.visible { display: block; }
+
+    /* Notice box */
+    .notice-box {
+      display: flex; align-items: flex-start; gap: .75rem;
+      background: #eff6ff; border: 1px solid #bfdbfe;
+      border-radius: 10px; padding: .85rem 1rem; margin-bottom: 1.25rem;
+      font-size: .86rem; color: #1e40af; line-height: 1.5;
+    }
+    .notice-box i { margin-top: .1rem; flex-shrink: 0; }
   </style>
+
+  <!-- Font Awesome 6 -->
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css"></noscript>
+
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"></noscript>
+
+  <link href="../shared/css/tokens.css" rel="stylesheet" media="print" onload="this.media='all';this.onload=null">
+  <link href="../shared/css/bridge-bootstrap.css" rel="stylesheet" media="print" onload="this.media='all';this.onload=null">
+  <link href="../shared/css/app.css" rel="stylesheet" media="print" onload="this.media='all';this.onload=null">
+
+  <link rel="modulepreload" href="../shared/js/app.js">
 </head>
 
 <body data-framework="bootstrap">
@@ -29,82 +120,156 @@
 
   <div class="brand">Bootstrap + Tokens</div>
 
-  <main id="main" class="center-stage" tabindex="-1">
-    <div class="card login-card">
-      <div class="card-body p-4 p-md-5">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-          <h1 class="h4 mb-0">Submit</h1>
-          <span id="pidBadge" class="badge text-bg-light">Not logged in</span>
-        </div>
+  <div class="top-right">
+    <span id="pidBadge" style="font-size:.85rem;font-weight:600;">ID: …</span>
+    <button id="logoutBtn" type="button" class="btn btn-sm btn-outline-secondary" title="Reset Study ID">
+      <i class="fa-solid fa-rotate-left"></i>
+    </button>
+    <button id="copyIdBtn" class="btn btn-sm btn-outline-secondary" type="button" title="Copy Study ID">
+      <i class="fa-regular fa-copy"></i>
+    </button>
+  </div>
 
-        <div class="nav-tabs mb-4">
-          <a class="btn btn-sm btn-outline-secondary" href="./index.html">Login</a>
-          <a class="btn btn-sm btn-primary" aria-current="page" href="./submit.html">Submit</a>
-          <a class="btn btn-sm btn-outline-secondary" href="./feedback.html">Feedback</a>
-        </div>
+  <main id="main" class="page-stack" tabindex="-1">
 
-        <p class="text-muted">
-          Task: Submit an assignment. Please do not enter personal information.
-        </p>
-
-        <form id="submitForm" novalidate>
-          <div class="mb-3">
-            <label class="form-label" for="assignment">Assignment</label>
-            <select class="form-select" id="assignment" name="assignment" required>
-              <option value="">-- Select an assignment --</option>
-              <option value="Web Dev Lab">Web Dev Lab</option>
-              <option value="HCI Coursework 1">HCI Coursework 1</option>
-              <option value="Programming Lab">Programming Lab</option>
-            </select>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">File (optional)</label>
-            <div class="input-group">
-              <label for="fileInput" class="btn btn-outline-secondary">
-                📁 Choose File
-              </label>
-              <span class="form-control" id="fileName">No file chosen</span>
-            </div>
-            <div class="form-text">You may choose any file. A sample name will be used if left empty.</div>
-          </div>
-          <input type="file" class="d-none" id="fileInput" accept=".pdf,.zip,.doc,.docx">
-
-          <div class="mb-3">
-            <label class="form-label" for="commentsInput">Comments (optional)</label>
-            <textarea class="form-control" id="commentsInput" rows="3" placeholder="Optional comment"></textarea>
-          </div>
-
-          <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary" aria-describedby="submit-hint">Submit</button>
-            <a class="btn btn-outline-secondary" href="./feedback.html" aria-describedby="view-fb-hint">View feedback</a>
-          </div>
-          <p class="form-text mt-2" id="submit-hint">Submit: records a submission log entry and redirects to the success page.</p>
-          <p class="form-text mt-1" id="view-fb-hint">View feedback: opens your latest submission feedback and file (if stored).</p>
-        </form>
-
+    <!-- Step flow -->
+    <nav class="step-flow" aria-label="Progress steps">
+      <div class="step step--done">
+        <div class="step__circle"><i class="fa-solid fa-check"></i></div>
+        <span class="step__label">Sign In</span>
       </div>
+      <div class="step__connector done"></div>
+      <div class="step step--active">
+        <div class="step__circle"><i class="fa-solid fa-file-arrow-up"></i></div>
+        <span class="step__label">Submit</span>
+      </div>
+      <div class="step__connector"></div>
+      <div class="step">
+        <div class="step__circle"><i class="fa-solid fa-chart-bar"></i></div>
+        <span class="step__label">Feedback</span>
+      </div>
+    </nav>
+
+    <!-- Panel card -->
+    <div class="panel-card">
+      <div class="panel-card__icon">
+        <i class="fa-solid fa-file-arrow-up"></i>
+      </div>
+      <h1 class="h4 fw-bold mb-1">Submit Your Assignment</h1>
+      <p class="text-muted mb-3" style="font-size:.9rem;">Select an assignment from the list, attach a file if required, then click <strong>Submit Assignment</strong> to record your submission.</p>
+
+      <!-- Simulated notice -->
+      <div class="notice-box">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>This is a <strong>simulated submission</strong> for study purposes only. No actual files are uploaded or stored on a server. Your data remains local to this browser.</span>
+      </div>
+
+      <form id="submitForm" novalidate>
+        <!-- Assignment -->
+        <div class="mb-3">
+          <div class="field-label-row">
+            <label class="form-label label" for="assignment">
+              <i class="fa-solid fa-list-check me-1" style="color:#64748b;"></i> Assignment
+            </label>
+            <span class="badge-req">Required</span>
+          </div>
+          <select class="form-select" id="assignment" name="assignment" required>
+            <option value="">— Select an assignment —</option>
+            <option value="Web Dev Lab">Web Dev Lab</option>
+            <option value="HCI Coursework 1">HCI Coursework 1</option>
+            <option value="Programming Lab">Programming Lab</option>
+          </select>
+          <div class="form-text">
+            <i class="fa-regular fa-circle-question me-1"></i>Choose the assignment you are submitting for.
+          </div>
+        </div>
+
+        <!-- File attachment -->
+        <div class="mb-3">
+          <div class="field-label-row">
+            <label class="form-label label" for="fileInput">
+              <i class="fa-solid fa-paperclip me-1" style="color:#64748b;"></i> Attachment
+            </label>
+            <span class="badge-opt">Optional</span>
+          </div>
+          <div class="drop-zone" id="dropZone" role="button" tabindex="0"
+               aria-label="Click to choose a file or drag and drop here">
+            <div class="drop-zone__icon">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+            </div>
+            <p class="drop-zone__cta">
+              <a id="browseLink">Click to browse</a> or drag a file here
+            </p>
+            <p class="drop-zone__sub">PDF, ZIP, DOC, DOCX accepted</p>
+            <p class="drop-zone__chosen" id="chosenFileName"></p>
+          </div>
+          <input type="file" class="d-none" id="fileInput" accept=".pdf,.zip,.doc,.docx"
+                 aria-label="Choose a file to attach">
+        </div>
+
+        <!-- Comments -->
+        <div class="mb-4">
+          <div class="field-label-row">
+            <label class="form-label label" for="commentsInput">
+              <i class="fa-regular fa-comment-dots me-1" style="color:#64748b;"></i> Submission Notes
+            </label>
+            <span class="badge-opt">Optional</span>
+          </div>
+          <textarea class="form-control" id="commentsInput" rows="3"
+                    placeholder="Add any notes or comments about your submission..."></textarea>
+          <div class="form-text">These notes will appear in your feedback record.</div>
+        </div>
+
+        <div class="d-flex gap-2 flex-wrap">
+          <button type="submit" class="btn btn-primary" aria-describedby="submit-hint">
+            <i class="fa-solid fa-circle-check me-2"></i>Submit Assignment
+          </button>
+          <a class="btn btn-outline-secondary" href="./feedback.html" aria-describedby="view-fb-hint">
+            <i class="fa-solid fa-chart-bar me-2"></i>View Feedback
+          </a>
+        </div>
+        <p class="form-text mt-2" id="submit-hint">Records a submission log entry and redirects to the success page.</p>
+        <p class="form-text mt-1" id="view-fb-hint">Opens your latest submission feedback and file (if stored).</p>
+      </form>
     </div>
+
   </main>
 
-  <button id="themeToggle" class="theme-switch" type="button" aria-label="Toggle theme" aria-pressed="false">
-  Toggle theme
-  </button>
+  <button id="themeToggle" class="theme-switch" type="button" aria-label="Toggle theme" aria-pressed="false">Toggle theme</button>
 
   <script type="module" src="../shared/js/app.js"></script>
   <script defer src="../shared/js/metrics.js"></script>
   <script defer src="../shared/js/theme.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-  // File input handler
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
     const fileInput = document.getElementById('fileInput');
-    const fileName = document.getElementById('fileName');
-    if (fileInput && fileName) {
-      fileInput.addEventListener('change', function(e) {
-        fileName.textContent = e.target.files[0]?.name || 'No file chosen';
-      });
+    const dropZone  = document.getElementById('dropZone');
+    const browseLink = document.getElementById('browseLink');
+    const chosenName = document.getElementById('chosenFileName');
+
+    function showFile(name) {
+      chosenName.textContent = name ? '\u2713 ' + name : '';
+      chosenName.classList.toggle('visible', !!name);
     }
+
+    browseLink.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') fileInput.click(); });
+    fileInput.addEventListener('change', e => showFile(e.target.files[0]?.name || ''));
+
+    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropZone.classList.remove('drag-over');
+      const file = e.dataTransfer.files[0];
+      if (file) {
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        fileInput.files = dt.files;
+        showFile(file.name);
+      }
+    });
   });
   </script>
 </body>

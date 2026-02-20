@@ -3,64 +3,106 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login</title>
+  <title>Sign In — Bulma</title>
   <link rel="icon" href="data:,">
-  
-  <!-- Optimized resource hints -->
+
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-  
 
   <style>
-    :root { 
-      --color-bg: #f7f8fa; 
+    :root {
+      --color-bg: #f1f5f9;
       --color-panel: #ffffff;
       --color-text: #0f172a;
       --radius-xl: 16px;
-      --shadow-md: 0 10px 28px rgba(2, 6, 23, 0.12);
+      --shadow-md: 0 10px 28px rgba(2,6,23,.12);
     }
-    html, body { height: 100%; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { min-height: 100%; margin: 0; padding: 0; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: var(--color-bg);
-      color: var(--color-text);
+      background: var(--color-bg); color: var(--color-text);
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
-    .brand { 
-      display: block; 
-      position: fixed; 
-      top: 14px; 
-      left: 24px;
-      font-weight: 700;
-      z-index: 100;
+    .brand { position: fixed; top: 14px; left: 20px; font-weight: 700; font-size: .95rem; z-index: 200; }
+    .top-right {
+      position: fixed; top: 12px; right: 16px; z-index: 200;
+      display: flex; align-items: center; gap: .5rem;
     }
-    .center-stage { 
-      min-height: 50vh; 
-      display: grid;
-      place-items: center;
-      padding: 48px 16px;
-      contain: layout style;
+
+    /* ── Page stack ── */
+    .page-stack {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 1.5rem; min-height: 100vh; padding: 80px 16px 56px;
     }
-    .box { 
-      background: var(--color-panel);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-md);
-      contain: layout style paint;
-      padding: 2rem;
-      max-width: 720px;
-      margin: 0 auto;
+
+    /* ── Step flow ── */
+    .step-flow { display: flex; align-items: flex-start; width: 100%; max-width: 420px; }
+    .step { display: flex; flex-direction: column; align-items: center; gap: .4rem; flex-shrink: 0; width: 80px; }
+    .step__circle {
+      width: 44px; height: 44px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; border: 2px solid #cbd5e1; background: #fff; color: #94a3b8;
     }
+    .step--done   .step__circle { background: #16a34a; border-color: #16a34a; color: #fff; }
+    .step--active .step__circle { background: #2563eb; border-color: #2563eb; color: #fff; }
+    .step__label { font-size: .7rem; font-weight: 600; color: #94a3b8; text-align: center; line-height: 1.2; }
+    .step--done   .step__label { color: #16a34a; }
+    .step--active .step__label { color: #2563eb; }
+    .step__connector { flex: 1; height: 2px; background: #cbd5e1; margin-top: 21px; }
+    .step__connector.done { background: #16a34a; }
+
+    /* ── Panel card ── */
+    .panel-card {
+      width: min(540px, 100%);
+      background: var(--color-panel); border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-md); padding: 2rem 2.5rem;
+    }
+    @media (max-width: 560px) { .panel-card { padding: 1.5rem; } }
+
+    .panel-card__icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      background: #eff6ff; color: #2563eb;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; margin-bottom: .85rem;
+    }
+
+    /* Session flow box */
+    .session-flow {
+      background: #f8fafc; border: 1px solid #e2e8f0;
+      border-radius: 10px; padding: 1rem 1.25rem; margin: 1.25rem 0;
+    }
+    .session-flow__label { font-size: .68rem; font-weight: 700; letter-spacing: .06em; color: #94a3b8; text-transform: uppercase; margin: 0 0 .7rem; }
+    .session-flow__item { display: flex; align-items: center; gap: .7rem; font-size: .88rem; padding: .3rem 0; }
+    .session-flow__dot {
+      width: 20px; height: 20px; border-radius: 50%;
+      border: 2px solid #cbd5e1; background: #fff; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .session-flow__dot.active { background: #2563eb; border-color: #2563eb; }
+    .session-flow__dot.active::after { content: ''; width: 8px; height: 8px; background: #fff; border-radius: 50%; }
+
+    /* Study ID box */
+    .study-id-box {
+      display: flex; align-items: center; gap: .65rem;
+      background: #f0f9ff; border: 1px solid #bae6fd;
+      border-radius: 8px; padding: .65rem 1rem;
+      font-size: .88rem; margin-bottom: 1.25rem;
+    }
+    .study-id-box strong { color: #0369a1; font-size: .95rem; }
   </style>
-  
-  <!-- Async load non-critical CSS -->
+
+  <!-- Font Awesome 6 -->
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css"></noscript>
+
   <link rel="preload" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css" rel="stylesheet"></noscript>
-  
+
   <link href="../shared/css/tokens.css" rel="stylesheet" media="print" onload="this.media='all';this.onload=null">
   <link href="../shared/css/bridge-bulma.css" rel="stylesheet" media="print" onload="this.media='all';this.onload=null">
   <link href="../shared/css/app.css" rel="stylesheet" media="print" onload="this.media='all';this.onload=null">
-  
+
   <link rel="modulepreload" href="../shared/js/app.js">
 </head>
 
@@ -70,49 +112,106 @@
 
   <div class="brand">Bulma + Tokens</div>
 
-  <main id="main" class="center-stage" tabindex="-1">
-    <div class="box" style="max-width: 720px; margin: 0 auto;">
-      <div class="is-flex is-justify-content-space-between is-align-items-center mb-3">
-        <h1 class="title is-5 mb-0">Login</h1>
-        <span id="pidBadge" class="tag is-light">Not logged in</span>
+  <div class="top-right">
+    <span id="pidBadge" style="font-size:.85rem;font-weight:600;">ID: …</span>
+    <button id="logoutBtn" type="button" class="button is-small is-light" title="Reset Study ID">
+      <span class="icon"><i class="fa-solid fa-rotate-left"></i></span>
+    </button>
+    <button id="copyIdBtn" class="button is-small is-light" type="button" title="Copy Study ID">
+      <span class="icon"><i class="fa-regular fa-copy"></i></span>
+    </button>
+  </div>
+
+  <main id="main" class="page-stack" tabindex="-1">
+
+    <!-- Step flow -->
+    <nav class="step-flow" aria-label="Progress steps">
+      <div class="step step--active">
+        <div class="step__circle"><i class="fa-solid fa-right-to-bracket"></i></div>
+        <span class="step__label">Sign In</span>
+      </div>
+      <div class="step__connector"></div>
+      <div class="step">
+        <div class="step__circle"><i class="fa-solid fa-file-arrow-up"></i></div>
+        <span class="step__label">Submit</span>
+      </div>
+      <div class="step__connector"></div>
+      <div class="step">
+        <div class="step__circle"><i class="fa-solid fa-chart-bar"></i></div>
+        <span class="step__label">Feedback</span>
+      </div>
+    </nav>
+
+    <!-- Panel card -->
+    <div class="panel-card">
+      <div class="panel-card__icon">
+        <i class="fa-solid fa-right-to-bracket"></i>
+      </div>
+      <h1 class="title is-4 mb-1">Sign In to the Portal</h1>
+      <p class="has-text-grey mb-0" style="font-size:.9rem;line-height:1.5;">This portal is part of a UX research study comparing two CSS frameworks. Your session is anonymous — no personal data is stored.</p>
+
+      <!-- Session flow overview -->
+      <div class="session-flow">
+        <p class="session-flow__label">Session Flow</p>
+        <div class="session-flow__item">
+          <div class="session-flow__dot active"></div>
+          <span>Step 1 — <strong>Sign in</strong> with a nickname</span>
+        </div>
+        <div class="session-flow__item">
+          <div class="session-flow__dot"></div>
+          <span>Step 2 — <a href="./submit.html" style="color:#2563eb;text-decoration:none;font-weight:500;">Submit</a> a sample assignment</span>
+        </div>
+        <div class="session-flow__item">
+          <div class="session-flow__dot"></div>
+          <span>Step 3 — Review your score and <a href="./feedback.html" style="color:#2563eb;text-decoration:none;font-weight:500;">teacher feedback</a></span>
+        </div>
       </div>
 
-      <p class="text-muted mb-2">
-        Your Study ID (auto-generated): <strong><span id="studyIdText">P----</span></strong>
-      </p>
-
+      <!-- Auto Study ID display -->
+      <div class="study-id-box">
+        <i class="fa-solid fa-id-badge" style="color:#0369a1;font-size:1.05rem;flex-shrink:0;"></i>
+        <span>Your Study ID: <strong><span id="studyIdText">P----</span></strong>&ensp;<span style="color:#64748b;font-size:.82rem;">(auto-generated, anonymous)</span></span>
+      </div>
 
       <form id="loginForm" data-next="./submit.html" novalidate>
         <div class="field">
-          <label class="label" for="loginAlias">Nickname (optional)</label>
+          <label class="label" for="loginAlias">
+            <span class="icon-text">
+              <span class="icon" style="color:#64748b;"><i class="fa-regular fa-user"></i></span>
+              <span>Nickname <span style="color:#94a3b8;font-size:.85em;font-weight:400;">(optional)</span></span>
+            </span>
+          </label>
           <div class="control">
-            <input id="loginAlias" 
-                   class="input" 
-                   name="nickname" 
-                   placeholder="e.g., BlueCat (do not use real name)">
+            <input id="loginAlias" class="input" name="nickname"
+                   placeholder="e.g. BlueCat — do not use your real name">
           </div>
-          <p class="help">Optional. Do not enter your real name.</p>
+          <p class="help">Use any alias. Your real identity will not be recorded.</p>
         </div>
 
-        <div class="field is-grouped">
-          <div class="control">
-            <button type="submit" class="button is-primary" aria-describedby="login-hint">Continue</button>
+        <div class="field is-grouped is-grouped-multiline">
+          <div class="control is-expanded">
+            <button type="submit" class="button is-primary is-fullwidth" aria-describedby="login-hint">
+              <span class="icon"><i class="fa-solid fa-arrow-right"></i></span>
+              <span>Continue to Submit</span>
+            </button>
           </div>
-          <div class="control">
-            <a class="button is-light" href="./feedback.html">Go to feedback</a>
+          <div class="control is-expanded">
+            <a class="button is-light is-fullwidth" href="./feedback.html">
+              <span class="icon"><i class="fa-solid fa-chart-bar"></i></span>
+              <span>Skip to Feedback</span>
+            </a>
           </div>
         </div>
-        <p class="help mt-2" id="login-hint">Continue: links your Study ID to this session and proceeds to the submission page. No personal data is collected.</p>
+        <p class="help mt-1" id="login-hint">Continues to the submission page. No personal data is collected.</p>
       </form>
     </div>
+
   </main>
 
-  <button id="themeToggle" class="theme-switch" type="button" aria-label="Toggle theme" aria-pressed="false">
-  Toggle theme
-</button>
+  <button id="themeToggle" class="theme-switch" type="button" aria-label="Toggle theme" aria-pressed="false">Toggle theme</button>
 
-<script type="module" src="../shared/js/app.js"></script>
-<script defer src="../shared/js/metrics.js"></script>
-<script defer src="../shared/js/theme.js"></script>
+  <script type="module" src="../shared/js/app.js"></script>
+  <script defer src="../shared/js/metrics.js"></script>
+  <script defer src="../shared/js/theme.js"></script>
 </body>
 </html>
