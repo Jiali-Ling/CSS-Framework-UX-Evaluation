@@ -49,6 +49,13 @@ function generateStudyId() {
   return `P${String(n).padStart(4, "0")}`;
 }
 
+function detectVersion() {
+  const framework = document.body.dataset.framework;
+  if (framework === 'bootstrap') return 'bootstrap_5.3.3';
+  if (framework === 'bulma') return 'bulma_1.0.2';
+  return 'unknown';
+}
+
 function getIdentity() {
   const raw = localStorage.getItem(IDENTITY_KEY);
   if (!raw) return null;
@@ -65,7 +72,16 @@ function setIdentity(identity) {
 function ensureIdentity() {
   let identity = getIdentity();
   if (!identity) {
-    identity = { studyId: generateStudyId(), nickname: "", createdAt: nowISO() };
+    identity = { 
+      studyId: generateStudyId(), 
+      version_code: detectVersion(),
+      nickname: "", 
+      createdAt: nowISO() 
+    };
+    setIdentity(identity);
+  }
+  if (!identity.version_code) {
+    identity.version_code = detectVersion();
     setIdentity(identity);
   }
   return identity;
@@ -218,6 +234,7 @@ function wireSubmitForm() {
     
     if (framework === 'bulma') {
       alertDiv.className = 'notification is-danger mt-4';
+      alertDiv.role = 'alert';
     } else {
       alertDiv.className = 'alert alert-danger mt-3';
       alertDiv.role = 'alert';
@@ -226,6 +243,10 @@ function wireSubmitForm() {
     alertDiv.innerHTML = `<strong>Error:</strong> ${message}`;
     form.parentNode.insertBefore(alertDiv, form);
     alertDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    
+    if (window.metrics) {
+      window.metrics.log('validation_error', { message, framework });
+    }
   }
 
   form.addEventListener("submit", async (e) => {
@@ -278,6 +299,7 @@ function wireSubmitForm() {
     const submission = {
       id: `${identity.studyId}_${Date.now()}`,
       studyId: identity.studyId,
+      version_code: identity.version_code || detectVersion(),
       nickname,
       task,
       fileName,
@@ -298,6 +320,7 @@ function wireSubmitForm() {
 
     logEvent("Submission", JSON.stringify({
       studyId: identity.studyId,
+      version_code: identity.version_code,
       task,
       fileName,
       hasFile: !!fileDataUrl,

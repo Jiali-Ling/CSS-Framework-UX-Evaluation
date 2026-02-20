@@ -10,6 +10,8 @@
   --radius: 10px;
   --shadow-md: 0 10px 28px rgba(2, 6, 23, 0.12);
   --shadow-lg: 0 24px 60px rgba(2, 6, 23, 0.16);
+  --focus-ring-color: rgba(37, 88, 168, 0.18);
+  --focus-ring-width: 3px;
 }
 :root[data-theme="dark"] {
   --color-bg: #0f1216;
@@ -20,6 +22,7 @@
   --color-secondary: #a78bfa;
   --shadow-md: 0 12px 30px rgba(0,0,0,.35);
   --shadow-lg: 0 40px 80px rgba(0,0,0,.45);
+  --focus-ring-color: rgba(96, 165, 250, 0.30);
 }
 
 html, body { height: 100%; }

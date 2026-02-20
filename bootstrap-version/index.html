@@ -92,7 +92,7 @@
       width: 34px; height: 34px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center; font-size: .82rem;
     }
-    .step-node__circle.is-active { background: var(--edu-blue); color: #fff; box-shadow: 0 0 0 3px rgba(37,88,168,.18); }
+    .step-node__circle.is-active { background: var(--edu-blue); color: #fff; box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color); }
     .step-node__circle.is-pending { background: #dce6f5; color: #7a9dc8; }
     .step-node__text { font-size: .68rem; font-weight: 500; color: #5c7099; text-align: center; }
     .step-node__text.is-active { color: var(--edu-blue); font-weight: 600; }
@@ -120,7 +120,7 @@
     /* Form */
     .form-label { font-size: .83rem; font-weight: 500; color: var(--edu-navy); }
     .form-control { border: 1px solid var(--edu-border); border-radius: 8px; font-size: .88rem; }
-    .form-control:focus { border-color: var(--edu-blue); box-shadow: 0 0 0 3px rgba(37,88,168,.12); }
+    .form-control:focus { border-color: var(--edu-blue); box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color); }
     .form-text { font-size: .76rem; }
 
     /* Buttons */
@@ -240,6 +240,12 @@
           <i class="fa-solid fa-id-card" aria-hidden="true"></i>
           <span>Anonymous Study ID: <strong><span id="studyIdText">P——</span></strong></span>
           <span style="opacity:.65; font-size:.74rem;">(auto-generated, not linked to you)</span>
+        </div>
+
+        <!-- Version Info -->
+        <div class="id-band" style="background:#f0f8ff; border-color:#b8d4f1;">
+          <i class="fa-solid fa-code-branch" aria-hidden="true" style="color:#2563eb;"></i>
+          <span>Study Version: <strong>Bootstrap 5.3.3</strong></span>
         </div>
 
         <!-- Login form -->
