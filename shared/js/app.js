@@ -51,8 +51,8 @@ function generateStudyId() {
 
 function detectVersion() {
   const framework = document.body.dataset.framework;
-  if (framework === 'bootstrap') return 'bootstrap_5.3.3';
-  if (framework === 'bulma') return 'bulma_1.0.2';
+  if (framework === 'bootstrap') return 'version_A';
+  if (framework === 'bulma') return 'version_B';
   return 'unknown';
 }
 
