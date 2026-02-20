@@ -1,240 +1,250 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Feedback — Bulma</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UX Study Portal — Assignment Results</title>
   <link rel="icon" href="data:,">
-
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css" rel="stylesheet">
+  <link href="../shared/css/tokens.css" rel="stylesheet">
+  <link href="../shared/css/bridge-bulma.css" rel="stylesheet">
+  <link href="../shared/css/app.css" rel="stylesheet">
 
   <style>
-    :root {
-      --color-bg: #f1f5f9;
-      --color-panel: #ffffff;
-      --color-text: #0f172a;
-      --radius-xl: 16px;
-      --shadow-md: 0 10px 28px rgba(2,6,23,.12);
-    }
-    *, *::before, *::after { box-sizing: border-box; }
-    html, body { min-height: 100%; margin: 0; padding: 0; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: var(--color-bg);
-      color: var(--color-text);
-      -webkit-font-smoothing: antialiased;
-    }
-    .brand {
-      position: fixed; top: 14px; left: 20px;
-      font-weight: 700; font-size: .95rem; z-index: 200;
-      will-change: transform;
-    }
-    .top-right {
-      position: fixed; top: 12px; right: 16px;
-      z-index: 200; display: flex; align-items: center; gap: .5rem;
-      will-change: transform;
-    }
-
-    /* ── Page stack ── */
-    .page-stack {
-      display: flex; flex-direction: column;
-      align-items: center; gap: 1.5rem;
-      min-height: 100vh;
-      padding: 80px 16px 56px;
-    }
-
-    /* ── Step flow ── */
-    .step-flow {
-      display: flex; align-items: flex-start;
-      width: 100%; max-width: 420px;
-    }
-    .step {
-      display: flex; flex-direction: column;
-      align-items: center; gap: .4rem;
-      flex-shrink: 0; width: 80px;
-    }
-    .step__circle {
-      width: 44px; height: 44px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1rem; border: 2px solid #cbd5e1;
-      background: #fff; color: #94a3b8;
-    }
-    .step--done   .step__circle { background: #16a34a; border-color: #16a34a; color: #fff; }
-    .step--active .step__circle { background: #2563eb; border-color: #2563eb; color: #fff; }
-    .step__label { font-size: .7rem; font-weight: 600; color: #94a3b8; text-align: center; line-height: 1.2; }
-    .step--done   .step__label { color: #16a34a; }
-    .step--active .step__label { color: #2563eb; }
-    .step__connector { flex: 1; height: 2px; background: #cbd5e1; margin-top: 21px; }
-    .step__connector.done { background: #16a34a; }
-
-    /* ── Panel card ── */
-    .panel-card {
-      width: min(820px, 100%);
-      background: var(--color-panel);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-md);
-      padding: 2rem 2.5rem;
-    }
-    @media (max-width: 600px) { .panel-card { padding: 1.25rem; } }
-
-    .panel-card__header {
-      display: flex; align-items: center; gap: 1rem;
-      margin-bottom: 1.5rem;
-      padding-bottom: 1.25rem;
-      border-bottom: 1px solid #e2e8f0;
-    }
-    .panel-card__icon {
-      width: 52px; height: 52px; border-radius: 14px;
-      background: #eff6ff; color: #2563eb;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem; flex-shrink: 0;
-    }
-    .panel-card__title { font-size: 1.35rem; font-weight: 700; margin: 0 0 .2rem; }
-    .panel-card__subtitle { font-size: .88rem; color: #64748b; margin: 0; line-height: 1.5; }
-
-    #fb, #history { min-height: 80px; }
-    #fb:empty::after { content: 'Loading…'; opacity: .5; }
-
-    /* ── Questionnaire card ── */
-    .quest-card {
-      width: min(820px, 100%);
-      background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%);
-      border-radius: var(--radius-xl);
-      color: #fff;
-      padding: 1.5rem 2rem;
-      display: flex; align-items: center; gap: 1.5rem;
-    }
-    .quest-card__icon { font-size: 2rem; flex-shrink: 0; opacity: .9; }
-    .quest-card__body { flex: 1; }
-    .quest-card__body h3 { margin: 0 0 .35rem; font-size: 1.05rem; font-weight: 700; }
-    .quest-card__body p  { margin: 0 0 .85rem; font-size: .88rem; opacity: .88; line-height: 1.5; }
-    .btn-quest {
-      display: inline-flex; align-items: center; gap: .5rem;
-      background: #fff; color: #1d4ed8;
-      border: none; border-radius: 8px;
-      padding: .55rem 1.25rem; font-weight: 700; font-size: .88rem;
-      text-decoration: none; cursor: pointer;
-      white-space: nowrap; transition: opacity .15s;
-    }
-    .btn-quest:hover { opacity: .9; color: #1d4ed8; }
-    @media (max-width: 540px) {
-      .quest-card { flex-direction: column; text-align: center; }
-    }
+    :root { --edu-navy:#1a2f5a; --edu-blue:#2558a8; --edu-light:#eef3fb; --edu-border:#d0d9e8; }
+    body { font-family:'DM Sans',sans-serif !important; background:#f0f4fb; overflow-x:auto; }
+    .portal-topbar { position:fixed;top:0;left:0;right:0;z-index:100;height:56px;background:var(--edu-navy);display:flex;align-items:center;justify-content:space-between;padding:0 20px;box-shadow:0 2px 10px rgba(0,0,0,.3); }
+    .topbar-brand { display:flex;align-items:center;gap:9px;color:#fff;font-size:.88rem;font-weight:600;text-decoration:none; }
+    .topbar-brand i { color:#90b8e8;font-size:1.05rem; }
+    .topbar-brand .edition { font-size:.73rem;font-weight:400;opacity:.6;background:rgba(255,255,255,.12);padding:2px 7px;border-radius:4px; }
+    .page-stack { min-width:320px;max-width:900px;margin:0 auto;padding:80px 16px 48px; }
+    .step-track { display:flex;align-items:center;padding:14px 18px;background:#fff;border:1px solid var(--edu-border);border-radius:10px;margin-bottom:20px;box-shadow:0 1px 4px rgba(26,47,90,.06); }
+    .step-node { display:flex;flex-direction:column;align-items:center;gap:5px;flex:1; }
+    .step-node__circle { width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.82rem; }
+    .step-node__circle.is-done { background:#16a34a;color:#fff; }
+    .step-node__circle.is-active { background:var(--edu-blue);color:#fff;box-shadow:0 0 0 3px rgba(37,88,168,.18); }
+    .step-node__text { font-size:.68rem;font-weight:500;color:#5c7099;text-align:center; }
+    .step-node__text.is-active { color:var(--edu-blue);font-weight:600; }
+    .step-node__text.is-done { color:#16a34a; }
+    .step-line { height:2px;flex:1;max-width:36px;background:#ccd9f0;margin-bottom:18px; }
+    .step-line.done { background:#16a34a; }
+    .panel-card { background:#fff;border:1px solid var(--edu-border);border-radius:12px;box-shadow:0 4px 28px rgba(26,47,90,.09);overflow:hidden;margin-bottom:20px; }
+    .panel-card__head { background:var(--edu-navy);padding:22px 28px 18px;display:flex;gap:16px;align-items:flex-start; }
+    .head-icon { width:48px;height:48px;flex-shrink:0;background:rgba(255,255,255,.12);border-radius:9px;display:flex;align-items:center;justify-content:center; }
+    .head-icon i { font-size:1.4rem;color:#90b8e8; }
+    .head-text h1 { font-family:'Source Serif 4',Georgia,serif !important;font-size:1.2rem;font-weight:600;color:#fff;margin:0 0 4px !important; }
+    .head-text p { font-size:.79rem;color:#8ab0d8;margin:0 !important;line-height:1.5; }
+    .panel-card__body { padding:24px 28px; }
+    .stat-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px; }
+    .stat-card { border:1px solid var(--edu-border);border-radius:10px;padding:14px 16px;background:var(--edu-light);display:flex;flex-direction:column;gap:4px; }
+    .stat-card__icon { font-size:1.1rem;color:#6090c8; }
+    .stat-card__value { font-size:1.5rem;font-weight:700;color:var(--edu-navy);line-height:1; }
+    .stat-card__label { font-size:.72rem;color:#64748b; }
+    .table-wrap { overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:20px; }
+    .fb-table { width:100%;border-collapse:collapse;min-width:580px; }
+    .fb-table th { padding:10px 12px;text-align:left;font-size:.75rem;font-weight:600;color:#64748b;border-bottom:2px solid var(--edu-border);background:var(--edu-light);text-transform:uppercase;letter-spacing:.4px; }
+    .fb-table td { padding:14px 12px;vertical-align:top;border-bottom:1px solid #eef2f8;font-size:.85rem; }
+    .fb-table tr:last-child td { border-bottom:none; }
+    .fb-table tr:hover td { background:#fafcff; }
+    .score-bar-wrap { margin-top:5px; }
+    .score-bar-track { height:6px;background:#e2e8f0;border-radius:99px;overflow:hidden; }
+    .score-bar-fill { height:100%;border-radius:99px;transition:width .4s; }
+    .score-meta { font-size:.74rem;color:#64748b;margin-top:4px; }
+    .score-delta { font-weight:600; }
+    .score-delta.pass { color:#16a34a; }
+    .score-delta.fail { color:#dc2626; }
+    .status-badge { display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:99px;font-size:.75rem;font-weight:600; }
+    .status-badge.pass { background:#dcfce7;color:#166534; }
+    .status-badge.fail { background:#fee2e2;color:#991b1b; }
+    .accordion-toggle { background:none;border:none;padding:0;font-size:.8rem;color:var(--edu-blue);font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px; }
+    .accordion-toggle i { transition:transform .2s;font-size:.7rem; }
+    .accordion-toggle.open i { transform:rotate(180deg); }
+    .accordion-body { display:none;margin-top:8px;font-size:.8rem;color:#475569;line-height:1.6;padding:10px 12px;background:var(--edu-light);border-radius:8px;border-left:3px solid var(--edu-blue); }
+    .accordion-body.visible { display:block; }
+    .doc-panel { display:none;padding:16px 18px;margin-bottom:20px;background:#fff8f0;border:1px solid #f0d8a8;border-radius:10px; }
+    .doc-panel.visible { display:block; }
+    .doc-panel__header { display:flex;justify-content:space-between;align-items:center;margin-bottom:12px; }
+    .doc-panel__title { font-size:.85rem;font-weight:600;color:#7a4a10;display:flex;align-items:center;gap:6px; }
+    .doc-panel__close { background:none;border:none;font-size:1rem;color:#a07040;cursor:pointer; }
+    .doc-panel__row { display:flex;gap:8px;margin-bottom:6px;font-size:.8rem; }
+    .doc-panel__label { color:#a07040;font-weight:600;min-width:100px;flex-shrink:0; }
+    .doc-panel__value { color:#344;line-height:1.5; }
+    .quest-banner { background:var(--edu-navy);border-radius:12px;padding:20px 24px;display:flex;align-items:center;gap:16px;box-shadow:0 4px 16px rgba(26,47,90,.2); }
+    .quest-banner__icon { width:48px;height:48px;flex-shrink:0;background:rgba(255,255,255,.12);border-radius:9px;display:flex;align-items:center;justify-content:center; }
+    .quest-banner__icon i { font-size:1.35rem;color:#90b8e8; }
+    .quest-banner__body { flex:1; }
+    .quest-banner__body h3 { font-size:.95rem;font-weight:600;color:#fff;margin:0 0 3px !important; }
+    .quest-banner__body p { font-size:.78rem;color:#8ab0d8;margin:0 !important; }
+    .btn-quest { flex-shrink:0;background:#fff;color:var(--edu-navy);border:none;border-radius:8px;padding:.5rem 1.1rem;font-weight:700;font-size:.83rem;display:inline-flex;align-items:center;gap:6px;text-decoration:none;transition:opacity .15s;white-space:nowrap; }
+    .btn-quest:hover { opacity:.88;color:var(--edu-navy); }
+    .empty-state { text-align:center;padding:48px 20px;color:#64748b; }
+    .empty-state i { font-size:3rem;color:#c8d8ee;margin-bottom:12px; }
+    .empty-state h3 { font-size:1rem;font-weight:600;color:#344566;margin-bottom:6px !important; }
+    .btn-sm-edu { font-size:.77rem;padding:.32rem .75rem;border-radius:6px;display:inline-flex;align-items:center;gap:5px;transition:.15s;cursor:pointer;font-weight:500;border:none; }
+    .btn-sm-view { background:var(--edu-light);border:1px solid #b8cee8;color:var(--edu-blue); }
+    .btn-sm-view:hover { background:var(--edu-blue);color:#fff; }
+    .theme-switch { position:fixed;left:14px;bottom:14px;z-index:30;padding:6px 13px;border-radius:999px;border:1px solid var(--edu-border);background:#fff;color:#475569;font-size:.76rem;cursor:pointer;display:flex;align-items:center;gap:5px; }
+    :root[data-theme="dark"] body { background:#0d1320; }
+    :root[data-theme="dark"] .step-track,:root[data-theme="dark"] .panel-card { background:#182030;border-color:#2d3d5a;color:#c8d8f0; }
+    :root[data-theme="dark"] .stat-card { background:#1a2540;border-color:#2d3d5a; }
+    :root[data-theme="dark"] .stat-card__value { color:#90c0f0; }
+    :root[data-theme="dark"] .fb-table th { background:#1a2540;border-bottom-color:#2d3d5a; }
+    :root[data-theme="dark"] .fb-table td { border-bottom-color:#2d3d5a; }
+    :root[data-theme="dark"] .accordion-body { background:#182540;color:#90b8e8; }
+    :root[data-theme="dark"] .doc-panel { background:#1e1808;border-color:#3a2e10; }
+    :root[data-theme="dark"] .theme-switch { background:#182030;border-color:#2d3d5a;color:#90b0d8; }
+    @media (max-width:540px) { .stat-grid{grid-template-columns:repeat(2,1fr);} .quest-banner{flex-direction:column;text-align:center;} .panel-card__head{padding:18px;} .panel-card__body{padding:16px 18px;} .topbar-brand .edition{display:none;} }
   </style>
-
-  <!-- Font Awesome 6 -->
-  <link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css"></noscript>
-
-  <link rel="preload" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css" rel="stylesheet"></noscript>
-
-  <link href="../shared/css/tokens.css" rel="stylesheet" media="print" onload="this.media='all';this.onload=null">
-  <link href="../shared/css/bridge-bulma.css" rel="stylesheet" media="print" onload="this.media='all';this.onload=null">
-  <link href="../shared/css/app.css" rel="stylesheet" media="print" onload="this.media='all';this.onload=null">
-
-  <link rel="modulepreload" href="../shared/js/app.js">
 </head>
 
 <body data-framework="bulma" data-page="feedback">
   <a class="skip-link" href="#main">Skip to main content</a>
   <div id="statusLive" class="is-sr-only" aria-live="polite"></div>
 
-  <div class="brand">Bulma + Tokens</div>
-
-  <div class="top-right">
-    <a class="button is-small is-light" href="../admin/log.html" target="_blank" rel="noopener">
-      <span class="icon"><i class="fa-solid fa-terminal"></i></span><span>Log</span>
+  <header class="portal-topbar" role="banner">
+    <a class="topbar-brand" href="./index.html">
+      <i class="fa-solid fa-building-columns" aria-hidden="true"></i>
+      <span>UX Study Portal</span>
+      <span class="edition">Bulma Edition</span>
     </a>
-    <span id="pidBadge" style="font-size:.85rem;font-weight:600;">ID: …</span>
-    <button id="logoutBtn" type="button" class="button is-small is-light" title="Reset Study ID">
-      <span class="icon"><i class="fa-solid fa-rotate-left"></i></span>
-    </button>
-    <button id="copyIdBtn" class="button is-small is-light" type="button" title="Copy Study ID">
-      <span class="icon"><i class="fa-regular fa-copy"></i></span>
-    </button>
-  </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span id="pidBadge" style="font-size:.76rem;color:#90b8e8;font-weight:500;">ID: —</span>
+      <button id="logoutBtn" type="button" class="button is-small is-light" title="Reset Study ID" style="font-size:.76rem;">
+        <span class="icon"><i class="fa-solid fa-rotate-left"></i></span>
+      </button>
+      <button id="copyIdBtn" class="button is-small is-light" type="button" title="Copy Study ID" style="font-size:.76rem;">
+        <span class="icon"><i class="fa-regular fa-copy"></i></span>
+      </button>
+    </div>
+  </header>
 
-  <main id="main" class="page-stack" tabindex="-1">
+  <main id="main" class="page-stack" role="main" tabindex="-1">
 
-    <!-- Step flow -->
-    <nav class="step-flow" aria-label="Progress steps">
-      <div class="step step--done">
-        <div class="step__circle"><i class="fa-solid fa-check"></i></div>
-        <span class="step__label">Sign In</span>
+    <nav class="step-track" aria-label="Study session steps">
+      <div class="step-node">
+        <div class="step-node__circle is-done"><i class="fa-solid fa-check" aria-hidden="true"></i></div>
+        <span class="step-node__text is-done">Sign In</span>
       </div>
-      <div class="step__connector done"></div>
-      <div class="step step--done">
-        <div class="step__circle"><i class="fa-solid fa-check"></i></div>
-        <span class="step__label">Submit</span>
+      <div class="step-line done" aria-hidden="true"></div>
+      <div class="step-node">
+        <div class="step-node__circle is-done"><i class="fa-solid fa-check" aria-hidden="true"></i></div>
+        <span class="step-node__text is-done">Submit</span>
       </div>
-      <div class="step__connector done"></div>
-      <div class="step step--active">
-        <div class="step__circle"><i class="fa-solid fa-chart-bar"></i></div>
-        <span class="step__label">Feedback</span>
+      <div class="step-line done" aria-hidden="true"></div>
+      <div class="step-node">
+        <div class="step-node__circle is-active" aria-current="step">
+          <i class="fa-solid fa-award" aria-hidden="true"></i>
+        </div>
+        <span class="step-node__text is-active">Results</span>
       </div>
     </nav>
 
-    <!-- Main panel card -->
     <div class="panel-card">
-      <div class="panel-card__header">
-        <div class="panel-card__icon">
-          <i class="fa-solid fa-chart-bar"></i>
-        </div>
-        <div>
-          <h1 class="panel-card__title">Your Submission Feedback</h1>
-          <p class="panel-card__subtitle">Review your submitted assignments, compare your score against the pass mark, and read your teacher's comments.</p>
+      <div class="panel-card__head">
+        <div class="head-icon"><i class="fa-solid fa-scroll" aria-hidden="true"></i></div>
+        <div class="head-text">
+          <h1>Assignment Feedback &amp; Results</h1>
+          <p>Review your submissions, compare scores against pass marks, and read your tutor's comments.</p>
         </div>
       </div>
 
-      <div id="fb" aria-live="polite"></div>
-      <div id="history" class="mt-4"></div>
+      <div class="panel-card__body">
+        <div class="stat-grid" id="statGrid" aria-label="Summary statistics">
+          <div class="stat-card">
+            <span class="stat-card__icon"><i class="fa-solid fa-inbox" aria-hidden="true"></i></span>
+            <span class="stat-card__value" id="statCount">—</span>
+            <span class="stat-card__label">Submissions</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-card__icon"><i class="fa-solid fa-star-half-stroke" aria-hidden="true"></i></span>
+            <span class="stat-card__value" id="statAvg">—</span>
+            <span class="stat-card__label">Average Score</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-card__icon"><i class="fa-solid fa-circle-check" aria-hidden="true"></i></span>
+            <span class="stat-card__value" id="statPassed">—</span>
+            <span class="stat-card__label">Passed</span>
+          </div>
+        </div>
+
+        <div class="doc-panel" id="docPanel" role="region" aria-label="Submission details">
+          <div class="doc-panel__header">
+            <span class="doc-panel__title">
+              <i class="fa-solid fa-file-lines" aria-hidden="true"></i> Submission Details
+            </span>
+            <button class="doc-panel__close" onclick="document.getElementById('docPanel').classList.remove('visible')" aria-label="Close details panel">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          <div id="docPanelContent"></div>
+        </div>
+
+        <div id="fb" aria-live="polite"></div>
+        <div id="history" class="mt-2"></div>
+      </div>
     </div>
 
-    <!-- Questionnaire card (outside main panel) -->
-    <div class="quest-card">
-      <div class="quest-card__icon">
-        <i class="fa-solid fa-clipboard-list"></i>
-      </div>
-      <div class="quest-card__body">
+    <div class="quest-banner" role="complementary" aria-label="Study questionnaire">
+      <div class="quest-banner__icon"><i class="fa-solid fa-clipboard-list" aria-hidden="true"></i></div>
+      <div class="quest-banner__body">
         <h3>Complete the Study Questionnaire</h3>
-        <p>After reviewing your feedback, please fill in the SUS + UEQ usability questionnaire. Your Study ID will be pre-filled.</p>
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfKiFssElyNNoaZ-PcQe2AoE-jSLSGaaoL-YyqCAY69zTVpBA/viewform"
-           target="_blank" rel="noopener"
-           class="btn-quest" id="questionnaireLink">
-          <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Questionnaire
-        </a>
+        <p>After reviewing your feedback, please fill in the SUS + UEQ usability questionnaire.</p>
       </div>
+      <a id="questLink" href="#" target="_blank" rel="noopener" class="btn-quest">
+        <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+        Open Questionnaire
+      </a>
     </div>
 
   </main>
 
-  <button id="themeToggle" class="theme-switch" type="button" aria-label="Toggle theme" aria-pressed="false">Toggle theme</button>
-
-  <script>
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(function () {
-        const link = document.getElementById('questionnaireLink');
-        if (!link) return;
-        link.addEventListener('click', function () {
-          try {
-            const identity = JSON.parse(localStorage.getItem('study_identity_v1') || '{}');
-            const framework = document.body.getAttribute('data-framework') || 'unknown';
-            if (identity.studyId) {
-              const url = new URL(this.href);
-              url.searchParams.set('entry.STUDY_ID_FIELD', identity.studyId);
-              url.searchParams.set('entry.VERSION_FIELD', framework);
-              this.href = url.toString();
-            }
-          } catch (e) { console.error(e); }
-        }, { once: true });
-      });
-    }
-  </script>
+  <button id="themeToggle" class="theme-switch" type="button" aria-label="Toggle colour theme" aria-pressed="false">
+    <i class="fa-regular fa-moon" aria-hidden="true"></i> Theme
+  </button>
 
   <script type="module" src="../shared/js/app.js"></script>
   <script defer src="../shared/js/metrics.js"></script>
   <script defer src="../shared/js/theme.js"></script>
+
+  <script>
+  const SCORES={' Web Dev Lab':66,'Web Dev Lab':66,'HCI Coursework 1':78,'Programming Lab':66};
+  const PASSES={'Web Dev Lab':60,'HCI Coursework 1':65,'Programming Lab':55};
+  const FEEDBACK={'Web Dev Lab':'Good structural approach to layout. Responsive breakpoints applied correctly. Consider adding more thorough CSS validation and testing edge-case states on smaller viewports.','HCI Coursework 1':'Strong analysis of user requirements. Wireframes clearly documented. Marks deducted for limited depth in evaluation section — expand discussion of heuristics in final report.','Programming Lab':'Code executes correctly across all test cases. Readability reasonable. Improvement areas include inline documentation and handling of unexpected input values.'};
+  function scoreFor(t){return SCORES[t]??Math.floor(58+Math.random()*30);}
+  function passFor(t){return PASSES[t]??60;}
+  function toggleFb(btn){const b=btn.nextElementSibling;const o=b.classList.toggle('visible');btn.classList.toggle('open',o);btn.setAttribute('aria-expanded',o);}
+  function viewDoc(idx){
+    const panel=document.getElementById('docPanel'),content=document.getElementById('docPanelContent');
+    let subs=[];try{subs=JSON.parse(localStorage.getItem('submissions_v1')||'[]');}catch(e){}
+    const sid=localStorage.getItem('study_pid')||'';
+    const mine=subs.filter(s=>s.studyId===sid||s.pid===sid);
+    const sub=mine[idx];if(!sub)return;
+    const task=sub.task||'(unknown)';const sc=scoreFor(task);const pm=passFor(task);const delta=sc-pm;const passed=delta>=0;const fb=FEEDBACK[task]||'No feedback available.';
+    content.innerHTML=`<div class="doc-panel__row"><span class="doc-panel__label"><i class="fa-solid fa-book-open me-1"></i>Module</span><span class="doc-panel__value">${task}</span></div><div class="doc-panel__row"><span class="doc-panel__label"><i class="fa-regular fa-clock me-1"></i>Submitted</span><span class="doc-panel__value">${sub.createdAtISO?new Date(sub.createdAtISO).toLocaleString('en-GB'):'—'}</span></div><div class="doc-panel__row"><span class="doc-panel__label"><i class="fa-regular fa-file me-1"></i>File</span><span class="doc-panel__value">${sub.fileName||'No file attached'}</span></div><div class="doc-panel__row"><span class="doc-panel__label"><i class="fa-solid fa-pen-nib me-1"></i>Notes</span><span class="doc-panel__value">${sub.comments||'No notes provided'}</span></div><div class="doc-panel__row"><span class="doc-panel__label"><i class="fa-solid fa-star-half-stroke me-1"></i>Score</span><span class="doc-panel__value"><strong>${sc}%</strong> vs pass mark ${pm}% — <span style="color:${passed?'#16a34a':'#dc2626'};font-weight:600;">${passed?'+':''}${delta}% ${passed?'above':'below'} pass mark</span></span></div><div class="doc-panel__row"><span class="doc-panel__label"><i class="fa-solid fa-chalkboard me-1"></i>Feedback</span><span class="doc-panel__value">${fb}</span></div>`;
+    panel.classList.add('visible');panel.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  function buildRow(sub,idx){
+    const task=sub.task||'(unknown)';const sc=scoreFor(task);const pm=passFor(task);const delta=sc-pm;const passed=delta>=0;const barCol=passed?'#16a34a':'#dc2626';const fb=FEEDBACK[task]||'Your work has been reviewed.';const ts=sub.createdAtISO?new Date(sub.createdAtISO).toLocaleString('en-GB'):'—';
+    return `<tr><td><strong style="font-size:.85rem;color:#1a2f5a;">${task}</strong><br><span style="font-size:.74rem;color:#94a3b8;"><i class="fa-regular fa-clock"></i> ${ts}</span>${sub.fileName?`<br><span style="font-size:.74rem;color:#64748b;"><i class="fa-regular fa-file"></i> ${sub.fileName}</span>`:''}<br><button class="btn-sm-edu btn-sm-view mt-1" onclick="viewDoc(${idx})" aria-label="View details"><i class="fa-solid fa-folder-open"></i> View Details</button></td><td><span style="font-size:.88rem;font-weight:700;color:${barCol};">${sc}%</span><div class="score-bar-wrap"><div class="score-bar-track"><div class="score-bar-fill" style="width:${sc}%;background:${barCol};"></div></div><div class="score-meta">Pass: ${pm}% &nbsp;·&nbsp;<span class="score-delta ${passed?'pass':'fail'}">${passed?'+':''}${delta}% ${passed?'above':'below'} pass</span></div></div></td><td><span class="status-badge ${passed?'pass':'fail'}"><i class="fa-solid ${passed?'fa-circle-check':'fa-triangle-exclamation'}"></i>${passed?'Passed':'At Risk'}</span></td><td><button class="accordion-toggle" onclick="toggleFb(this)" aria-expanded="false"><i class="fa-solid fa-chevron-down"></i>Read Tutor Feedback</button><div class="accordion-body" role="region"><i class="fa-solid fa-chalkboard fa-sm me-1" style="color:#6090c8;"></i>${fb}</div></td></tr>`;
+  }
+  function renderEnhancedFeedback(){
+    const histEl=document.getElementById('history');if(!histEl)return;
+    let subs=[];try{subs=JSON.parse(localStorage.getItem('submissions_v1')||'[]');}catch(e){}
+    const sid=localStorage.getItem('study_pid')||'';
+    const mine=subs.filter(s=>s.studyId===sid||s.pid===sid);
+    document.getElementById('statCount').textContent=mine.length;
+    if(mine.length>0){const scores=mine.map(s=>scoreFor(s.task||''));const avg=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);const passedN=mine.filter(s=>scoreFor(s.task||'')>=passFor(s.task||'')).length;document.getElementById('statAvg').textContent=avg+'%';document.getElementById('statPassed').textContent=passedN+' / '+mine.length;}
+    const pid=localStorage.getItem('study_pid')||'';const ql=document.getElementById('questLink');if(ql)ql.href='https://forms.gle/YOUR_FORM_ID?usp=pp_url&entry.YOUR_FIELD='+encodeURIComponent(pid);
+    if(mine.length===0){histEl.innerHTML='<div class="empty-state"><i class="fa-regular fa-folder-open"></i><h3>No submissions yet</h3><p>You have not submitted any assignments in this session.<br><a href="./submit.html" style="color:#2558a8;font-weight:600;">Go to Submit</a> to complete your task.</p></div>';return;}
+    const rows=mine.map((s,i)=>buildRow(s,i)).join('');
+    histEl.innerHTML=`<div class="table-wrap"><table class="fb-table" aria-label="Submission records"><thead><tr><th><i class="fa-solid fa-file-lines me-1"></i>Assignment</th><th><i class="fa-solid fa-star-half-stroke me-1"></i>Score vs Pass Mark</th><th><i class="fa-solid fa-circle-half-stroke me-1"></i>Status</th><th><i class="fa-solid fa-chalkboard me-1"></i>Tutor Feedback</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  }
+  window.addEventListener('load',()=>setTimeout(renderEnhancedFeedback,200));
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(renderEnhancedFeedback,400));
+  </script>
 </body>
 </html>
