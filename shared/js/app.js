@@ -296,6 +296,27 @@ function wireSubmitForm() {
       form.querySelector('textarea[name="comments"], textarea#comments, textarea#commentsInput') || null;
     const comments = commentsInput ? commentsInput.value.trim() : "";
 
+    // 动态生成评分和反馈
+    const mockScore = 60 + Math.floor(Math.random() * 36); // 60-95分随机
+    const passMarks = {
+      'Web Dev Lab': 60,
+      'HCI Coursework 1': 60,
+      'Programming Lab': 60
+    };
+    const passMark = passMarks[task] || 60;
+    const passed = mockScore >= passMark;
+    
+    // 随机选择教师反馈
+    const feedbackOptions = [
+      'Good structural approach to layout. Responsive breakpoints applied correctly. Consider adding more thorough CSS validation and testing edge-case states on smaller viewports.',
+      'Strong analysis of user requirements. Wireframes clearly documented. Marks deducted for limited depth in evaluation section – expand discussion of heuristics in final report.',
+      'Code executes correctly across all test cases. Readability reasonable. Improvement areas include inline documentation and handling of unexpected input values.',
+      'Clear semantic HTML structure. Excellent use of ARIA landmarks. Minor issue: button focus states could be more prominent for keyboard users.',
+      'Well-organized component architecture. Good responsive behaviour across devices. Consider optimizing image assets and implementing lazy loading for performance.',
+      'Solid implementation of core features. User interface is intuitive. Some edge cases in form validation need attention. Overall demonstrates good understanding of framework concepts.'
+    ];
+    const feedback = feedbackOptions[Math.floor(Math.random() * feedbackOptions.length)];
+
     const submission = {
       id: `${identity.studyId}_${Date.now()}`,
       studyId: identity.studyId,
@@ -308,6 +329,11 @@ function wireSubmitForm() {
       fileSize,
       comments,
       createdAtISO: nowISO(),
+      // 动态生成的评分数据
+      score: mockScore,
+      passMark: passMark,
+      status: passed ? 'Passed' : 'At Risk',
+      feedback: feedback
     };
 
     try {

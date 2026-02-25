@@ -7,7 +7,7 @@
   <link rel="icon" href="data:,">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
   <link href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css" rel="stylesheet">
   <link href="../shared/css/tokens.css" rel="stylesheet">
@@ -16,12 +16,15 @@
 
   <style>
     :root { --edu-navy:#1a2f5a; --edu-blue:#2558a8; --edu-light:#eef3fb; --edu-border:#d0d9e8; }
-    body { font-family:'DM Sans',sans-serif !important; background:#f0f4fb; overflow-x:auto; }
+    body { font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif !important; background:#f0f4fb; overflow-x:auto; font-weight:500; -webkit-font-smoothing:antialiased; }
     .portal-topbar { position:fixed;top:0;left:0;right:0;z-index:100;height:56px;background:var(--edu-navy);display:flex;align-items:center;justify-content:space-between;padding:0 20px;box-shadow:0 2px 10px rgba(0,0,0,.3); }
     .topbar-brand { display:flex;align-items:center;gap:9px;color:#fff;font-size:.88rem;font-weight:600;text-decoration:none; }
     .topbar-brand i { color:#90b8e8;font-size:1.05rem; }
     .topbar-brand .edition { font-size:.73rem;font-weight:400;opacity:.6;background:rgba(255,255,255,.12);padding:2px 7px;border-radius:4px; }
-    .page-stack { min-width:320px;max-width:900px;margin:0 auto;padding:80px 16px 48px; }
+    .page-stack { min-width:320px;max-width:960px;margin:0 auto;padding:58px 16px 20px; }
+    @media(min-width:1024px){ .page-stack{max-width:1100px;padding:58px 24px 20px;} }
+    @media(min-width:1280px){ .page-stack{max-width:1250px;padding:58px 32px 20px;} }
+    @media(min-width:1600px){ .page-stack{max-width:1450px;padding:58px 40px 20px;} }
     .step-track { display:flex;align-items:center;padding:14px 18px;background:#fff;border:1px solid var(--edu-border);border-radius:10px;margin-bottom:20px;box-shadow:0 1px 4px rgba(26,47,90,.06); }
     .step-node { display:flex;flex-direction:column;align-items:center;gap:5px;flex:1; }
     .step-node__circle { width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.82rem; }
@@ -35,35 +38,35 @@
     .panel-card { background:#fff;border:1px solid var(--edu-border);border-radius:12px;box-shadow:0 4px 28px rgba(26,47,90,.09);overflow:hidden;margin-bottom:20px; }
     .panel-card__head { background:var(--edu-navy);padding:22px 28px 18px;display:flex;gap:16px;align-items:flex-start; }
     .head-icon { width:48px;height:48px;flex-shrink:0;background:rgba(255,255,255,.12);border-radius:9px;display:flex;align-items:center;justify-content:center; }
-    .head-icon i { font-size:1.4rem;color:#90b8e8; }
-    .head-text h1 { font-family:'Source Serif 4',Georgia,serif !important;font-size:1.2rem;font-weight:600;color:#fff;margin:0 0 4px !important; }
-    .head-text p { font-size:.79rem;color:#8ab0d8;margin:0 !important;line-height:1.5; }
+    .head-icon i { font-size:1.7rem;color:#90b8e8; }
+    .head-text h1 { font-family:'Poppins',sans-serif !important;font-size:1.5rem;font-weight:700;color:#fff;margin:0 0 4px !important;letter-spacing:-0.02em; }
+    .head-text p { font-size:.92rem;color:#8ab0d8;margin:0 !important;line-height:1.5;font-weight:500; }
     .panel-card__body { padding:24px 28px; }
     .stat-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px; }
     .stat-card { border:1px solid var(--edu-border);border-radius:10px;padding:14px 16px;background:var(--edu-light);display:flex;flex-direction:column;gap:4px; }
-    .stat-card__icon { font-size:1.1rem;color:#6090c8; }
-    .stat-card__value { font-size:1.5rem;font-weight:700;color:var(--edu-navy);line-height:1; }
-    .stat-card__label { font-size:.72rem;color:#64748b; }
+    .stat-card__icon { font-size:1.3rem;color:#6090c8; }
+    .stat-card__value { font-size:1.75rem;font-weight:800;color:var(--edu-navy);line-height:1; }
+    .stat-card__label { font-size:.85rem;color:#64748b;font-weight:600; }
     .table-wrap { overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:20px; }
     .fb-table { width:100%;border-collapse:collapse;min-width:580px; }
-    .fb-table th { padding:10px 12px;text-align:left;font-size:.75rem;font-weight:600;color:#64748b;border-bottom:2px solid var(--edu-border);background:var(--edu-light);text-transform:uppercase;letter-spacing:.4px; }
-    .fb-table td { padding:14px 12px;vertical-align:top;border-bottom:1px solid #eef2f8;font-size:.85rem; }
+    .fb-table th { padding:12px 14px;text-align:left;font-size:.88rem;font-weight:700;color:#64748b;border-bottom:2px solid var(--edu-border);background:var(--edu-light);text-transform:uppercase;letter-spacing:.4px; }
+    .fb-table td { padding:16px 14px;vertical-align:top;border-bottom:1px solid #eef2f8;font-size:.98rem;font-weight:500; }
     .fb-table tr:last-child td { border-bottom:none; }
     .fb-table tr:hover td { background:#fafcff; }
     .score-bar-wrap { margin-top:5px; }
     .score-bar-track { height:6px;background:#e2e8f0;border-radius:99px;overflow:hidden; }
     .score-bar-fill { height:100%;border-radius:99px;transition:width .4s; }
-    .score-meta { font-size:.74rem;color:#64748b;margin-top:4px; }
+    .score-meta { font-size:.85rem;color:#64748b;margin-top:4px;font-weight:500; }
     .score-delta { font-weight:600; }
     .score-delta.pass { color:#16a34a; }
     .score-delta.fail { color:#dc2626; }
-    .status-badge { display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:99px;font-size:.75rem;font-weight:600; }
+    .status-badge { display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:99px;font-size:.88rem;font-weight:700; }
     .status-badge.pass { background:#dcfce7;color:#166534; }
     .status-badge.fail { background:#fee2e2;color:#991b1b; }
-    .accordion-toggle { background:none;border:none;padding:0;font-size:.8rem;color:var(--edu-blue);font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px; }
+    .accordion-toggle { background:none;border:none;padding:0;font-size:.92rem;color:var(--edu-blue);font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px; }
     .accordion-toggle i { transition:transform .2s;font-size:.7rem; }
     .accordion-toggle.open i { transform:rotate(180deg); }
-    .accordion-body { display:none;margin-top:8px;font-size:.8rem;color:#475569;line-height:1.6;padding:10px 12px;background:var(--edu-light);border-radius:8px;border-left:3px solid var(--edu-blue); }
+    .accordion-body { display:none;margin-top:8px;font-size:.92rem;color:#475569;line-height:1.7;padding:12px 14px;background:var(--edu-light);border-radius:8px;border-left:3px solid var(--edu-blue);font-weight:500; }
     .accordion-body.visible { display:block; }
     .doc-panel { display:none;padding:16px 18px;margin-bottom:20px;background:#fff8f0;border:1px solid #f0d8a8;border-radius:10px; }
     .doc-panel.visible { display:block; }
@@ -79,12 +82,12 @@
     .quest-banner__body { flex:1; }
     .quest-banner__body h3 { font-size:.95rem;font-weight:600;color:#fff;margin:0 0 3px !important; }
     .quest-banner__body p { font-size:.78rem;color:#8ab0d8;margin:0 !important; }
-    .btn-quest { flex-shrink:0;background:#fff;color:var(--edu-navy);border:none;border-radius:8px;padding:.5rem 1.1rem;font-weight:700;font-size:.83rem;display:inline-flex;align-items:center;gap:6px;text-decoration:none;transition:opacity .15s;white-space:nowrap; }
+    .btn-quest { flex-shrink:0;background:#fff;color:var(--edu-navy);border:none;border-radius:8px;padding:.55rem 1.2rem;font-weight:700;font-size:.9rem;display:inline-flex;align-items:center;gap:6px;text-decoration:none;transition:opacity .15s;white-space:nowrap;letter-spacing:0.01em; }
     .btn-quest:hover { opacity:.88;color:var(--edu-navy); }
     .empty-state { text-align:center;padding:48px 20px;color:#64748b; }
     .empty-state i { font-size:3rem;color:#c8d8ee;margin-bottom:12px; }
     .empty-state h3 { font-size:1rem;font-weight:600;color:#344566;margin-bottom:6px !important; }
-    .btn-sm-edu { font-size:.77rem;padding:.32rem .75rem;border-radius:6px;display:inline-flex;align-items:center;gap:5px;transition:.15s;cursor:pointer;font-weight:500;border:none; }
+    .btn-sm-edu { font-size:.82rem;padding:.36rem .8rem;border-radius:6px;display:inline-flex;align-items:center;gap:5px;transition:.15s;cursor:pointer;font-weight:700;border:none;letter-spacing:0.01em; }
     .btn-sm-view { background:var(--edu-light);border:1px solid #b8cee8;color:var(--edu-blue); }
     .btn-sm-view:hover { background:var(--edu-blue);color:#fff; }
     .theme-switch { position:fixed;left:14px;bottom:14px;z-index:30;padding:6px 13px;border-radius:999px;border:1px solid var(--edu-border);background:#fff;color:#475569;font-size:.76rem;cursor:pointer;display:flex;align-items:center;gap:5px; }
@@ -97,7 +100,7 @@
     :root[data-theme="dark"] .accordion-body { background:#182540;color:#90b8e8; }
     :root[data-theme="dark"] .doc-panel { background:#1e1808;border-color:#3a2e10; }
     :root[data-theme="dark"] .theme-switch { background:#182030;border-color:#2d3d5a;color:#90b0d8; }
-    @media (max-width:540px) { .stat-grid{grid-template-columns:repeat(2,1fr);} .quest-banner{flex-direction:column;text-align:center;} .panel-card__head{padding:18px;} .panel-card__body{padding:16px 18px;} .topbar-brand .edition{display:none;} }
+    @media(max-width:540px){ .page-stack{padding:58px 12px 16px;max-width:100%;} .stat-grid{grid-template-columns:repeat(2,1fr);} .quest-banner{flex-direction:column;text-align:center;} .panel-card__head{padding:18px;} .panel-card__body{padding:16px 18px;} .topbar-brand .edition{display:none;} }
   </style>
 </head>
 
@@ -211,11 +214,10 @@
   <script defer src="../shared/js/theme.js"></script>
 
   <script>
-  const SCORES={' Web Dev Lab':66,'Web Dev Lab':66,'HCI Coursework 1':78,'Programming Lab':66};
-  const PASSES={'Web Dev Lab':60,'HCI Coursework 1':65,'Programming Lab':55};
-  const FEEDBACK={'Web Dev Lab':'Good structural approach to layout. Responsive breakpoints applied correctly. Consider adding more thorough CSS validation and testing edge-case states on smaller viewports.','HCI Coursework 1':'Strong analysis of user requirements. Wireframes clearly documented. Marks deducted for limited depth in evaluation section — expand discussion of heuristics in final report.','Programming Lab':'Code executes correctly across all test cases. Readability reasonable. Improvement areas include inline documentation and handling of unexpected input values.'};
-  function scoreFor(t){return SCORES[t]??Math.floor(58+Math.random()*30);}
-  function passFor(t){return PASSES[t]??60;}
+  // 使用提交时存储的真实分数，而非硬编码
+  function scoreFor(sub){return sub.score ?? 66;} // 如果旧数据没有score字段，默认66
+  function passFor(sub){return sub.passMark ?? 60;}
+  function feedbackFor(sub){return sub.feedback ?? 'Your work has been reviewed. Check back for detailed comments.';}
   function toggleFb(btn){const b=btn.nextElementSibling;const o=b.classList.toggle('visible');btn.classList.toggle('open',o);btn.setAttribute('aria-expanded',o);}
   function getSubs(){try{return JSON.parse(localStorage.getItem('study_submissions_v1')||'[]');}catch(e){return[];}}
   function getStudyId(){try{return JSON.parse(localStorage.getItem('study_identity_v1')||'{}').studyId||'';}catch(e){return '';}}
@@ -229,7 +231,7 @@
     const subs=getSubs();
     const mine=subs.filter(s=>s.studyId===sid);
     const sub=mine[idx];if(!sub)return;
-    const task=sub.task||sub.assignment||'(unknown)';const sc=scoreFor(task);const pm=passFor(task);const delta=sc-pm;const passed=delta>=0;const fb=FEEDBACK[task]||'No feedback available.';
+    const task=sub.task||sub.assignment||'(unknown)';const sc=scoreFor(sub);const pm=passFor(sub);const delta=sc-pm;const passed=delta>=0;const fb=feedbackFor(sub);
     const fileRow=`<div class="doc-panel__row"><span class="doc-panel__label"><i class="fa-regular fa-file me-1"></i>File</span><span class="doc-panel__value">${sub.fileName||'No file attached'}${sub.fileDataUrl?`<br><button onclick="openSubmissionFile(getSubs().filter(s=>s.studyId===getStudyId())[${idx}])" style="margin-top:8px;padding:4px 10px;background:#2558a8;color:#fff;border:none;border-radius:6px;font-size:.75rem;cursor:pointer;display:inline-flex;align-items:center;gap:5px;"><i class="fa-regular fa-file"></i> Open file</button>`:''}</span></div>`;
     content.innerHTML=`<div class="doc-panel__row"><span class="doc-panel__label"><i class="fa-solid fa-book-open me-1"></i>Module</span><span class="doc-panel__value">${task}</span></div><div class="doc-panel__row"><span class="doc-panel__label"><i class="fa-regular fa-clock me-1"></i>Submitted</span><span class="doc-panel__value">${sub.createdAtISO?new Date(sub.createdAtISO).toLocaleString('en-GB'):'—'}</span></div>${fileRow}<div class="doc-panel__row"><span class="doc-panel__label"><i class="fa-solid fa-pen-nib me-1"></i>Notes</span><span class="doc-panel__value">${sub.comments||'No notes provided'}</span></div><div class="doc-panel__row"><span class="doc-panel__label"><i class="fa-solid fa-star-half-stroke me-1"></i>Score</span><span class="doc-panel__value"><strong>${sc}%</strong> vs pass mark ${pm}% — <span style="color:${passed?'#16a34a':'#dc2626'};font-weight:600;">${passed?'+':''}${delta}% ${passed?'above':'below'} pass mark</span></span></div><div class="doc-panel__row"><span class="doc-panel__label"><i class="fa-solid fa-chalkboard me-1"></i>Feedback</span><span class="doc-panel__value">${fb}</span></div>`;
     panel.classList.add('visible');panel.scrollIntoView({behavior:'smooth',block:'start'});
@@ -243,7 +245,7 @@
     const sid=getStudyId();
     const mine=getSubs().filter(s=>s.studyId===sid);
     document.getElementById('statCount').textContent=mine.length;
-    if(mine.length>0){const scores=mine.map(s=>scoreFor(s.task||s.assignment||''));const avg=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);const passedN=mine.filter(s=>scoreFor(s.task||s.assignment||'')>=passFor(s.task||s.assignment||'')).length;document.getElementById('statAvg').textContent=avg+'%';document.getElementById('statPassed').textContent=passedN+' / '+mine.length;}
+    if(mine.length>0){const scores=mine.map(s=>scoreFor(s));const avg=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);const passedN=mine.filter(s=>scoreFor(s)>=passFor(s)).length;document.getElementById('statAvg').textContent=avg+'%';document.getElementById('statPassed').textContent=passedN+' / '+mine.length;}
     if(mine.length===0){histEl.innerHTML='<div class="empty-state"><i class="fa-regular fa-folder-open"></i><h3>No submissions yet</h3><p>You have not submitted any assignments in this session.<br><a href="./submit.html" style="color:#2558a8;font-weight:600;">Go to Submit</a> to complete your task.</p></div>';return;}
     const rows=mine.map((s,i)=>buildRow(s,i)).join('');
     histEl.innerHTML=`<div class="table-wrap"><table class="fb-table" aria-label="Submission records"><thead><tr><th><i class="fa-solid fa-file-lines me-1"></i>Assignment</th><th><i class="fa-solid fa-star-half-stroke me-1"></i>Score vs Pass Mark</th><th><i class="fa-solid fa-circle-half-stroke me-1"></i>Status</th><th><i class="fa-solid fa-chalkboard me-1"></i>Tutor Feedback</th></tr></thead><tbody>${rows}</tbody></table></div>`;
