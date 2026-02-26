@@ -104,7 +104,9 @@
 </head>
 <body data-framework="bootstrap" data-page="feedback">
   <a class="skip-link visually-hidden-focusable" href="#main">Skip to main content</a>
+  // The statusLive element is used to provide live feedback to screen readers, such as confirming that the Study ID has been copied to the clipboard or that the session has been reset. It is visually hidden but remains accessible to assistive technologies, ensuring that all users receive important status updates during their interaction with the portal.
   <div id="statusLive" class="visually-hidden" aria-live="polite"></div>
+  // The button has an aria-label for accessibility and uses a Font Awesome copy icon for visual clarity.
   <header class="portal-topbar" role="banner">
     <a class="topbar-brand" href="./index.html">
       <i class="fa-solid fa-building-columns" aria-hidden="true"></i>
@@ -121,6 +123,9 @@
       </button>
     </div>
   </header>
+
+  // The main content area has a role of "main" and is focusable with tabindex="-1" to allow keyboard users to jump directly to it after skipping the navigation.
+   The class "page-canvas" is used for styling and layout purposes.
   <main id="main" class="page-stack" role="main" tabindex="-1">
     <nav class="step-track" aria-label="Study session steps">
       <div class="step-node">
@@ -133,6 +138,8 @@
         <span class="step-node__text is-done">Submit</span>
       </div>
       <div class="step-line done" aria-hidden="true"></div>
+      // The current step is marked with "is-active" and has an aria-current="step" attribute to indicate the user's current position in the process. 
+      This helps screen reader users understand where they are in the workflow.
       <div class="step-node">
         <div class="step-node__circle is-active" aria-current="step">
           <i class="fa-solid fa-award" aria-hidden="true"></i>
@@ -149,6 +156,8 @@
         </div>
       </div>
       <div class="panel-card__body">
+        // The stat grid provides a quick overview of the user's performance, including total submissions, average score, and pass count. 
+        Each stat card includes an icon for visual interest, a value that will be populated dynamically, and a label for clarity.
         <div class="stat-grid" id="statGrid" aria-label="Summary statistics">
           <div class="stat-card">
             <span class="stat-card__icon"><i class="fa-solid fa-inbox" aria-hidden="true"></i></span>
@@ -166,11 +175,16 @@
             <span class="stat-card__label">Passed</span>
           </div>
         </div>
+
+        // The feedback table lists all submissions with their respective scores, pass/fail status
         <div class="doc-panel" id="docPanel" role="region" aria-label="Submission details">
           <div class="doc-panel__header">
             <span class="doc-panel__title">
               <i class="fa-solid fa-file-lines" aria-hidden="true"></i> Submission Details
             </span>
+
+            // The close button allows users to hide the details panel when they are finished reviewing a submission.
+             It has an aria-label for accessibility and uses a Font Awesome "x" icon for clarity.
             <button class="doc-panel__close" onclick="document.getElementById('docPanel').classList.remove('visible')" aria-label="Close details panel">
               <i class="fa-solid fa-xmark"></i>
             </button>
@@ -181,6 +195,10 @@
         <div id="history"></div>
       </div>
     </div>
+
+    // The questionnaire banner encourages users to complete a follow-up survey after reviewing their feedback.
+     It includes an icon, a heading, a description, and a call-to-action button that opens the questionnaire in a new tab. 
+     The banner is designed to be visually distinct and accessible, with clear labels and sufficient color contrast.
     <div class="quest-banner" role="complementary" aria-label="Study questionnaire">
       <div class="quest-banner__icon"><i class="fa-solid fa-clipboard-list" aria-hidden="true"></i></div>
       <div class="quest-banner__body">
@@ -193,6 +211,9 @@
       </a>
     </div>
   </main>
+
+  // The theme toggle button allows users to switch between light and dark modes. It has an aria-label for accessibility and uses a Font Awesome half-moon icon to indicate its function. 
+   The button's state (aria-pressed) will be updated dynamically based on the current theme, providing feedback to assistive technologies about the toggle state.
   <button id="themeToggle" class="theme-switch" type="button" aria-label="Toggle colour theme" aria-pressed="false">
     <i class="fa-regular fa-moon" aria-hidden="true"></i> Theme
   </button>
@@ -201,8 +222,9 @@
   <script defer src="../shared/js/theme.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-  // 使用提交时存储的真实分数，而非硬编码
-  function scoreFor(sub){return sub.score ?? 66;} // 如果旧数据没有score字段，默认66
+
+// JavaScript functions to handle feedback display, score calculations, and interaction with stored submissions. These functions will be used to populate the feedback table and details panel based on the user's submission history.
+  function scoreFor(sub){return sub.score ?? 66;} // Default score is set to 66% for demonstration purposes. In a real implementation, this would be calculated based on the submission's content and the assignment's grading criteria.
   function passFor(sub){return sub.passMark ?? 60;}
   function feedbackFor(sub){return sub.feedback ?? 'Your work has been reviewed. Check back for detailed comments.';}
   function toggleFb(btn){const b=btn.nextElementSibling;const o=b.classList.toggle('visible');btn.classList.toggle('open',o);btn.setAttribute('aria-expanded',o);}

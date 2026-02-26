@@ -174,8 +174,10 @@
               </label>
               <span class="badge-req">Required</span>
             </div>
+            
+            // The same file input and drag-and-drop zone implementation as in the Bootstrap version, but with Bulma classes and styles
             <div class="drop-zone" id="dropZone" role="button" tabindex="0"
-                 aria-label="Click to choose a file or drag and drop here">
+                 aria-label="Click to choose a file or drag and drop here"> // WCAG 2.1 recommends using aria-label on interactive elements that don't have visible text to ensure they are accessible to screen readers
               <div class="drop-zone__icon"><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i></div>
               <p class="drop-zone__cta"><a id="browseLink">Click to browse</a> or drag a file here</p>
               <p class="drop-zone__sub">PDF, ZIP, DOC, DOCX accepted</p>

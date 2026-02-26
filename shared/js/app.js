@@ -44,11 +44,13 @@ function nowISO() {
   return new Date().toISOString();
 }
 
+// Generate a random Study ID in the format "PXXXX", where XXXX is a zero-padded number between 0000 and 9999. 
 function generateStudyId() {
   const n = Math.floor(Math.random() * 10000);
   return `P${String(n).padStart(4, "0")}`;
 }
 
+// Detect the framework version based on the data-framework attribute on the body element.
 function detectVersion() {
   const framework = document.body.dataset.framework;
   if (framework === 'bootstrap') return 'version_A';
@@ -65,10 +67,12 @@ function getIdentity() {
   return obj;
 }
 
+// Save the user's identity information, including Study ID, nickname, and version code.
 function setIdentity(identity) {
   localStorage.setItem(IDENTITY_KEY, JSON.stringify(identity));
 }
 
+// Ensure that a Study ID exists in localStorage, generating a new one if necessary.
 function ensureIdentity() {
   let identity = getIdentity();
   if (!identity) {
@@ -296,8 +300,8 @@ function wireSubmitForm() {
       form.querySelector('textarea[name="comments"], textarea#comments, textarea#commentsInput') || null;
     const comments = commentsInput ? commentsInput.value.trim() : "";
 
-    // 动态生成评分和反馈
-    const mockScore = 60 + Math.floor(Math.random() * 36); // 60-95分随机
+    // Simulate a score for demonstration purposes. In a real application, this would be determined by the marker's evaluation of the submission.
+    const mockScore = 60 + Math.floor(Math.random() * 36);  // Generates a score between 60 and 95.
     const passMarks = {
       'Web Dev Lab': 60,
       'HCI Coursework 1': 60,
@@ -306,7 +310,7 @@ function wireSubmitForm() {
     const passMark = passMarks[task] || 60;
     const passed = mockScore >= passMark;
     
-    // 随机选择教师反馈
+    // Generate dynamic feedback based on the simulated score. In a real application, this would come from the marker's comments and evaluation of the submission.
     const feedbackOptions = [
       'Good structural approach to layout. Responsive breakpoints applied correctly. Consider adding more thorough CSS validation and testing edge-case states on smaller viewports.',
       'Strong analysis of user requirements. Wireframes clearly documented. Marks deducted for limited depth in evaluation section – expand discussion of heuristics in final report.',
@@ -329,7 +333,7 @@ function wireSubmitForm() {
       fileSize,
       comments,
       createdAtISO: nowISO(),
-      // 动态生成的评分数据
+      // The score, pass mark, status, and feedback are included in the submission record for demonstration purposes. In a real application, these would be determined by the marker's evaluation of the submission and stored separately from the submission data.
       score: mockScore,
       passMark: passMark,
       status: passed ? 'Passed' : 'At Risk',

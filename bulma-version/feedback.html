@@ -106,8 +106,11 @@
 
 <body data-framework="bulma" data-page="feedback">
   <a class="skip-link" href="#main">Skip to main content</a>
+  // The statusLive element is used to provide live updates to screen reader users about the status of their actions, such as when feedback is loaded or when a submission is selected. 
+  It has an aria-live attribute set to "polite" to ensure that updates are announced at an appropriate time without interrupting the user's current activity.
   <div id="statusLive" class="is-sr-only" aria-live="polite"></div>
 
+  // The header contains the portal's branding and navigation elements.
   <header class="portal-topbar" role="banner">
     <a class="topbar-brand" href="./index.html">
       <i class="fa-solid fa-building-columns" aria-hidden="true"></i>
@@ -125,21 +128,27 @@
     </div>
   </header>
 
+  // The main content area is where users will review their assignment feedback and results.
+   The main element has appropriate ARIA roles and attributes to ensure accessibility for all users.
   <main id="main" class="page-stack" role="main" tabindex="-1">
-
+    //  The step tracker visually represents the user's progress through the study process.
     <nav class="step-track" aria-label="Study session steps">
+      // Each step node represents a stage in the process, with visual indicators for completed steps (is-done) and the current active step (is-active). 
       <div class="step-node">
         <div class="step-node__circle is-done"><i class="fa-solid fa-check" aria-hidden="true"></i></div>
         <span class="step-node__text is-done">Sign In</span>
       </div>
+      // The step line elements visually connect the steps and indicate completion status. They are marked with aria-hidden="true" to ensure they are ignored by screen readers, as they do not convey additional information beyond the step nodes.
       <div class="step-line done" aria-hidden="true"></div>
       <div class="step-node">
+        // The "Submit" step is marked as completed, indicating that the user has successfully submitted their assignment.
         <div class="step-node__circle is-done"><i class="fa-solid fa-check" aria-hidden="true"></i></div>
         <span class="step-node__text is-done">Submit</span>
       </div>
+      // The final step, "Results," is marked as active, indicating that the user is currently viewing their feedback and results for the assignment. 
       <div class="step-line done" aria-hidden="true"></div>
       <div class="step-node">
-        <div class="step-node__circle is-active" aria-current="step">
+        // The "Results" step is the current active step, indicating that the user is currently reviewing their feedback and results for the assignment. 
           <i class="fa-solid fa-award" aria-hidden="true"></i>
         </div>
         <span class="step-node__text is-active">Results</span>
@@ -156,6 +165,7 @@
       </div>
 
       <div class="panel-card__body">
+        // The stat grid provides a quick overview of the user's performance.
         <div class="stat-grid" id="statGrid" aria-label="Summary statistics">
           <div class="stat-card">
             <span class="stat-card__icon"><i class="fa-solid fa-inbox" aria-hidden="true"></i></span>
@@ -174,23 +184,27 @@
           </div>
         </div>
 
+        // The feedback table lists all of the user's submissions, along with their scores, pass/fail status, and an option to view detailed feedback.
         <div class="doc-panel" id="docPanel" role="region" aria-label="Submission details">
           <div class="doc-panel__header">
             <span class="doc-panel__title">
               <i class="fa-solid fa-file-lines" aria-hidden="true"></i> Submission Details
             </span>
+            // The close button allows users to hide the detailed feedback panel when they are finished reviewing their submission details. It is designed to be easily accessible and includes an aria-label for screen reader users.
             <button class="doc-panel__close" onclick="document.getElementById('docPanel').classList.remove('visible')" aria-label="Close details panel">
               <i class="fa-solid fa-xmark"></i>
             </button>
           </div>
           <div id="docPanelContent"></div>
         </div>
-
+         
+        // The feedback section provides a summary of the user's performance on each submission, including scores, pass/fail status, and any comments from the tutor. 
         <div id="fb" aria-live="polite"></div>
         <div id="history" class="mt-2"></div>
       </div>
     </div>
 
+    // The quest banner encourages users to complete the study questionnaire after reviewing their feedback. 
     <div class="quest-banner" role="complementary" aria-label="Study questionnaire">
       <div class="quest-banner__icon"><i class="fa-solid fa-clipboard-list" aria-hidden="true"></i></div>
       <div class="quest-banner__body">
@@ -205,6 +219,7 @@
 
   </main>
 
+  // The theme toggle button allows users to switch between light and dark themes for better accessibility and user preference.
   <button id="themeToggle" class="theme-switch" type="button" aria-label="Toggle colour theme" aria-pressed="false">
     <i class="fa-regular fa-moon" aria-hidden="true"></i> Theme
   </button>
@@ -214,8 +229,8 @@
   <script defer src="../shared/js/theme.js"></script>
 
   <script>
-  // 使用提交时存储的真实分数，而非硬编码
-  function scoreFor(sub){return sub.score ?? 66;} // 如果旧数据没有score字段，默认66
+  // The following JavaScript functions are responsible for handling the retrieval and display of submission data, calculating scores, and managing user interactions with the feedback interface.
+  function scoreFor(sub){return sub.score ?? 66;} // The scoreFor function retrieves the score for a given submission. If the score is not available, it defaults to 66%. In a real implementation, this function would likely calculate the score based on the submission data or retrieve it from a server.
   function passFor(sub){return sub.passMark ?? 60;}
   function feedbackFor(sub){return sub.feedback ?? 'Your work has been reviewed. Check back for detailed comments.';}
   function toggleFb(btn){const b=btn.nextElementSibling;const o=b.classList.toggle('visible');btn.classList.toggle('open',o);btn.setAttribute('aria-expanded',o);}
