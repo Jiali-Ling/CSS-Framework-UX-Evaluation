@@ -15,79 +15,72 @@
   <link href="../shared/css/app.css" rel="stylesheet">
 
   <style>
-    :root { --edu-navy:#1a2f5a; --edu-blue:#2558a8; --edu-light:#eef3fb; --edu-border:#d0d9e8; }
-    body { font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif !important; background:#f0f4fb; overflow-y:auto; font-weight:500; -webkit-font-smoothing:antialiased; }
+    :root { --edu-navy:#1a2f5a; --edu-blue:#2558a8; --edu-light:#eef3fb; --edu-border:#d0d9e8; --edu-accent:#c9822a; }
+    body { font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif !important; background:#f0f4fb; font-weight:500; -webkit-font-smoothing:antialiased; }
     .portal-topbar { position:fixed;top:0;left:0;right:0;z-index:100;height:56px;background:var(--edu-navy);display:flex;align-items:center;justify-content:space-between;padding:0 20px;box-shadow:0 2px 10px rgba(0,0,0,.3); }
     .topbar-brand { display:flex;align-items:center;gap:9px;color:#fff;font-size:.88rem;font-weight:600;text-decoration:none; }
     .topbar-brand i { color:#90b8e8;font-size:1.05rem; }
     .topbar-brand .edition { font-size:.73rem;font-weight:400;opacity:.6;background:rgba(255,255,255,.12);padding:2px 7px;border-radius:4px; }
     .page-canvas { min-height:100vh;padding:58px 16px 16px;display:flex;align-items:center;justify-content:center; }
     .portal-card { width:100%;max-width:720px;background:#fff;border:1px solid var(--edu-border);border-radius:14px;box-shadow:0 4px 28px rgba(26,47,90,.09);overflow:hidden; }
-    .portal-card__head { background:var(--edu-navy);padding:26px 28px 22px;display:flex;gap:16px;align-items:flex-start; }
-    .head-icon { width:52px;height:52px;flex-shrink:0;background:rgba(255,255,255,.12);border-radius:10px;display:flex;align-items:center;justify-content:center; }
+    .portal-card__head { background:var(--edu-navy);padding:22px 28px 18px;display:flex;gap:16px;align-items:flex-start; }
+    .head-icon { width:48px;height:48px;flex-shrink:0;background:rgba(255,255,255,.12);border-radius:9px;display:flex;align-items:center;justify-content:center; }
     .head-icon i { font-size:1.75rem;color:#90b8e8; }
-    .head-text h1 { font-family:'Poppins',sans-serif !important;font-size:1.55rem;font-weight:700;color:#fff;margin:0 0 5px !important;letter-spacing:-0.02em; }
-    .head-text p { font-size:.95rem;color:#8ab0d8;margin:0 !important;line-height:1.5;font-weight:500; }
-    .portal-card__body { padding:26px 28px 30px; }
-    .step-track { display:flex;align-items:center;padding:14px 18px;background:var(--edu-light);border:1px solid #ccd9f0;border-radius:10px;margin-bottom:22px; }
-    .step-node { display:flex;flex-direction:column;align-items:center;gap:5px;flex:1; }
+    .head-text h1 { font-family:'Poppins',sans-serif !important;font-size:1.55rem;font-weight:700;color:#fff;margin:0 0 4px;letter-spacing:-0.02em; }
+    .head-text p { font-size:.95rem;color:#8ab0d8;margin:0;line-height:1.5;font-weight:500; }
+    .portal-card__body { padding:24px 28px; }
+    .step-track { display:flex;align-items:center;padding:12px 16px;background:var(--edu-light);border:1px solid var(--edu-border);border-radius:8px;margin-bottom:20px; }
+    .step-node { display:flex;flex-direction:column;align-items:center;gap:4px;flex:1; }
     .step-node__circle { width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.92rem;font-weight:700; }
     .step-node__circle.is-done { background:#16a34a;color:#fff; }
     .step-node__circle.is-active { background:var(--edu-blue);color:#fff;box-shadow:0 0 0 3px rgba(37,88,168,.18); }
-    .step-node__circle.is-pending { background:#dce6f5;color:#7a9dc8; }
+    .step-node__circle.is-pending { background:#e2e8f0;color:#94a3b8; }
     .step-node__text { font-size:.78rem;font-weight:600;color:#5c7099;text-align:center; }
     .step-node__text.is-active { color:var(--edu-blue);font-weight:600; }
     .step-node__text.is-done { color:#16a34a; }
-    .step-line { height:2px;flex:1;max-width:36px;background:#ccd9f0;margin-bottom:18px; }
+    .step-line { height:2px;flex:1;max-width:36px;background:#ccd9f0;margin-bottom:16px; }
     .step-line.done { background:#16a34a; }
-    .notice-box { display:flex;gap:9px;align-items:flex-start;padding:11px 13px;margin-bottom:22px;background:var(--edu-light);border-left:3px solid var(--edu-blue);border-radius:0 8px 8px 0;font-size:.8rem;color:#2d4e80;line-height:1.55; }
-    .notice-box i { margin-top:2px;flex-shrink:0; }
-    .field-label-row { display:flex;align-items:center;justify-content:space-between;margin-bottom:5px; }
-    .label { font-size:.83rem;font-weight:500;color:var(--edu-navy) !important; }
-    .badge-req { font-size:.7rem;background:#fee2e2;color:#991b1b;padding:2px 7px;border-radius:4px;font-weight:600; }
-    .badge-opt { font-size:.8rem;background:#f1f5f9;color:#64748b;padding:2px 7px;border-radius:4px;font-weight:600; }
-    .input, .select select, .textarea {
-      border:1px solid var(--edu-border) !important;border-radius:8px !important;
-      font-size:1rem !important;font-family:'Inter',sans-serif !important;
-      font-weight:500 !important;
-    }
-    .input:focus, .select select:focus, .textarea:focus {
-      border-color:var(--edu-blue) !important;box-shadow:0 0 0 var(--focus-ring-width) var(--focus-ring-color) !important;
-    }
-    .help { font-size:.76rem !important; }
-    .drop-zone { border:2px dashed var(--edu-border);border-radius:10px;padding:28px 20px;text-align:center;cursor:pointer;transition:.2s;background:#fafcff; }
-    .drop-zone:hover,.drop-zone.drag-over { border-color:var(--edu-blue);background:var(--edu-light); }
-    .drop-zone__icon { font-size:2rem;color:#90b8e8;margin-bottom:8px; }
-    .drop-zone__cta { font-size:.98rem;color:#344566;margin:0;font-weight:600; }
-    .drop-zone__cta a { color:var(--edu-blue);font-weight:600;text-decoration:none; }
-    .drop-zone__sub { font-size:.88rem;color:#94a3b8;margin:4px 0 0;font-weight:500; }
-    .drop-zone__chosen { font-size:.95rem;color:#16a34a;font-weight:700;margin-top:6px;display:none; }
-    .drop-zone__chosen.visible { display:block; }
-    .button.is-primary { background:var(--edu-navy) !important;border:none !important;font-weight:700 !important;border-radius:8px !important;font-family:'Inter',sans-serif !important;font-size:1.05rem !important;padding:.8rem 1.7rem !important;letter-spacing:0.01em !important; }
-    .button.is-primary:hover { background:var(--edu-blue) !important; }
-    .button.is-light { border:1.5px solid var(--edu-border) !important;color:#344566 !important;font-weight:700 !important;border-radius:8px !important;font-size:1rem !important;letter-spacing:0.01em !important; }
-    .button.is-light:hover { border-color:var(--edu-blue) !important;color:var(--edu-blue) !important;background:var(--edu-light) !important; }
+    .notice-box { display:flex;gap:12px;align-items:flex-start;padding:14px 16px;background:var(--edu-light);border:1px solid #b8cee8;border-radius:8px;margin-bottom:20px;font-size:.96rem;color:#344566;line-height:1.6;font-weight:500; }
+    .notice-box i { color:var(--edu-blue);margin-top:2px;flex-shrink:0; }
+    .field-label { font-size:1rem;font-weight:700;color:#344566;margin-bottom:8px;display:flex;align-items:center;gap:5px; }
+    .field-label i { color:var(--edu-blue); }
+    .dropzone { border:2px dashed var(--edu-border);border-radius:10px;padding:28px 16px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;margin-bottom:4px;background:#fff; }
+    .dropzone:hover,.dropzone.drag-over { border-color:var(--edu-blue);background:var(--edu-light); }
+    .dropzone i.dz-icon { font-size:2rem;color:#b8cee8;display:block;margin-bottom:8px; }
+    .dz-label { font-size:1rem;font-weight:700;color:#344566;margin-bottom:4px; }
+    .dz-hint { font-size:.88rem;color:#64748b;font-weight:500; }
+    .dz-chosen { font-size:.95rem;color:#16a34a;font-weight:700;margin-top:6px;display:none; }
+    .visually-hidden { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0; }
+    .visually-hidden-focusable:not(:focus):not(:focus-within) { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0; }
+    .skip-link { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0; }
+    .skip-link:focus { position:static;width:auto;height:auto;padding:8px 16px;margin:0;overflow:visible;clip:auto;white-space:normal;background:var(--edu-navy);color:#fff;text-decoration:none; }
+    .field { margin-bottom:1rem; }
+    .select select, .textarea { border:1px solid var(--edu-border);border-radius:8px;font-size:1rem;font-family:'Inter',sans-serif;font-weight:500; }
+    .submit-actions { display:flex;gap:10px;flex-wrap:wrap;margin-top:18px; }
+    .button.is-primary { background:var(--edu-navy);color:#fff;border:none;border-radius:8px;padding:.75rem 1.6rem;font-weight:700;font-size:1.05rem;display:inline-flex;align-items:center;gap:7px;cursor:pointer;transition:opacity .15s;letter-spacing:0.01em; }
+    .button.is-primary:hover { opacity:.88; }
+    .button.is-light { background:var(--edu-light);color:var(--edu-blue);border:1px solid var(--edu-border);border-radius:8px;padding:.75rem 1.4rem;font-weight:700;font-size:1rem;display:inline-flex;align-items:center;gap:7px;cursor:pointer;text-decoration:none;transition:background .15s;letter-spacing:0.01em; }
+    .button.is-light:hover { background:#dce8f6;color:var(--edu-blue); }
     .theme-switch { position:fixed;left:14px;bottom:14px;z-index:100;padding:6px 13px;border-radius:999px;border:1px solid var(--edu-border);background:#fff;color:#475569;font-size:.76rem;cursor:pointer;display:flex;align-items:center;gap:5px;box-shadow:0 2px 12px rgba(0,0,0,.15); }
     :root[data-theme="dark"] body { background:#0d1320; }
-    :root[data-theme="dark"] .portal-card { background:#182030;border-color:#2d3d5a; }
-    :root[data-theme="dark"] .portal-card__body { color:#c8d8f0; }
-    :root[data-theme="dark"] .step-track { background:#182540;border-color:#2d3d5a; }
-    :root[data-theme="dark"] .notice-box { background:#182540;color:#90b8e8; }
-    :root[data-theme="dark"] .label { color:#90b0d8 !important; }
-    :root[data-theme="dark"] .input,:root[data-theme="dark"] .select select,:root[data-theme="dark"] .textarea { background:#1e2c42 !important;border-color:#2d3d5a !important;color:#c8d8f0 !important; }
-    :root[data-theme="dark"] .drop-zone { background:#1a2440;border-color:#2d3d5a; }
-    :root[data-theme="dark"] .button.is-light { background:#182030 !important;border-color:#2d3d5a !important;color:#90b0d8 !important; }
+    :root[data-theme="dark"] .portal-card { background:#182030;border-color:#2d3d5a;color:#c8d8f0; }
+    :root[data-theme="dark"] .step-track { background:#1a2540;border-color:#2d3d5a; }
+    :root[data-theme="dark"] .notice-box { background:#182540;border-color:#2d3d5a;color:#90b8e8; }
+    :root[data-theme="dark"] .dropzone { background:#182030;border-color:#2d3d5a; }
+    :root[data-theme="dark"] .select select,:root[data-theme="dark"] .textarea { background:#182030;border-color:#2d3d5a;color:#c8d8f0; }
+    :root[data-theme="dark"] .button.is-light { background:#182030;border-color:#2d3d5a;color:#90b0d8; }
+    :root[data-theme="dark"] .button.is-light:hover { background:#1e2c42;border-color:#3a4d6a;color:#a8c0e0; }
     :root[data-theme="dark"] .theme-switch { background:#182030;border-color:#2d3d5a;color:#90b0d8;box-shadow:0 2px 12px rgba(0,0,0,.40); }
     :root[data-theme="dark"] .badge-req { background:#dc2626;color:#fef2f2; }
-    @media (max-width:460px) { .page-canvas{padding:58px 12px 12px;} .portal-card{max-width:100%;} .portal-card__head{padding:18px;} .portal-card__body{padding:18px;} .topbar-brand .edition{display:none;} }
-    @media (min-width:768px) { .page-canvas{padding:58px 24px 16px;} .portal-card{max-width:800px;} .portal-card__body{padding:26px 30px;} .portal-card__head{padding:26px 30px 22px;} }
-    @media (min-width:1024px) { .page-canvas{padding:58px 32px 16px;} .portal-card{max-width:950px;} }
-    @media (min-width:1280px) { .page-canvas{padding:58px 40px 16px;} .portal-card{max-width:1150px;} .portal-card__body{padding:28px 36px;} .portal-card__head{padding:28px 36px 24px;} }
-    @media (min-width:1440px) { .portal-card{max-width:1250px;} }
+    @media(max-width:480px){ .page-canvas{padding:58px 12px 12px;} .portal-card{max-width:100%;} .portal-card__head{padding:18px;} .portal-card__body{padding:16px 18px;} .topbar-brand .edition{display:none;} }
+    @media(min-width:768px){ .page-canvas{padding:58px 24px 16px;} .portal-card{max-width:800px;} .portal-card__body{padding:26px 30px;} .portal-card__head{padding:24px 30px 20px;} }
+    @media(min-width:1024px){ .page-canvas{padding:58px 32px 16px;} .portal-card{max-width:950px;} }
+    @media(min-width:1280px){ .page-canvas{padding:58px 40px 16px;} .portal-card{max-width:1150px;} .portal-card__body{padding:28px 36px;} .portal-card__head{padding:26px 36px 22px;} }
+    @media(min-width:1440px){ .portal-card{max-width:1250px;} }
   </style>
 </head>
 
-<body data-framework="bulma">
+<body data-framework="bulma" data-page="submit">
   <a class="skip-link" href="#main">Skip to main content</a>
   <div id="statusLive" class="is-sr-only" aria-live="polite"></div>
 
@@ -98,10 +91,13 @@
       <span class="edition">Bulma Edition</span>
     </a>
     <div style="display:flex;align-items:center;gap:8px;">
-      <a class="button is-small is-light" href="../admin/log.html" target="_blank" rel="noopener" style="font-size:.76rem;">
-        <span class="icon"><i class="fa-solid fa-terminal"></i></span><span>Log</span>
-      </a>
       <span id="pidBadge" style="font-size:.76rem;color:#90b8e8;font-weight:500;">ID: —</span>
+      <button id="logoutBtn" type="button" class="button is-small is-light" title="Reset Study ID" style="font-size:.76rem;">
+        <span class="icon"><i class="fa-solid fa-rotate-left"></i></span>
+      </button>
+      <button id="copyIdBtn" class="button is-small is-light" type="button" title="Copy Study ID" style="font-size:.76rem;">
+        <span class="icon"><i class="fa-regular fa-copy"></i></span>
+      </button>
     </div>
   </header>
 
@@ -111,7 +107,7 @@
         <div class="head-icon"><i class="fa-solid fa-file-pen" aria-hidden="true"></i></div>
         <div class="head-text">
           <h1>Submit Your Assignment</h1>
-          <p>Select a module, attach your work, then click Submit. This is a simulated submission for study purposes.</p>
+          <p>Select your module, attach your file, and add any notes before submitting.</p>
         </div>
       </div>
 
@@ -124,101 +120,80 @@
           <div class="step-line done" aria-hidden="true"></div>
           <div class="step-node">
             <div class="step-node__circle is-active" aria-current="step">
-              <i class="fa-solid fa-file-lines" aria-hidden="true"></i>
+              <i class="fa-solid fa-file-pen" aria-hidden="true"></i>
             </div>
             <span class="step-node__text is-active">Submit</span>
           </div>
           <div class="step-line" aria-hidden="true"></div>
           <div class="step-node">
-            <div class="step-node__circle is-pending"><i class="fa-solid fa-award" aria-hidden="true"></i></div>
+            <div class="step-node__circle is-pending"><i class="fa-solid fa-chart-bar" aria-hidden="true"></i></div>
             <span class="step-node__text">Results</span>
           </div>
         </nav>
 
         <div class="notice-box" role="note">
-          <i class="fa-solid fa-flask" aria-hidden="true"></i>
-          <span>This is a simulated submission used only to evaluate the portal interface. No actual academic work is assessed. Choose any module below and attach any file.</span>
+          <i class="fa-solid fa-flask fa-sm" aria-hidden="true"></i>
+          <span>This is a simulated submission for a HCI evaluation study. No real file is uploaded — your data stays in your browser only.</span>
         </div>
 
         <form id="submitForm" data-next="./feedback.html" novalidate>
           <div class="field">
-            <div class="field-label-row">
-              <label class="label" for="taskSelect">
-                <span class="icon-text">
-                  <span class="icon" style="color:#7a9dc8;"><i class="fa-solid fa-book-open" aria-hidden="true"></i></span>
-                  <span>Module / Assignment</span>
-                </span>
-              </label>
-              <span class="badge-req">Required</span>
-            </div>
+            <label class="field-label" for="assignment">
+              <i class="fa-solid fa-book-open fa-sm" aria-hidden="true"></i>
+              Module / Assignment
+            </label>
             <div class="control">
               <div class="select is-fullwidth">
-                <select id="assignment" name="assignment">
-                  <option value="">— Select a module —</option>
-                  <option value="Web Dev Lab">Web Development Lab</option>
+                <select id="assignment" name="assignment" required style="font-size:.87rem;">
+                  <option value="" disabled selected>— Select your assignment —</option>
+                  <option value="Web Dev Lab">Web Dev Lab</option>
                   <option value="HCI Coursework 1">HCI Coursework 1</option>
                   <option value="Programming Lab">Programming Lab</option>
                 </select>
               </div>
             </div>
-            <p class="help">Choose the module you are simulating a submission for.</p>
           </div>
 
-          <div class="field mt-4">
-            <div class="field-label-row">
-              <label class="label" for="fileInput">
-                <span class="icon-text">
-                  <span class="icon" style="color:#7a9dc8;"><i class="fa-solid fa-paperclip" aria-hidden="true"></i></span>
-                  <span>Attach Document</span>
-                </span>
-              </label>
+          <div class="field">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+              <div class="field-label" id="dropzoneLabel" style="margin-bottom:0;">
+                <i class="fa-solid fa-file-arrow-up fa-sm" aria-hidden="true"></i>
+                Submission File
+              </div>
               <span class="badge-req">Required</span>
             </div>
-            
-            // The same file input and drag-and-drop zone implementation as in the Bootstrap version, but with Bulma classes and styles
-            <div class="drop-zone" id="dropZone" role="button" tabindex="0"
-                 aria-label="Click to choose a file or drag and drop here"> // WCAG 2.1 recommends using aria-label on interactive elements that don't have visible text to ensure they are accessible to screen readers
-              <div class="drop-zone__icon"><i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i></div>
-              <p class="drop-zone__cta"><a id="browseLink">Click to browse</a> or drag a file here</p>
-              <p class="drop-zone__sub">PDF, ZIP, DOC, DOCX accepted</p>
-              <p class="drop-zone__chosen" id="chosenFileName"></p>
+            <div class="dropzone" id="dropzone" role="button" tabindex="0"
+                 aria-labelledby="dropzoneLabel" aria-describedby="dzChosen">
+              <i class="fa-regular fa-file-lines dz-icon" aria-hidden="true"></i>
+              <div class="dz-label">Drag &amp; drop your file here</div>
+              <div class="dz-hint">or <span style="color:var(--edu-blue);font-weight:600;">browse to upload</span> · PDF, DOCX, ZIP accepted</div>
+              <div class="dz-chosen" id="dzChosen" aria-live="polite"></div>
+              <input type="file" id="fileInput" class="visually-hidden" accept=".pdf,.docx,.zip"
+                     aria-label="Choose submission file">
             </div>
-            <input type="file" style="display:none;" id="fileInput" accept=".pdf,.zip,.doc,.docx" aria-label="Choose a file to attach">
           </div>
 
-          <div class="field mt-4">
-            <div class="field-label-row">
-              <label class="label" for="commentsInput">
-                <span class="icon-text">
-                  <span class="icon" style="color:#7a9dc8;"><i class="fa-solid fa-pen-nib" aria-hidden="true"></i></span>
-                  <span>Submission Notes</span>
-                </span>
-              </label>
-              <span class="badge-opt">Optional</span>
-            </div>
-            <div class="control">
-              <textarea class="textarea" id="commentsInput" rows="3"
-                        placeholder="Add any notes about this submission..."></textarea>
-            </div>
-            <p class="help">Your notes will appear in the feedback record.</p>
+          <div class="field">
+            <label class="field-label" for="commentsInput">
+              <i class="fa-regular fa-comment-dots fa-sm" aria-hidden="true"></i>
+              Notes for marker
+              <span style="font-weight:400;color:#94a3b8;font-size:.82rem;">(optional)</span>
+            </label>
+            <textarea class="textarea" id="commentsInput" rows="3"
+                      placeholder="Any notes or context for your marker…"
+                      style="font-size:.87rem;resize:vertical;"></textarea>
           </div>
 
-          <div class="field is-grouped is-grouped-multiline mt-5" style="gap:8px;">
-            <div class="control">
-              <button type="submit" class="button is-primary" aria-describedby="submit-hint">
-                <span class="icon"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i></span>
-                <span>Submit Assignment</span>
-              </button>
-            </div>
-            <div class="control">
-              <a class="button is-light" href="./feedback.html" aria-describedby="view-fb-hint">
-                <span class="icon"><i class="fa-solid fa-award" aria-hidden="true"></i></span>
-                <span>View Feedback</span>
-              </a>
-            </div>
+          <div class="submit-actions">
+            <button type="submit" class="button is-primary">
+              <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+              Submit Assignment
+            </button>
+            <a href="./feedback.html" class="button is-light">
+              <i class="fa-solid fa-chart-bar" aria-hidden="true"></i>
+              View Feedback
+            </a>
           </div>
-          <p class="help mt-1" id="submit-hint">Records a submission and redirects to your results page.</p>
-          <p class="help mt-1" id="view-fb-hint">Opens your latest feedback directly.</p>
         </form>
       </div>
     </div>
@@ -232,16 +207,19 @@
   <script defer src="../shared/js/metrics.js"></script>
   <script defer src="../shared/js/theme.js"></script>
   <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const fileInput=document.getElementById('fileInput'),dropZone=document.getElementById('dropZone'),browseLink=document.getElementById('browseLink'),chosenName=document.getElementById('chosenFileName');
-    function showFile(n){chosenName.textContent=n?'\u2713 '+n:'';chosenName.classList.toggle('visible',!!n);}
-    browseLink.addEventListener('click',()=>fileInput.click());
-    dropZone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')fileInput.click();});
-    fileInput.addEventListener('change',e=>showFile(e.target.files[0]?.name||''));
-    dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.classList.add('drag-over');});
-    dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('drag-over'));
-    dropZone.addEventListener('drop',e=>{e.preventDefault();dropZone.classList.remove('drag-over');const f=e.dataTransfer.files[0];if(f){const dt=new DataTransfer();dt.items.add(f);fileInput.files=dt.files;showFile(f.name);}});
-  });
+    const dz = document.getElementById('dropzone');
+    const fi = document.getElementById('fileInput');
+    const dzChosen = document.getElementById('dzChosen');
+    dz.addEventListener('click', () => fi.click());
+    dz.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fi.click(); } });
+    dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
+    dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+    dz.addEventListener('drop', e => {
+      e.preventDefault(); dz.classList.remove('drag-over');
+      if (e.dataTransfer.files[0]) { fi.files = e.dataTransfer.files; showFile(e.dataTransfer.files[0].name); }
+    });
+    fi.addEventListener('change', () => { if (fi.files[0]) showFile(fi.files[0].name); });
+    function showFile(name) { dzChosen.textContent = '✓ ' + name; dzChosen.style.display = 'block'; }
   </script>
 </body>
 </html>
