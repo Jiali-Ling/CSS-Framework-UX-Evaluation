@@ -2,22 +2,41 @@
 <html lang="EN">
 <head>
   <meta charset="utf-8">
-  <title>Background log</title>
+  <title>Background Log - CSV Export</title>
   <link rel="icon" href="data:,">
   <link href="../shared/css/tokens.css" rel="stylesheet">
   <link href="../shared/css/bridge-bootstrap.css" rel="stylesheet">
   <link href="../shared/css/app.css" rel="stylesheet">
+  <style>
+    body { padding: 24px; background: #f8f9fa; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    .container { max-width: 1200px; margin: 0 auto; background: #fff; padding: 32px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+    h2 { color: #1a2f5a; margin: 0 0 24px; font-size: 1.75rem; font-weight: 700; }
+    .btn-group { display: flex; gap: 12px; margin-bottom: 24px; }
+    .btn { padding: 10px 20px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all .2s; font-size: .95rem; }
+    .btn-primary { background: #2558a8; color: #fff; }
+    .btn-primary:hover { background: #1d4580; }
+    .btn-light { background: #e9ecef; color: #495057; border: 1px solid #ced4da; }
+    .btn-light:hover { background: #dee2e6; }
+    .log-card { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 20px; overflow: auto; max-height: 600px; }
+    .table-like { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    .table-like thead th { padding: 12px; text-align: left; background: #e9ecef; font-weight: 700; color: #495057; border-bottom: 2px solid #dee2e6; position: sticky; top: 0; }
+    .table-like tbody td { padding: 12px; border-bottom: 1px solid #e9ecef; vertical-align: top; color: #212529; }
+    .table-like tbody tr:hover { background: #f8f9fa; }
+    pre { white-space: pre-wrap; margin: 0; font-family: 'Consolas', 'Monaco', monospace; font-size: .85rem; color: #495057; }
+    .info-text { color: #6c757d; font-size: .9rem; margin-bottom: 16px; }
+  </style>
 </head>
 <body>
-<div class="container" style="max-width:960px; padding:24px;">
-  <h2>Background log</h2>
-  <div class="mt-2">
-    <button id="export" class="btn btn-primary">Export CSV</button>
-    <button id="clear" class="btn btn-light">Clear log</button>
+<div class="container">
+  <h2>📊 Background Log & CSV Export</h2>
+  <p class="info-text">系统活动日志记录，可导出为CSV文件用于数据分析</p>
+  <div class="btn-group">
+    <button id="export" class="btn btn-primary">📥 Export CSV</button>
+    <button id="clear" class="btn btn-light">🗑️ Clear Log</button>
   </div>
-  <div class="card" style="margin-top:12px; padding:12px; overflow:auto;">
-    <table id="table" class="table-like" style="width:100%;">
-      <thead><tr><th>Time</th><th>Event</th><th>Details</th></tr></thead>
+  <div class="log-card">
+    <table id="table" class="table-like">
+      <thead><tr><th style="width:180px;">Time</th><th style="width:150px;">Event</th><th>Details</th></tr></thead>
       <tbody id="tbody"></tbody>
     </table>
   </div>

@@ -177,22 +177,37 @@
     .button.is-light:hover { border-color: var(--edu-blue) !important; color: var(--edu-blue) !important; background: var(--edu-light) !important; }
 
     .theme-switch {
-      position: fixed; left: 14px; bottom: 14px; z-index: 30;
-      padding: 6px 13px; border-radius: 999px;
-      border: 1px solid var(--edu-border); background: #fff; color: #475569;
-      font-size: .76rem; cursor: pointer; display: flex; align-items: center; gap: 5px;
+      position: fixed; left: 20px; bottom: 20px; z-index: 100;
+      padding: 12px 20px; border-radius: 999px;
+      border: 2px solid var(--edu-border); background: #fff; color: #475569;
+      font-size: .95rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;
+      box-shadow: 0 4px 16px rgba(26,47,90,.15); transition: all .2s ease;
     }
+    .theme-switch:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(26,47,90,.25); border-color: #2558a8; }
+    .theme-switch i { font-size: 1.1rem; }
 
     :root[data-theme="dark"] body { background: #0d1320; }
     :root[data-theme="dark"] .portal-card { background: #182030; border-color: #2d3d5a; }
     :root[data-theme="dark"] .portal-card__body { color: #c8d8f0; }
     :root[data-theme="dark"] .step-track { background: #182540; border-color: #2d3d5a; }
+    :root[data-theme="dark"] .step-node__text { color: #90b8e8; }
+    :root[data-theme="dark"] .step-node__text.is-active { color: #6db3f2; }
+    :root[data-theme="dark"] .step-node__circle.is-pending { background: #2d3d5a; color: #90b8e8; }
     :root[data-theme="dark"] .id-band { background: #1e1808; border-color: #3a2e10; color: #c8a060; }
-    :root[data-theme="dark"] .info-callout { background: #182540; color: #90b8e8; }
-    :root[data-theme="dark"] .label { color: #90b0d8 !important; }
-    :root[data-theme="dark"] .input { background: #1e2c42 !important; border-color: #2d3d5a !important; color: #c8d8f0 !important; }
-    :root[data-theme="dark"] .button.is-light { background: #182030 !important; border-color: #2d3d5a !important; color: #90b0d8 !important; }
-    :root[data-theme="dark"] .theme-switch { background: #182030; border-color: #2d3d5a; color: #90b0d8; }
+    .id-band--version { background: #f0f8ff !important; border-color: #b8d4f1 !important; color: #0a1628 !important; }
+    .id-band--version i { color: #2563eb !important; }
+    .id-band--version strong { color: #0a1628 !important; }
+    :root[data-theme="dark"] .id-band--version { background: #1a2540 !important; border-color: #2d4a8a !important; color: #e0e8f8 !important; }
+    :root[data-theme="dark"] .id-band--version i { color: #6db3f2 !important; }
+    :root[data-theme="dark"] .id-band--version strong { color: #ffffff !important; }
+    :root[data-theme="dark"] .info-callout { background: #182540; color: #a8c8e8; border-left-color: #4a7bc8; }
+    :root[data-theme="dark"] .label { color: #a8c0e0 !important; }
+    :root[data-theme="dark"] .input { background: #1e2c42 !important; border-color: #3d5d8a !important; color: #e0e8f0 !important; }
+    :root[data-theme="dark"] .input::placeholder { color: #6b8bb8 !important; }
+    :root[data-theme="dark"] .button.is-light { background: #2d3d5a !important; border-color: #3d5d8a !important; color: #c8d8f0 !important; }
+    :root[data-theme="dark"] .button.is-light:hover { background: #3d4d6a !important; border-color: #4a7bc8 !important; color: #e0e8f0 !important; }
+    :root[data-theme="dark"] .theme-switch { background: #182030; border-color: #3d5d8a; color: #90b0d8; box-shadow: 0 4px 16px rgba(0,0,0,.3); }
+    :root[data-theme="dark"] .theme-switch:hover { border-color: #4a7bc8; box-shadow: 0 6px 20px rgba(0,0,0,.4); }
 
     @media (max-width: 460px) {
       .portal-card__head { padding: 18px; }
@@ -271,7 +286,7 @@
         </div>
 
         <!-- Version Info -->
-        <div class="id-band" style="background:#f0f8ff; border-color:#b8d4f1;">
+        <div class="id-band id-band--version">
           <i class="fa-solid fa-code-branch" aria-hidden="true" style="color:#2563eb;"></i>
           <span>Study Version: <strong>Version B</strong></span>
         </div>
@@ -313,7 +328,7 @@
     </div>
   </main>
 
-  <button id="themeToggle" class="theme-switch" type="button" aria-label="Toggle colour theme" aria-pressed="false">
+  <button id="themeToggle" class="theme-switch" type="button" aria-label="Toggle colour theme" aria-pressed="false" onclick="toggleTheme()">
     <i class="fa-regular fa-moon" aria-hidden="true"></i> Theme
   </button>
 

@@ -42,16 +42,20 @@
       .button.is-primary:hover { opacity:.88 !important; }
       .button.is-light { background:var(--edu-light) !important;color:var(--edu-blue) !important;border:1px solid var(--edu-border) !important;border-radius:8px !important;font-weight:700 !important;font-size:1.05rem !important;padding:.8rem 1.7rem !important;height:auto !important;letter-spacing:0.01em !important; }
       .button.is-light:hover { background:#dce8f6 !important; }
-      .theme-switch { position:fixed;left:14px;bottom:14px;z-index:100;padding:6px 13px;border-radius:999px;border:1px solid var(--edu-border);background:#fff;color:#475569;font-size:.76rem;cursor:pointer;display:flex;align-items:center;gap:5px;box-shadow:0 2px 12px rgba(0,0,0,.15); }
+      .theme-switch { position:fixed;left:20px;bottom:20px;z-index:100;padding:12px 20px;border-radius:999px;border:2px solid var(--edu-border);background:#fff;color:#475569;font-size:.95rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 4px 16px rgba(26,47,90,.15);transition:all .2s ease; }
+      .theme-switch:hover { transform:translateY(-2px);box-shadow:0 6px 20px rgba(26,47,90,.25);border-color:#2558a8; }
+      .theme-switch i { font-size:1.1rem; }
       :root[data-theme="dark"] body { background:#0d1320; }
       :root[data-theme="dark"] .portal-card { background:#182030;border-color:#2d3d5a; }
-      :root[data-theme="dark"] .portal-card__body { color:#c8d8f0; }
+      :root[data-theme="dark"] .portal-card__body { color:#e0e8f0; }
       :root[data-theme="dark"] .success-message { background:#064e3b;border-color:#047857; }
-      :root[data-theme="dark"] .success-message__content h2 { color:#6ee7b7; }
-      :root[data-theme="dark"] .success-message__content p { color:#a7f3d0; }
+      :root[data-theme="dark"] .success-message__content h2 { color:#86efac; }
+      :root[data-theme="dark"] .success-message__content p { color:#bbf7d0; }
       :root[data-theme="dark"] .info-box { background:#182540;border-color:#2d3d5a; }
-      :root[data-theme="dark"] .info-box__value { color:#90b8e8; }
-      :root[data-theme="dark"] .theme-switch { background:#182030;border-color:#2d3d5a;color:#90b0d8;box-shadow:0 2px 12px rgba(0,0,0,.40); }
+      :root[data-theme="dark"] .info-box__label { color:#90b8e8; }
+      :root[data-theme="dark"] .info-box__value { color:#a8c8e8; }
+      :root[data-theme="dark"] .theme-switch { background:#182030;border-color:#3d5d8a;color:#90b0d8;box-shadow:0 4px 16px rgba(0,0,0,.3); }
+      :root[data-theme="dark"] .theme-switch:hover { border-color:#4a7bc8;box-shadow:0 6px 20px rgba(0,0,0,.4); }
       @media(max-width:576px){ .page-canvas{padding:58px 12px 12px;} .portal-card{max-width:100%;} .portal-card__head{padding:20px;} .portal-card__body{padding:20px;} .topbar-brand .edition{display:none;} }
       @media(min-width:768px){ .page-canvas{padding:58px 24px 16px;} .portal-card{max-width:750px;} }
       @media(min-width:1024px){ .page-canvas{padding:58px 32px 16px;} .portal-card{max-width:900px;} }
@@ -115,7 +119,7 @@
       </div>
     </main>
 
-    <button id="themeToggle" class="theme-switch" type="button" aria-label="Toggle color theme">
+    <button id="themeToggle" class="theme-switch" type="button" aria-label="Toggle color theme" onclick="toggleTheme()">
       <i class="fa-solid fa-circle-half-stroke"></i>
       Theme
     </button>

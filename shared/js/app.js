@@ -209,6 +209,10 @@ function wireLoginForm() {
     e.preventDefault();
 
     const nickname = nicknameInput ? nicknameInput.value : "";
+    // Always generate a fresh Study ID on each login so a new participant
+    // cannot see a previous participant's submissions on the same browser.
+    // Existing submissions are intentionally kept for admin/CSV export.
+    localStorage.removeItem(IDENTITY_KEY);
     const identity = setNickname(nickname);
 
     logEvent("Login", `StudyID: ${identity.studyId}, Nickname: ${nickname || "none"}`);
