@@ -55,6 +55,9 @@
     .btn-secondary-edu { background:var(--edu-light);color:var(--edu-blue);border:1px solid var(--edu-border);border-radius:8px;padding:.75rem 1.4rem;font-weight:700;font-size:1rem;display:inline-flex;align-items:center;gap:7px;cursor:pointer;text-decoration:none;transition:background .15s;letter-spacing:0.01em; }
     .btn-secondary-edu:hover { background:#dce8f6;color:var(--edu-blue); }
     .badge-req { font-size:.7rem;background:#fee2e2;color:#991b1b;padding:2px 7px;border-radius:4px;font-weight:600; }
+    .alert { padding:12px 16px;border-radius:8px;margin-bottom:16px;font-size:.95rem;line-height:1.5; }
+    .alert-danger { background:#fee2e2;border:1px solid #fca5a5;color:#991b1b; }
+    .alert strong { font-weight:700; }
     .theme-switch { position:fixed;left:14px;bottom:14px;z-index:100;padding:6px 13px;border-radius:999px;border:1px solid var(--edu-border);background:#fff;color:#475569;font-size:.76rem;cursor:pointer;display:flex;align-items:center;gap:5px;box-shadow:0 2px 12px rgba(0,0,0,.15); }
     :root[data-theme="dark"] body { background:#0d1320; }
     :root[data-theme="dark"] .portal-card { background:#182030;border-color:#2d3d5a;color:#c8d8f0; }
@@ -62,8 +65,11 @@
     :root[data-theme="dark"] .notice-box { background:#182540;border-color:#2d3d5a;color:#90b8e8; }
     :root[data-theme="dark"] .dropzone { background:#182030;border-color:#2d3d5a; }
     :root[data-theme="dark"] .form-select,:root[data-theme="dark"] .form-control { background:#182030;border-color:#2d3d5a;color:#c8d8f0; }
+    :root[data-theme="dark"] .btn-secondary-edu { background:#182030;border-color:#2d3d5a;color:#90b0d8; }
+    :root[data-theme="dark"] .btn-secondary-edu:hover { background:#1e2c42;border-color:#3a4d6a;color:#a8c0e0; }
     :root[data-theme="dark"] .theme-switch { background:#182030;border-color:#2d3d5a;color:#90b0d8;box-shadow:0 2px 12px rgba(0,0,0,.40); }
     :root[data-theme="dark"] .badge-req { background:#dc2626;color:#fef2f2; }
+    :root[data-theme="dark"] .alert-danger { background:#7f1d1d;border-color:#991b1b;color:#fecaca; }
     @media(max-width:480px){ .page-canvas{padding:58px 12px 12px;} .portal-card{max-width:100%;} .portal-card__body{padding:16px 18px;} .portal-card__head{padding:18px;} .topbar-brand .edition{display:none;} }
     @media(min-width:768px){ .page-canvas{padding:58px 24px 16px;} .portal-card{max-width:800px;} .portal-card__body{padding:26px 30px;} .portal-card__head{padding:24px 30px 20px;} }
     @media(min-width:1024px){ .page-canvas{padding:58px 32px 16px;} .portal-card{max-width:950px;} }
