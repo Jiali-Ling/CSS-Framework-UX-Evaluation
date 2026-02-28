@@ -7,9 +7,18 @@
   <link rel="icon" href="data:,">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
-  <link href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <!-- Non-blocking fonts -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+  <!-- Non-blocking FontAwesome -->
+  <link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css"></noscript>
+  <link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css" rel="stylesheet"></noscript>
   <link href="../shared/css/tokens.css" rel="stylesheet">
   <link href="../shared/css/bridge-bulma.css" rel="stylesheet">
   <link href="../shared/css/app.css" rel="stylesheet">
@@ -119,6 +128,21 @@
     :root[data-theme="dark"] .button.is-light { background:#2d3d5a !important;border-color:#3d5d8a !important;color:#c8d8f0 !important; }
     :root[data-theme="dark"] .button.is-light:hover { background:#3d4d6a !important;border-color:#4a7bc8 !important;color:#e0e8f0 !important; }
     @media(max-width:540px){ .page-stack{padding:58px 12px 16px;max-width:100%;} .stat-grid{grid-template-columns:repeat(2,1fr);} .quest-banner{flex-direction:column;text-align:center;} .panel-card__head{padding:18px;} .panel-card__body{padding:16px 18px;} .topbar-brand .edition{display:none;} }
+    /* CLS: reserve icon space before FontAwesome loads */
+    .step-node__circle i,.stat-card__icon i,.head-icon i,.quest-banner__icon i,.topbar-brand i { display:inline-block;min-width:.8em;min-height:.8em; }
+    /* CLS: reserve space for stat values filled by JS */
+    .stat-card__value { min-height:2rem;display:block;min-width:3rem;text-align:left; }
+    /* Skeleton pulse animation */
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+    :root[data-theme="dark"] #history [style*="background:#e0e8f0"] { background:#2d3d5a !important; }
+    /* Hide #fb since inline renderEnhancedFeedback handles display */
+    #fb { display:none; }
+    /* CLS: reserve height for #history skeleton area */
+    #history { min-height:200px; }
+    /* font-display: swap for FontAwesome icon fonts */
+    @font-face { font-family:'Font Awesome 6 Free'; font-display:swap; }
+    @font-face { font-family:'Font Awesome 6 Brands'; font-display:swap; }
+    @font-face { font-family:'Font Awesome 6 Pro'; font-display:swap; }
   </style>
 </head>
 
@@ -202,9 +226,11 @@
           </div>
           <div id="docPanelContent"></div>
         </div>
-         
         <div id="fb" aria-live="polite"></div>
-        <div id="history" class="mt-2"></div>
+        <div id="history" class="mt-2">
+          <!-- Loading skeleton - replaced by JS -->
+          <div class="table-wrap"><table class="fb-table" aria-label="Loading submissions"><thead><tr><th><i class="fa-solid fa-file-lines me-1"></i>Assignment</th><th><i class="fa-solid fa-star-half-stroke me-1"></i>Score vs Pass Mark</th><th><i class="fa-solid fa-circle-half-stroke me-1"></i>Status</th><th><i class="fa-solid fa-chalkboard me-1"></i>Tutor Feedback</th></tr></thead><tbody><tr><td><div style="background:#e0e8f0;height:80px;border-radius:6px;animation:pulse 1.5s ease-in-out infinite;"></div></td><td><div style="background:#e0e8f0;height:60px;border-radius:6px;animation:pulse 1.5s ease-in-out infinite;animation-delay:0.1s;"></div></td><td><div style="background:#e0e8f0;height:30px;width:80px;border-radius:6px;animation:pulse 1.5s ease-in-out infinite;animation-delay:0.2s;"></div></td><td><div style="background:#e0e8f0;height:40px;border-radius:6px;animation:pulse 1.5s ease-in-out infinite;animation-delay:0.3s;"></div></td></tr></tbody></table></div>
+        </div>
       </div>
     </div>
 
@@ -266,8 +292,7 @@
     const rows=mine.map((s,i)=>buildRow(s,i)).join('');
     histEl.innerHTML=`<div class="table-wrap"><table class="fb-table" aria-label="Submission records"><thead><tr><th><i class="fa-solid fa-file-lines me-1"></i>Assignment</th><th><i class="fa-solid fa-star-half-stroke me-1"></i>Score vs Pass Mark</th><th><i class="fa-solid fa-circle-half-stroke me-1"></i>Status</th><th><i class="fa-solid fa-chalkboard me-1"></i>Tutor Feedback</th></tr></thead><tbody>${rows}</tbody></table></div>`;
   }
-  window.addEventListener('load',()=>setTimeout(renderEnhancedFeedback,200));
-  document.addEventListener('DOMContentLoaded',()=>setTimeout(renderEnhancedFeedback,400));
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',()=>requestAnimationFrame(renderEnhancedFeedback));}else{requestAnimationFrame(renderEnhancedFeedback);}
   </script>
 </body>
 </html>
