@@ -517,7 +517,7 @@ function renderFeedbackPage() {
       }
     }
 
-    if (history) {
+    if (history && !window.__enhancedFeedback) {
       if (mine.length === 0) {
         history.textContent = '';
       } else {

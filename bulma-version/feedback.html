@@ -135,8 +135,8 @@
     /* Skeleton pulse animation */
     @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
     :root[data-theme="dark"] #history [style*="background:#e0e8f0"] { background:#2d3d5a !important; }
-    /* Hide #fb since inline renderEnhancedFeedback handles display */
-    #fb { display:none; }
+    /* #fb: Submission Records rendered by app.js */
+    #fb { display:block; }
     /* CLS: reserve height for #history skeleton area */
     #history { min-height:200px; }
     /* font-display: swap for FontAwesome icon fonts */
@@ -257,6 +257,7 @@
   <script defer src="../shared/js/theme.js"></script>
 
   <script>
+  window.__enhancedFeedback = true;
   function scoreFor(sub){return sub.score ?? 66;}
   function passFor(sub){return sub.passMark ?? 60;}
   function feedbackFor(sub){return sub.feedback ?? 'Your work has been reviewed. Check back for detailed comments.';}
