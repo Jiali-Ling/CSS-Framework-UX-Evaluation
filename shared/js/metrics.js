@@ -176,42 +176,57 @@
     }
 
     attachAutoBindings() {
+      // Track clicks: explicit data-metric-click first, then auto-detect all buttons/links
       document.addEventListener('click', (e) => {
-        const el = e.target.closest('[data-metric-click]');
+        const explicit = e.target.closest('[data-metric-click]');
+        if (explicit) {
+          this.click(explicit.getAttribute('data-metric-click'));
+          return;
+        }
+        // Auto-track any button or anchor click
+        const el = e.target.closest('button,a,[role="button"]');
         if (el) {
-          const name = el.getAttribute('data-metric-click');
-          this.click(name);
+          const name = el.id || el.getAttribute('aria-label') || el.textContent.trim().slice(0,40) || el.tagName.toLowerCase();
+          this.click('auto:' + name);
         }
       }, { passive: true, capture: true });
 
-      const forms = document.querySelectorAll('form[data-metric-form]');
-      if (forms.length > 0) {
-        const formStates = new WeakMap();
-        
-        forms.forEach(form => {
-          const taskName = form.getAttribute('data-metric-form') || 'form';
-          formStates.set(form, { started: false });
-          
-          form.addEventListener('focusin', () => {
-            const state = formStates.get(form);
-            if (!state.started) {
-              this.startTask(taskName);
-              state.started = true;
-            }
-          }, { passive: true, once: false });
-          
-          form.addEventListener('submit', () => {
-            const valid = form.checkValidity();
-            this.endTask(taskName, { success: valid, submit: true });
-            const state = formStates.get(form);
-            if (state) state.started = false;
-          });
-          
-          form.addEventListener('invalid', (e) => {
-            this.error('html5_invalid', {name: taskName, field: e.target?.name});
-          }, true);
+      // Track all forms: explicit data-metric-form, or auto-detect
+      const formStates = new WeakMap();
+      const bindForm = (form) => {
+        const taskName = form.getAttribute('data-metric-form') || form.id || 'form';
+        formStates.set(form, { started: false });
+
+        form.addEventListener('focusin', () => {
+          const state = formStates.get(form);
+          if (state && !state.started) {
+            this.startTask(taskName);
+            state.started = true;
+          }
+        }, { passive: true });
+
+        form.addEventListener('submit', () => {
+          const valid = form.checkValidity();
+          this.endTask(taskName, { success: valid, submit: true });
+          const state = formStates.get(form);
+          if (state) state.started = false;
         });
-      }
+
+        form.addEventListener('invalid', (ev) => {
+          this.error('html5_invalid', { name: taskName, field: ev.target?.name });
+        }, true);
+      };
+
+      document.querySelectorAll('form').forEach(bindForm);
+
+      // Also catch forms added after DOMContentLoaded via MutationObserver
+      new MutationObserver(mutations => {
+        mutations.forEach(m => m.addedNodes.forEach(node => {
+          if (node.nodeType !== 1) return;
+          if (node.tagName === 'FORM') bindForm(node);
+          node.querySelectorAll && node.querySelectorAll('form').forEach(bindForm);
+        }));
+      }).observe(document.body, { childList: true, subtree: true });
     }
 
     exportCSV(filename=`metrics_${this.context.variant}_${new Date().toISOString().slice(0,10)}.csv`) {
