@@ -33,6 +33,14 @@
       
       window.addEventListener('storage', () => { this.context.theme = this._getTheme(); }, { passive: true });
       
+      // Flush any pending debounced save immediately on page unload
+      window.addEventListener('beforeunload', () => {
+        if (this._saveTimeout) {
+          clearTimeout(this._saveTimeout);
+          this._saveLogs();
+        }
+      });
+      
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => this.attachAutoBindings(), { once: true });
       } else {
@@ -91,9 +99,8 @@
       }, this.context, payload || {});
       this.logs.push(entry);
       
-      // Debounce save operation
-      if (this._saveTimeout) clearTimeout(this._saveTimeout);
-      this._saveTimeout = setTimeout(() => this._saveLogs(), 300);
+      // Save synchronously on every push to prevent data loss on page navigation
+      this._saveLogs();
       
       return entry;
     }

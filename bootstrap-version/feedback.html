@@ -313,6 +313,16 @@
 
   function exportAndPreviewMetrics(){
     const m=window.Metrics;
+    // Always re-read localStorage to get the most up-to-date data,
+    // in case _init() ran before data was saved, or the page loaded before _init() ran.
+    if(m){
+      try{
+        const raw=localStorage.getItem('metrics_logs_v1');
+        const saved=raw?JSON.parse(raw):[];
+        if(Array.isArray(saved)&&saved.length>=(m.logs||[]).length){m.logs=saved;}
+      }catch(e){}
+      m.logsLoaded=true;
+    }
     if(!m||!m.logs||!m.logs.length){document.getElementById('metricsExportStatus').textContent='No metrics data collected yet.';return;}
     // trigger download
     m.exportCSV();
