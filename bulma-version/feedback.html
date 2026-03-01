@@ -234,6 +234,32 @@
       </div>
     </div>
 
+    <div class="panel-card" id="metricsPanel" style="margin-bottom:14px;">
+      <div class="panel-card__head" style="padding:16px 22px;">
+        <div class="head-icon" style="width:40px;height:40px;"><i class="fa-solid fa-chart-bar" aria-hidden="true"></i></div>
+        <div class="head-text">
+          <h2 style="font-family:'Poppins',sans-serif;font-size:1.1rem;font-weight:700;color:#fff;margin:0 0 2px;">Interaction Metrics</h2>
+          <p style="font-size:.84rem;color:#8ab0d8;margin:0;">Export your session's interaction data as a CSV file</p>
+        </div>
+      </div>
+      <div class="panel-card__body" style="padding:18px 24px;">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <button id="exportMetricsBtn" type="button" onclick="exportAndPreviewMetrics()" style="display:inline-flex;align-items:center;gap:7px;background:#2558a8;color:#fff;border:none;border-radius:8px;padding:9px 20px;font-weight:700;font-size:.92rem;cursor:pointer;transition:background .2s;">
+            <i class="fa-solid fa-download"></i> Export Metrics CSV
+          </button>
+          <button id="togglePreviewBtn" type="button" onclick="toggleMetricsPreview()" style="display:none;align-items:center;gap:7px;background:#eef3fb;border:1px solid #b8cee8;color:#2558a8;border-radius:8px;padding:9px 20px;font-weight:700;font-size:.92rem;cursor:pointer;transition:background .2s;">
+            <i class="fa-solid fa-table"></i> <span id="togglePreviewLabel">Show Preview</span>
+          </button>
+          <span id="metricsExportStatus" style="font-size:.85rem;color:#64748b;"></span>
+        </div>
+        <div id="metricsPreview" style="display:none;margin-top:16px;">
+          <div style="overflow-x:auto;max-height:320px;border:1px solid #d0d9e8;border-radius:8px;">
+            <table id="metricsPreviewTable" class="fb-table" style="min-width:600px;font-size:.82rem;"></table>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="quest-banner" role="complementary" aria-label="Study questionnaire">
       <div class="quest-banner__icon"><i class="fa-solid fa-clipboard-list" aria-hidden="true"></i></div>
       <div class="quest-banner__body">
@@ -294,6 +320,39 @@
     histEl.innerHTML=`<div class="table-wrap"><table class="fb-table" aria-label="Submission records"><thead><tr><th><i class="fa-solid fa-file-lines me-1"></i>Assignment</th><th><i class="fa-solid fa-star-half-stroke me-1"></i>Score vs Pass Mark</th><th><i class="fa-solid fa-circle-half-stroke me-1"></i>Status</th><th><i class="fa-solid fa-chalkboard me-1"></i>Tutor Feedback</th></tr></thead><tbody>${rows}</tbody></table></div>`;
   }
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',()=>requestAnimationFrame(renderEnhancedFeedback));}else{requestAnimationFrame(renderEnhancedFeedback);}
+
+  function exportAndPreviewMetrics(){
+    const m=window.Metrics;
+    if(!m||!m.logs||!m.logs.length){document.getElementById('metricsExportStatus').textContent='No metrics data collected yet.';return;}
+    // trigger download
+    m.exportCSV();
+    // build preview
+    const headers=['ts','type','session','variant','theme','viewport','name','code','extra'];
+    const previewRows=m.logs.slice(-100); // show last 100 rows
+    const table=document.getElementById('metricsPreviewTable');
+    table.innerHTML='<thead><tr>'+headers.map(h=>`<th style="white-space:nowrap;background:#eef3fb;color:#1a2f5a;padding:8px 10px;border-bottom:2px solid #d0d9e8;">${h}</th>`).join('')+'</tr></thead>'
+      +'<tbody>'+previewRows.map(l=>'<tr>'+headers.map(h=>{
+        let v=l[h];
+        if(h==='ts')v=new Date(v).toLocaleString('en-GB');
+        else if(h==='extra')v=JSON.stringify(v||{});
+        else v=v||'';
+        return `<td style="padding:6px 10px;border-bottom:1px solid #eef2f8;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${String(v).replace(/"/g,'&quot;')}">${String(v)}</td>`;
+      }).join('')+'</tr>').join('')+'</tbody>';
+    const statusEl=document.getElementById('metricsExportStatus');
+    statusEl.textContent=`✓ Downloaded — ${m.logs.length} row${m.logs.length!==1?'s':''} total${m.logs.length>100?' (preview shows last 100)':''}`;
+    statusEl.style.color='#16a34a';
+    const toggleBtn=document.getElementById('togglePreviewBtn');
+    toggleBtn.style.display='inline-flex';
+    document.getElementById('metricsPreview').style.display='block';
+    document.getElementById('togglePreviewLabel').textContent='Hide Preview';
+  }
+  function toggleMetricsPreview(){
+    const p=document.getElementById('metricsPreview');
+    const lbl=document.getElementById('togglePreviewLabel');
+    const shown=p.style.display!=='none';
+    p.style.display=shown?'none':'block';
+    lbl.textContent=shown?'Show Preview':'Hide Preview';
+  }
   </script>
 </body>
 </html>
