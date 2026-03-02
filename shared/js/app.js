@@ -267,7 +267,13 @@ function wireSubmitForm() {
     const task = taskSel ? taskSel.value : "";
 
     if (!task || task === "") {
-      showError('Please select an assignment.');
+      showError('Please select a module / assignment before submitting.');
+      return;
+    }
+
+    const fileInputCheck = form.querySelector('input[type="file"]');
+    if (!fileInputCheck || !fileInputCheck.files || !fileInputCheck.files[0]) {
+      showError('Please upload your submission file (PDF, DOCX, or ZIP) before submitting.');
       return;
     }
 
