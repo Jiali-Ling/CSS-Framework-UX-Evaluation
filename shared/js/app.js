@@ -477,10 +477,10 @@ function renderFeedbackPage() {
 
           const detailTr = document.createElement('tr');
           detailTr.hidden = true;
-          detailTr.style.backgroundColor = 'var(--color-surface-2, #f8fafc)';
+          detailTr.style.backgroundColor = 'var(--bb-card, var(--color-surface-2, #f1f5f9))';
           const detailTd = document.createElement('td');
           detailTd.colSpan = 5;
-          detailTd.style.cssText = 'padding:1rem 1.25rem;border-top:none;';
+          detailTd.style.cssText = 'padding:1rem 1.25rem;border-top:none;color:var(--bb-text,inherit);';
           detailTd.innerHTML = `
             <dl style="margin:0;display:grid;gap:.4rem;">
               <div><dt style="font-weight:600;display:inline;">Score: </dt><dd style="display:inline;">${score}</dd></div>
@@ -511,7 +511,7 @@ function renderFeedbackPage() {
         fragment.appendChild(wrapper);
         
         const infoDiv = document.createElement('div');
-        infoDiv.style.cssText = 'margin-top:1rem;padding:.875rem 1rem;background:var(--color-surface-2,#f8fafc);border:1px solid var(--color-border,rgba(148,163,184,.18));border-radius:8px;font-size:.9em;';
+        infoDiv.style.cssText = 'margin-top:1rem;padding:.875rem 1rem;background:var(--bb-card,var(--color-surface-2,#f1f5f9));border:1px solid var(--bb-border,rgba(148,163,184,.18));border-radius:8px;font-size:.9em;color:var(--bb-text,inherit);';
         infoDiv.innerHTML = `
           <p style="margin:.25rem 0;"><strong>Study ID:</strong> ${escapeHtml(identity.studyId)}${identity.nickname ? ` (${escapeHtml(identity.nickname)})` : ''}</p>
           <p style="margin:.25rem 0;"><strong>Latest submission:</strong> ${escapeHtml(mine[0].task)} — ${formatLocal(mine[0].createdAtISO)}</p>
